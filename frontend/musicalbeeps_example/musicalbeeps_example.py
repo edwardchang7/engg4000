@@ -1,7 +1,7 @@
 import musicalbeeps
 
 player = musicalbeeps.Player(volume=1, mute_output=False)
-file_name = "tetris.txt"
+file_name = "fur_elise.txt"
 music_sheet = open(f"music_sheets/{file_name}", "r")
 
 lines = music_sheet.readlines()
@@ -13,4 +13,4 @@ for line in lines:
     duration = line[1].strip()
     player.play_note(note, float(duration))
 
-print(f"There are a total of {note_count} notes in {file_name} music sheet.")
+print(f"There is a total of {note_count} notes in the {file_name} music sheet.")
