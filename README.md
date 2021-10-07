@@ -4,6 +4,12 @@
     <img src="https://media.giphy.com/media/NU8tcjnPaODTy/giphy.gif" width="480" height="282" />
 </p>
 
+### Project Set-up
+1. In `/C:/.../eng4000/` directory, run the command: `pip install -r requirements.txt` to install required dependencies.
+
+### Development Practices
+- If you have added a new package/library, make sure to add update `requirements.txt` by running the command: `pip freeze > requirements.txt`
+
 ### Group Members
 - Thomas Campbell _[[GitHub]](https://github.com/tcampbe6UNB3035)_ _[[LinkedIn]](https://www.linkedin.com/in/thomas-campbell-a6a245184/)_
 - Edward Chang _[[GitHub]](https://github.com/edwardchang7)_ _[[LinkedIn]](https://www.linkedin.com/in/edward-chang-2134791a4/)_
