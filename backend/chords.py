@@ -25,7 +25,11 @@ def genChord(root, chordType):
     Returns a list of notes to build the specified root chord
 
         Parameters:
-            root 
+            root (String)       : the note of the root chord
+            chordType (String)  : the type of chord to build
+
+        Returns:
+            a list of notes within the chord
     '''
 
     # adds the root note to the list first
