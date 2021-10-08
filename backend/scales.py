@@ -26,8 +26,8 @@ def genChord(root, scaleType):
     Returns either a major or minor chord with the root as the root note.
 
         Parameters:
-            root (String)           : the root note of the chord
-            scaleType (character)   : the type of chord to build
+            root (String)        : the root note of the chord
+            scaleType (String)   : the type of chord to build
 
         Returns:
             the chord generated from the root note
