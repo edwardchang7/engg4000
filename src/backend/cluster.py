@@ -38,4 +38,4 @@ class Cluster:
             self.collection_name = new_collection_name
             self.is_admin = new_is_admin
 
-        return self.__collection
+        return self
