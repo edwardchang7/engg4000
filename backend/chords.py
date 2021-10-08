@@ -62,6 +62,5 @@ def genChord(root, chordType):
     return chord
 
 
-genChord('C', 'M')
 
         
