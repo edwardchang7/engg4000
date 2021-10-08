@@ -21,13 +21,13 @@ P_major = 'WWPW'
 P_minor = 'PWWP'
 
 
-def genChord(root, option):
+def genChord(root, scaleType):
     '''
     Returns either a major or minor chord with the root as the root note.
 
         Parameters:
-            initial (String)   : the root note of the chord
-            option (character) : the type of chord to build
+            initial (String)        : the root note of the chord
+            scaleType (character)   : the type of chord to build
 
         Returns:
             the chord generated from the root note
@@ -39,16 +39,16 @@ def genChord(root, option):
     # The initial index of the note to start at
     key = notes.index(root)
 
-    if option == 'M':
+    if scaleType == 'M':
         stepList = I_major
-    elif option == 'm':
+    elif scaleType == 'm':
         stepList = A_minor
-    elif option == 'pM':
+    elif scaleType == 'pM':
         stepList = P_major
-    elif option == 'pm':
+    elif scaleType == 'pm':
         stepList = P_minor
 
-    # if the option selected is a major chord (M)
+    # if the scaleType selected is a major chord (M)
     for char in stepList:
         # Whole step += 2; half step += 1
         if char == 'P':
