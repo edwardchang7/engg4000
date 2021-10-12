@@ -31,7 +31,7 @@ An appropriate selection of tools is incredibly important for the success of a s
 -   Works alongside team members in developing the final product.
 - _[[GitHub]](https://github.com/owenlee-dev)_ _[[LinkedIn]](https://www.linkedin.com/in/owen-lee-b3b3a2197/)_
     
-  ###  Edward Chang
+###  Edward Chang
   **Integration Manager / Implementer / Head Developer**
 - In charge of overlooking the integration of the whole project.
 - Coordinates the team when merging different features together.
