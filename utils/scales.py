@@ -21,7 +21,7 @@ P_major = 'WWPW'
 P_minor = 'PWWP'
 
 
-def genChord(root, scaleType):
+def getScale(root, scaleType):
     '''
     Returns either a major or minor chord with the root as the root note.
 
