@@ -11,16 +11,16 @@ from music_tools import *
 
 # the number of semitones away from the previous note
 
-# Major and minor triad
-M_triad = "43"
-m_triad = "34"
+# # Major and minor triad
+# M_triad = "43"
+# m_triad = "34"
 
-# Diminished triad
-D_triad = "33"
+# # Diminished triad
+# D_triad = "33"
 
-# Suspended triad (sus2 and sus4)
-sus2_triad = "25"
-sus4_triad = "52"
+# # Suspended triad (sus2 and sus4)
+# sus2_triad = "25"
+# sus4_triad = "52"
 
 
 def gen_triad(root, type):
