@@ -173,4 +173,6 @@ CCGG|AAG2|FFEE|DDC2:|
 ```
 ![image](https://user-images.githubusercontent.com/70532700/137585810-07530219-b6fb-4308-900a-07aa6133ea7b.png)
 
+Full Syntax guide: https://abcwiki.org/abc:syntax
+
 
