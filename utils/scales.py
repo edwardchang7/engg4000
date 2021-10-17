@@ -15,7 +15,7 @@ from music_tools import *
 # P_minor = 'PWWP'
 
 
-def get_scale(root, type):
+def gen_scale(root, type):
     '''
     Returns a chord from the root node.
 
