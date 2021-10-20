@@ -5,13 +5,13 @@ Last Edit : Thomas (13.10.2021 10:54AM)
 
 import triads
 from music_tools import *
-
+from music_tools import *
 # A major / minor notes (not for pentatonic scale)
 # notes = ['C', 'C#', 'D', 'D#', 'E', 'F',  'F#', 'G', 'G#', 'A', 'A#', 'B']
 
 # the number of semitones the seventh note is away from the previous triad
 
-def gen_chord(root, type):
+def gen_chord(root, type, extra_note_list):
     '''
     Returns a list of notes to build the specified root chord
 
@@ -46,17 +46,41 @@ def gen_chord(root, type):
     else:
         root = chord[len(chord) - 1]
         if type == 'M7':
-            chord.append(whole_step(whole_step(root)))
+            chord.append(M3(root, True))
         elif type == 'Mm7':
-            chord.append(whole_step(half_step(root)))
+            chord.append(m3(root, True))
         elif type == 'm7':
-            chord.append(whole_step(half_step(root)))
+            chord.append(m3(root, True))
         elif type == 'HD':
-            chord.append(whole_step(whole_step(root)))
+            chord.append(M3(root, True))
         elif type == 'FD':
-            chord.append(whole_step(half_step(root)))
-    
-    return chord
+            chord.append(m3(root, True))
+    if not extra_note_list:
+        return chord
+    else: #if extra_note_list is not empty, then need to add more notes
+        for note_in_chord in extra_note_list:
+            if note_in_chord[0] == '0':
+                note = chord[0]
+            elif note_in_chord[0] == '1':
+                note = chord[1]
+            elif note_in_chord[0] == '2':
+                note = chord[2]
+            elif note_in_chord[0] == '3':
+                note = chord[3]
+
+            for symbol in note_in_chord[1:]:
+                if symbol == "'":
+                    note = change_octave(note, True)
+                elif symbol == ',':
+                    note = change_octave(note, False)
+
+            chord.append(note)
+
+        # Ex: if extra_note_list = [] and we call gen_chord('C', 'm7', extra_note_list) => output = ['C', 'D#', 'G', A#']
+        # if extra_note_list = ["1'", '3,', "2''"] and we call gen_chord('C', 'm7', extra_note_list) => output = ['C', 'D#', 'G', A#', "d#'", 'A#,', "g''"]
+
+        return chord
+
 
 # # Seventh Chord
 # major_seventh_chord = triads.M_triad + "4"

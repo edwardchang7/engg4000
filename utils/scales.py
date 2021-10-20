@@ -31,44 +31,44 @@ def get_scale(root, type):
     if type == 'M':
         # WW
         for _ in range(2):
-            root = whole_step(root)
+            root = whole_step(root, True)
             scale.append(root)
 
         # H
-        root = half_step(root)
+        root = half_step(root, True)
         scale.append(root)
 
         # WWW
         for _ in range(3):
-            root = whole_step(root)
+            root = whole_step(root, True)
             scale.append(root)
 
         # H
-        scale.append(half_step(root))
+        scale.append(half_step(root, True))
 
         return scale
 
     elif type == 'm':
         # W
-        root = whole_step(root)
+        root = whole_step(root, True)
         scale.append(root)
 
         # H
-        root = half_step(root)
+        root = half_step(root, True)
         scale.append(root)
 
         # WW
         for _ in range(2):
-            root = whole_step(root)
+            root = whole_step(root, True)
             scale.append(root)
 
         # H
-        root = half_step(root)
+        root = half_step(root, True)
         scale.append(root)
 
         # WW
         for _ in range(2):
-            root = whole_step(root)
+            root = whole_step(root, True)
             scale.append(root)
 
         return scale
@@ -76,30 +76,30 @@ def get_scale(root, type):
     elif type == 'pM':
         # WW
         for _ in range(2):
-            root = whole_step(root)
+            root = whole_step(root, True)
             scale.append(root)
 
         # HW
-        root = whole_step(half_step(root))
+        root = whole_step(half_step(root, True), True)
         scale.append(root)
 
         # W
-        scale.append(whole_step(root))
+        scale.append(whole_step(root, True))
 
         return scale
 
     elif type == 'pm':
         # WH
-        root = whole_step(half_step(root))
+        root = whole_step(half_step(root, True), True)
         scale.append(root)
 
         # WW
         for _ in range(2):
-            root = whole_step(root)
+            root = whole_step(root, True)
             scale.append(root)
 
         # WH
-        root = whole_step(half_step(root))
+        root = whole_step(half_step(root, True), True)
         scale.append(root)
 
         return scale

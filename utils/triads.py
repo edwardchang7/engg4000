@@ -36,34 +36,34 @@ def gen_triad(root, type):
     triad = [root]
 
     if type == 'M':
-        root = whole_step(whole_step(root))
+        root = whole_step(whole_step(root, True), True)
         triad.append(root)
 
-        triad.append(whole_step(half_step(root)))
+        triad.append(whole_step(half_step(root, True), True))
 
     elif type == 'm':
-        root = whole_step(half_step(root))
+        root = whole_step(half_step(root, True), True)
         triad.append(root)
 
-        triad.append(whole_step(whole_step(root)))
+        triad.append(whole_step(whole_step(root, True), True))
 
     elif type == 'D':
-        root = whole_step(half_step(root))
+        root = whole_step(half_step(root, True), True)
         triad.append(root)
 
-        triad.append(whole_step(half_step(root)))
+        triad.append(whole_step(half_step(root, True), True))
 
     elif type == 's2':
-        root = whole_step(root)
+        root = whole_step(root, True)
         triad.append(root)
 
-        triad.append(whole_step(whole_step(half_step(root))))
+        triad.append(whole_step(whole_step(half_step(root, True), True), True))
 
     elif type == 's4':
-        root = whole_step(whole_step(half_step(root)))
+        root = whole_step(whole_step(half_step(root, True), True), True)
         triad.append(root)
 
-        triad.append(whole_step(root))
+        triad.append(whole_step(root, True))
 
     return triad
 
