@@ -2,8 +2,8 @@ from pymongo import MongoClient
 
 
 class Cluster:
-    __database = None
-    __collection = None
+    database = None
+    collection = None
     database_name = None
     collection_name = None
     is_admin = None
@@ -18,7 +18,7 @@ class Cluster:
         :param new_is_admin: A flag used to access the cluster as admin (True) or as a regular developer (False).
         :return: The collection where documents can be accessed or stored.
         """
-        if (self.__database is None or self.database_name != new_database_name or
+        if (self.database is None or self.database_name != new_database_name or
                 self.collection_name != new_collection_name or self.is_admin != new_is_admin):
             database_user_name = "dev1"
             database_password = "dev1"
@@ -32,10 +32,10 @@ class Cluster:
                 f"/myFirstDatabase?retryWrites=true&w=majority"
             )
 
-            self.__database = cluster[new_database_name]
-            self.__collection = self.__database[new_collection_name]
+            self.database = cluster[new_database_name]
+            self.collection = self.database[new_collection_name]
             self.database_name = new_database_name
             self.collection_name = new_collection_name
             self.is_admin = new_is_admin
 
-        return self.__collection
+        return self
