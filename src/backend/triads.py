@@ -3,7 +3,7 @@ Author : Elliot, Thomas
 Last Edit : Elliot (13.10.2021 11:19PM)
 '''
 
-from music_tools import *
+from src.backend.music_tools import *
 
 
 # A major / minor notes (not for pentatonic scale)

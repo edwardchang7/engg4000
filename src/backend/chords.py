@@ -3,9 +3,8 @@ Author : Elliot, Thomas
 Last Edit : Thomas (13.10.2021 10:54AM)
 '''
 
-import triads
-from music_tools import *
-from music_tools import *
+from src.backend.triads import *
+from src.backend.music_tools import *
 # A major / minor notes (not for pentatonic scale)
 # notes = ['C', 'C#', 'D', 'D#', 'E', 'F',  'F#', 'G', 'G#', 'A', 'A#', 'B']
 
@@ -26,22 +25,23 @@ def gen_chord(root, type, extra_note_list):
 
     # major M, major_7th : M7, major_minor_7th : Mm7
     if type == 'M' or type == 'M7' or type == 'Mm7':
-        chord = triads.gen_triad(root, 'M')
+        chord = gen_triad(root, 'M')
 
     elif type == 'm' or type == 'm7':
-        chord = triads.gen_triad(root, 'm')
+        chord = gen_triad(root, 'm')
 
     elif type == 'D' or type == 'HD' or type == 'FD':
-        chord = triads.gen_triad(root, 'D')
+        chord = gen_triad(root, 'D')
 
     elif type == 'sus2':
-        chord = triads.gen_triad(root, 'sus2')
+        chord = gen_triad(root, 's2')
 
     elif type == 'sus4':
-        chord = triads.gen_triad(root, 'sus4')
+        chord = gen_triad(root, 's4')
 
-    if type == 'M' or type == 'm' or type == 'D' or type == 'sus2' or type == 'sus4':
-        return chord
+    if not extra_note_list:
+        if type == 'M' or type == 'm' or type == 'D' or type == 'sus2' or type == 'sus4':
+            return chord
 
     else:
         root = chord[len(chord) - 1]
@@ -57,6 +57,7 @@ def gen_chord(root, type, extra_note_list):
             chord.append(m3(root, True))
     if not extra_note_list:
         return chord
+
     else: #if extra_note_list is not empty, then need to add more notes
         for note_in_chord in extra_note_list:
             if note_in_chord[0] == '0':

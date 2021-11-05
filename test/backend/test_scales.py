@@ -1,4 +1,4 @@
-from ..utils.scales import getScale
+from src.backend.scales import getScale
 
 def test_M_one():
   assert getScale('C','M') == ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C']
