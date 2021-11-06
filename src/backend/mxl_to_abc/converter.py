@@ -12,3 +12,7 @@ def batch_convert():
   files_to_convert=os.listdir("to_convert") 
   for file in files_to_convert:
     convert("to_convert/"+file, "converted_compositions")
+
+if(__name__=="__main__"):
+  os.chdir("src/backend/mxl_to_abc")
+  batch_convert();
