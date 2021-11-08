@@ -39,9 +39,8 @@ def gen_chord(root, type, extra_note_list):
     elif type == 'sus4':
         chord = gen_triad(root, 's4')
 
-    if not extra_note_list:
-        if type == 'M' or type == 'm' or type == 'D' or type == 'sus2' or type == 'sus4':
-            return chord
+    if not extra_note_list and (type == 'M' or type == 'm' or type == 'D' or type == 'sus2' or type == 'sus4'):
+        return chord
 
     else:
         root = chord[len(chord) - 1]
