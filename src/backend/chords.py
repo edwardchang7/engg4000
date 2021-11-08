@@ -24,10 +24,10 @@ def gen_chord(root, type, extra_note_list):
     chord = None
 
     # major M, major_7th : M7, major_minor_7th : Mm7
-    if type == 'M' or type == 'M7' or type == 'Mm7':
+    if type == 'M' or type == 'M7':
         chord = gen_triad(root, 'M')
 
-    elif type == 'm' or type == 'm7':
+    elif type == 'm' or type == 'm7' or type == 'Mm7':
         chord = gen_triad(root, 'm')
 
     elif type == 'D' or type == 'HD' or type == 'FD':
@@ -47,7 +47,7 @@ def gen_chord(root, type, extra_note_list):
         if type == 'M7':
             chord.append(M3(root, True))
         elif type == 'Mm7':
-            chord.append(m3(root, True))
+            chord.append(M3(root, True))
         elif type == 'm7':
             chord.append(m3(root, True))
         elif type == 'HD':

@@ -37,10 +37,10 @@ class TestTriads(unittest.TestCase):
         self.assertEqual(gen_triad('C', 's2'), ['C', 'D', 'G'])
 
     def test_sus2Triad_two(self):
-        self.assertEqual(gen_triad("a'", 's2'), ["a'", "b''", "e''"])
+        self.assertEqual(gen_triad("a'", 's2'), ["a'", "b'", "e''"])
 
     def test_sus2Triad_three(self):
-        self.assertEqual(gen_triad('D#,,', 's2'), ['D#,,', 'E#,,', 'A#,,'])
+        self.assertEqual(gen_triad('D#,,', 's2'), ['D#,,', 'F,,', 'A#,,'])
 
 
     def test_sus4Triad_one(self):
