@@ -4,7 +4,7 @@ class CircleOfFifths:
     minor_notes: list = ['a', 'e', 'b', '^f', '^c', '^g', '^d', '_b', 'f', 'c', 'g', 'd']
     alternative_minor_notes: list = ['a', 'e', 'b', '^f', '^c', '_a', '_e', '^a', 'f', 'c', 'g', 'd']
 
-    def get_scale(self, base_note: str) -> list:
+    def get_cof(self, base_note: str) -> list:
         """
         Gets a scale that is specifically based on the note passed as base_note. This scale is different from the normal
         scale because it is in the context of 'circle of fifths' where a note is the fifth note after the previous note.

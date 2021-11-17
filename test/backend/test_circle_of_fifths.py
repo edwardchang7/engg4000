@@ -8,7 +8,7 @@ class TestCircleOfFifths(unittest.TestCase):
         cof = CircleOfFifths()
 
         expected_result = ['D', 'A', 'E', 'B', '_G', '_D', '_A', '_E', '_B', 'F', 'C', 'G']
-        actual_result = cof.get_scale('D')
+        actual_result = cof.get_cof('D')
 
         self.assertEqual(actual_result, expected_result)
 
@@ -16,7 +16,7 @@ class TestCircleOfFifths(unittest.TestCase):
         cof = CircleOfFifths()
 
         expected_result = ['^F', '^C', '_A', '_E', '_B', 'F', 'C', 'G', 'D', 'A', 'E', '_C']
-        actual_result = cof.get_scale('^F')
+        actual_result = cof.get_cof('^F')
 
         self.assertEqual(actual_result, expected_result)
 
@@ -24,7 +24,7 @@ class TestCircleOfFifths(unittest.TestCase):
         cof = CircleOfFifths()
 
         expected_result = ['b', '^f', '^c', '^g', '^d', '_b', 'f', 'c', 'g', 'd', 'a', 'e']
-        actual_result = cof.get_scale('b')
+        actual_result = cof.get_cof('b')
 
         self.assertEqual(actual_result, expected_result)
 
@@ -32,7 +32,7 @@ class TestCircleOfFifths(unittest.TestCase):
         cof = CircleOfFifths()
 
         expected_result = ['_e', '^a', 'f', 'c', 'g', 'd', 'a', 'e', 'b', '^f', '^c', '_a']
-        actual_result = cof.get_scale('_e')
+        actual_result = cof.get_cof('_e')
 
         self.assertEqual(actual_result, expected_result)
 
@@ -40,7 +40,7 @@ class TestCircleOfFifths(unittest.TestCase):
         cof = CircleOfFifths()
 
         expected_result = []
-        actual_result = cof.get_scale('T')
+        actual_result = cof.get_cof('T')
 
         self.assertEqual(actual_result, expected_result)
 
