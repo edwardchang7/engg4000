@@ -12,6 +12,7 @@ def half_step(input_note, up_frequency):
 
   comp_note = input_note[0].upper()
   octave = input_note[1:]
+  index  = 0
 
   if len(input_note) > 1:
     if input_note[1] == '#':
@@ -88,3 +89,18 @@ def change_octave(input_note, up_frequency):
 
     '''
   return whole_step(whole_step(whole_step(whole_step(whole_step(whole_step(input_note, up_frequency), up_frequency), up_frequency), up_frequency), up_frequency), up_frequency)
+
+
+def is_half_step(root, next):
+  '''
+    Returns a boolean value of the two given notes is a half-step away from each other
+    (works for both half-step up or half-step down)
+
+    Param:
+      root : the original note
+      next : the next note to check
+
+    Return:
+      The boolean value of the two given notes is a half-step away from each other
+  '''
+  return half_step(root, True) == next or half_step(root, False) == next
