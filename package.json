@@ -1,3 +1,6 @@
 {
-  "packageManager": "yarn@3.0.2"
+  "packageManager": "yarn@3.0.2",
+  "scripts": {
+    "convert-files": "python src/backend/mxl_to_abc/converter.py"
+  }
 }
