@@ -19,7 +19,7 @@ def analyze_patterns(key = 'GM', input_string = "E'/ | G A/ (B3/4 c/4) B/"):
                 analyze_str += char
 
     #hardcoded for now to test pattern freq
-    pattern = ['h', '-h']
+    pattern = ['w', 'w']
 
     print(frequency_of_pattern(analyze_str, key, pattern))
 
@@ -53,18 +53,42 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
     prev_notes.append(flip(prev_chars))
 
-# prev_notes = ["A", "#A", "A"]
-# pattern = [h, hh]
 
     total = 0
+    pattern_index = 0
 
+    # -------- DEBUG --------- 
+    # TO BE DELETED BEFORE MERGING WITH MASTER
     print(prev_notes)
 
-    for i in range (1, len(prev_notes)): #inclusive start, exclusive end
-        if is_half_step(prev_notes[i], prev_notes[i-1]):
-            total += 1
+    for i in range(1, len(prev_notes)):
+        # checks for half notes upwards and downwards
+        if pattern[pattern_index] == "h" and is_half_step(prev_notes[i-1], prev_notes[i], True):
+            pattern_index += 1
+        elif pattern[pattern_index] == "-h" and is_half_step(prev_notes[i-1], prev_notes[i], False):
+            pattern_index += 1
+        elif pattern[pattern_index] == "w" and is_whole_step(prev_notes[i-1], prev_notes[i], True):
+            pattern_index += 1
+        elif pattern[pattern_index] == "-w" and is_whole_step(prev_notes[i-1], prev_notes[i], False):
+            pattern_index += 1
 
-    
+        else:
+            # if the pattern is broken, reset the counter for the pattern
+            pattern_index = 0
+            # Since the pattern is broken, check if it is the start of the given pattern
+            # only reduce i by 1 if its not at the start so that it checks if its the start of the pattern
+            if i > 1:
+                i -= 1
+
+        # finished parsing through the pattern
+        if pattern_index == len(pattern):
+            # reset the counter and increase the total count of the pattern found by 1
+            pattern_index = 0
+            total += 1
+        
+      
+        
+            
 
 
     # if len(prev_notes) == len(pattern) + 1:
@@ -104,6 +128,20 @@ def flip(note):
     Param:
         the note to flip
     '''
-    if len(note) == 2:
-        return note[1] + note[0]
+    # This exception list is for examples like if you do a whole step for A# it returns c' rather than C
+    # This ensures that it stays at c' rather than 'c
+    exceptions = ["'", ","]
+
+    if len(note) >= 2 and note[1] not in exceptions:
+        to_return = note[1] + note[0]
+
+        # Append any remaining modifiers at the end
+        # EX: if you input "#A," it will return A#, <-- The "," is kept in place
+        # EX: if you do "c'" it will return "c'" <-- no changes are to be made if its valid
+        # EX: if you do "c" it will return c <-- no changes are to be made if its valid
+        for i in range (2, len(note)):
+            to_return += note[i]
+
+        return to_return
+        
     return note
