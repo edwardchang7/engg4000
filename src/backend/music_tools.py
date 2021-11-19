@@ -91,16 +91,31 @@ def change_octave(input_note, up_frequency):
   return whole_step(whole_step(whole_step(whole_step(whole_step(whole_step(input_note, up_frequency), up_frequency), up_frequency), up_frequency), up_frequency), up_frequency)
 
 
-def is_half_step(root, next):
+def is_half_step(root, prev, upwards):
   '''
     Returns a boolean value of the two given notes is a half-step away from each other
     (works for both half-step up or half-step down)
 
     Param:
       root : the original note
-      next : the next note to check
+      prev : the previous note to check
+      upwards : boolean value to check if its half-step upwards (True) or downwards (False)
 
     Return:
       The boolean value of the two given notes is a half-step away from each other
   '''
-  return half_step(root, True) == next or half_step(root, False) == next
+  return half_step(root, upwards) == prev
+
+def is_whole_step(root, prev, upwards):
+  '''
+    Returns a boolean value of the two given notes is a whole-step away from each other
+    (works for both whole-step up or whole-step down)
+
+    Param:
+      root : the original note
+      prev : the previous note to check
+
+    Return:
+      The boolean value of the two given notes is a whole-step away from each other
+  '''
+  return whole_step(root, upwards) == prev
