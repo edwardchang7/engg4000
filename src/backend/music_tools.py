@@ -90,32 +90,39 @@ def change_octave(input_note, up_frequency):
     '''
   return whole_step(whole_step(whole_step(whole_step(whole_step(whole_step(input_note, up_frequency), up_frequency), up_frequency), up_frequency), up_frequency), up_frequency)
 
-
-def is_half_step(root, prev, upwards):
+def is_pattern_match(pattern_type, root, prev):
   '''
-    Returns a boolean value of the two given notes is a half-step away from each other
-    (works for both half-step up or half-step down)
+    Returns a boolean value of given notes are the pattern_type away from each other
 
     Param:
-      root : the original note
-      prev : the previous note to check
-      upwards : boolean value to check if its half-step upwards (True) or downwards (False)
-
+      pattern_type : the type of step (half step, whole step, etc)
+      root : the original note to step from
+      prev : the note to step to
+    
     Return:
-      The boolean value of the two given notes is a half-step away from each other
+      a boolean value if the `prev` note matches the pattern_type given
   '''
-  return half_step(root, upwards) == prev
+  if 'h' in pattern_type:
+    if '-' in pattern_type:
+      return half_step(root, False) == prev
+    else:
+      return half_step(root, True) == prev
 
-def is_whole_step(root, prev, upwards):
+  elif 'w' in pattern_type:
+    if '-' in pattern_type:
+      return whole_step(root, False) == prev
+    else:
+      return whole_step(root, True) == prev
+
   '''
-    Returns a boolean value of the two given notes is a whole-step away from each other
-    (works for both whole-step up or whole-step down)
+  COPY THIS FORMAT BELOW TO ADD MORE PATTERN TYPES
 
-    Param:
-      root : the original note
-      prev : the previous note to check
-
-    Return:
-      The boolean value of the two given notes is a whole-step away from each other
+  
+  elif 'Condition' in pattern_type:
+    if '-' in pattern_type:
+      return 'function_name_to_check' == prev
+    else:
+      return 'function_name_to_check' == prev
   '''
-  return whole_step(root, upwards) == prev
+
+
