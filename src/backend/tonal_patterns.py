@@ -40,7 +40,7 @@ def frequency_of_pattern(analyze_str,key, pattern):
                 is_flat = True
             else:
                 if prev_chars != "":
-                    prev_notes.append(flip(prev_chars))
+                    prev_notes.append(_flip(prev_chars))
 
                 prev_chars = ""
 
@@ -50,7 +50,7 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
             prev_chars += char
 
-    prev_notes.append(flip(prev_chars))
+    prev_notes.append(_flip(prev_chars))
 
 
     total = 0
@@ -58,6 +58,7 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
     # -------- DEBUG --------- 
     # TO BE DELETED BEFORE MERGING WITH MASTER
+    # -------- DEBUG --------- 
     print(prev_notes)
 
 
@@ -114,7 +115,7 @@ def frequency_of_pattern(analyze_str,key, pattern):
     return total
 
 
-def flip(note):
+def _flip(note):
     '''
     A function to 'fix' the notation. If the note given is '#A', it will return 'A#'
 
