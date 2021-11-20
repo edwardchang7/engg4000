@@ -102,27 +102,27 @@ def is_pattern_match(pattern_type, root, prev):
     Return:
       a boolean value if the `prev` note matches the pattern_type given
   '''
-  if 'h' in pattern_type:
+  if 'h' or 'H' in pattern_type:
     if '-' in pattern_type:
       return half_step(root, False) == prev
     else:
       return half_step(root, True) == prev
 
-  elif 'w' in pattern_type:
+  elif 'w' or 'W' in pattern_type:
     if '-' in pattern_type:
       return whole_step(root, False) == prev
     else:
       return whole_step(root, True) == prev
 
-  '''
-  COPY THIS FORMAT BELOW TO ADD MORE PATTERN TYPES
+'''
+COPY THIS FORMAT BELOW TO ADD MORE PATTERN TYPES
 
-  
-  elif 'Condition' in pattern_type:
-    if '-' in pattern_type:
-      return 'function_name_to_check' == prev
-    else:
-      return 'function_name_to_check' == prev
-  '''
+
+elif 'keyword.lower()' or 'keyword.upper()' in pattern_type:
+  if '-' in pattern_type:
+    return 'function_name_to_check' == prev
+  else:
+    return 'function_name_to_check' == prev
+'''
 
 
