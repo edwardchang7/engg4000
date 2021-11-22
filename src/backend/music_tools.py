@@ -112,13 +112,14 @@ def is_pattern_match(pattern_type, root, prev):
     Return:
       a boolean value if the `prev` note matches the pattern_type given
   '''
-  if 'h' or 'H' in pattern_type:
+
+  if 'h' in pattern_type or 'H' in pattern_type:
     if '-' in pattern_type:
       return half_step(root, False) == prev
     else:
       return half_step(root, True) == prev
 
-  elif 'w' or 'W' in pattern_type:
+  elif 'w' in pattern_type or 'W' in pattern_type:
     if '-' in pattern_type:
       return whole_step(root, False) == prev
     else:
