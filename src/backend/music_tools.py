@@ -1,4 +1,4 @@
-notes = ['C', 'C#', 'D', 'D#', 'E', 'F',  'F#', 'G', 'G#', 'A', 'A#', 'B']
+notes = ['C', '#C', 'D', '#D', 'E', 'F',  '#F', 'G', '#G', 'A', '#A', 'B']
 
 '''
 
@@ -10,21 +10,28 @@ notes = ['C', 'C#', 'D', 'D#', 'E', 'F',  'F#', 'G', 'G#', 'A', 'A#', 'B']
 
 def half_step(input_note, up_frequency):
 
+  letter = input_note[0]
   comp_note = input_note[0].upper()
   octave = input_note[1:]
   index  = 0
+  flag = False
 
   if len(input_note) > 1:
-    if input_note[1] == '#':
-      comp_note = comp_note + '#'
+    if input_note[0] == '#':
+      letter = input_note[1]
+      comp_note = '#' + input_note[1].upper()
       octave = input_note[2:]
 
   if up_frequency:
     for i in range(len(notes)):
       if comp_note == notes[i]:
         if (i+1) == len(notes):
-          if octave == "''" or octave == "'" or octave == '':
+          if octave == "''" or octave == "'":
             octave = octave + "'"
+          elif octave == "":
+            flag = True
+            if letter.islower():
+              octave = octave + "'"
           elif octave == ",":
             octave = ''
           elif octave == ",,":
@@ -38,8 +45,11 @@ def half_step(input_note, up_frequency):
     for i in range(len(notes)):
       if comp_note == notes[i]:
         if (i-1) == -1:
-          if octave == ",," or octave == "," or octave == '':
+          if octave == ",," or octave == ",":
             octave = octave + ","
+          elif octave == "":
+            if not letter.islower():
+              octave = octave + ","
           elif octave == "'":
             octave = ''
           elif octave == "''":
@@ -49,10 +59,10 @@ def half_step(input_note, up_frequency):
 
         index=(i-1)%(len(notes))
 
-  if octave.count("'") > 0:
-    return notes[index].lower() + octave
+  if flag or letter.islower():
+      return notes[index].lower() + octave
   else:
-    return notes[index] + octave
+      return notes[index] + octave
 
 
 def whole_step(input_note, up_frequency):

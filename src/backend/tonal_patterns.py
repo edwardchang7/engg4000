@@ -2,7 +2,7 @@ from src.backend.music_tools import *
 from src.backend.scales import *
 import itertools
 
-def analyze_patterns(key = 'GM', input_string = "E'/ | G A/ (B3/4 c/4) B/", pattern=None):
+def analyze_patterns(key = 'GM', input_string = "E'/ | G A/ (B3/4 c/4) ^B/", pattern=None):
 
     # list of symbols to keep track of
     exceptions = ["'", ",", "_", "^", "|"]
@@ -40,7 +40,7 @@ def frequency_of_pattern(analyze_str,key, pattern):
                 is_flat = True
             else:
                 if prev_chars != "":
-                    prev_notes.append(_flip(prev_chars))
+                    prev_notes.append(prev_chars)
 
                 prev_chars = ""
 
@@ -50,7 +50,7 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
             prev_chars += char
 
-    prev_notes.append(_flip(prev_chars))
+    prev_notes.append(prev_chars)
 
 
     total = 0
@@ -115,27 +115,27 @@ def frequency_of_pattern(analyze_str,key, pattern):
     return total
 
 
-def _flip(note):
-    '''
-    A function to 'fix' the notation. If the note given is '#A', it will return 'A#'
-
-    Param:
-        the note to flip
-    '''
-    # This exception list is for examples like if you do a whole step for A# it returns c' rather than C
-    # This ensures that it stays at c' rather than 'c
-    exceptions = ["'", ","]
-
-    if len(note) >= 2 and note[1] not in exceptions:
-        to_return = note[1] + note[0]
-
-        # Append any remaining modifiers at the end
-        # EX: if you input "#A," it will return A#, <-- The "," is kept in place
-        # EX: if you do "c'" it will return "c'" <-- no changes are to be made if its valid
-        # EX: if you do "c" it will return c <-- no changes are to be made if its valid
-        for i in range (2, len(note)):
-            to_return += note[i]
-
-        return to_return
-        
-    return note
+# def _flip(note):
+#     '''
+#     A function to 'fix' the notation. If the note given is '#A', it will return 'A#'
+#
+#     Param:
+#         the note to flip
+#     '''
+#     # This exception list is for examples like if you do a whole step for A# it returns c' rather than C
+#     # This ensures that it stays at c' rather than 'c
+#     exceptions = ["'", ","]
+#
+#     if len(note) >= 2 and note[1] not in exceptions:
+#         to_return = note[1] + note[0]
+#
+#         # Append any remaining modifiers at the end
+#         # EX: if you input "#A," it will return A#, <-- The "," is kept in place
+#         # EX: if you do "c'" it will return "c'" <-- no changes are to be made if its valid
+#         # EX: if you do "c" it will return c <-- no changes are to be made if its valid
+#         for i in range (2, len(note)):
+#             to_return += note[i]
+#
+#         return to_return
+#
+#     return note
