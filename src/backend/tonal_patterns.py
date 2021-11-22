@@ -1,5 +1,6 @@
 from src.backend.music_tools import *
 from src.backend.scales import *
+import itertools
 
 def analyze_patterns(key = 'GM', input_string = "E'/ | G A/ (B3/4 c/4) ^B/", pattern=None):
 
@@ -19,9 +20,9 @@ def analyze_patterns(key = 'GM', input_string = "E'/ | G A/ (B3/4 c/4) ^B/", pat
 
     #hardcoded for now to test pattern freq
 
-    print(_frequency_of_pattern(analyze_str, key, pattern))
+    print(frequency_of_pattern(analyze_str, key, pattern))
 
-def _frequency_of_pattern(analyze_str,key, pattern):
+def frequency_of_pattern(analyze_str,key, pattern):
 
     prev_chars = ""
     prev_notes = []
@@ -43,7 +44,7 @@ def _frequency_of_pattern(analyze_str,key, pattern):
 
                 prev_chars = ""
 
-            if is_flat: #if it is a flat, set it to the sharp equivalent
+            if is_flat is True: #if it is a flat, set it to the sharp equivalent
                 char = whole_step(char, False)
                 is_flat = False
 
@@ -57,16 +58,14 @@ def _frequency_of_pattern(analyze_str,key, pattern):
 
     # -------- DEBUG --------- 
     # TO BE DELETED BEFORE MERGING WITH MASTER
-    print(prev_notes)
     # -------- DEBUG --------- 
+    print(prev_notes)
 
 
     for i in range(1, len(prev_notes)):
         # checks for half notes upwards and downwards
         if is_pattern_match(pattern[pattern_index], prev_notes[i-1], prev_notes[i]):
-            print(prev_notes[i-1], prev_notes[i])
             pattern_index += 1
-            
         else:
             # if the pattern is broken, reset the counter for the pattern
             pattern_index = 0
