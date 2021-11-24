@@ -21,6 +21,15 @@ An appropriate selection of tools is incredibly important for the success of a s
 ## Development Practices
 * If a new package or library is added, make sure to add updates `requirements.txt` by running the command: `pip freeze > requirements.txt`.
 
+## Converting music .xml to .abc
+There is a script in package.json to take care of this, you will need to
+1. Add your mxml files to `src/backend/mxl_to_abc/to_convert` directory
+2. Install requirements.txt
+3. `yarn install`
+4. `yarn convert-files`
+5. .abc files will now be available in `src/backend/mxl_to_abc/converted_compositions` directory
+
+
 ## Group Members
 
 ###   Owen Lee
