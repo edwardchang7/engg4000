@@ -15,6 +15,8 @@ class TestMetronome(unittest.TestCase):
 
         self.assertTrue(mock_musicalbeeps_player.called)
         self.assertTrue(mock_time_time.called)
+
+        # Force stop this test after all assertions are made
         return
 
     # UNCOMMENT THIS TEST TO RUN IT LOCALLY/MANUALLY
@@ -28,4 +30,6 @@ class TestMetronome(unittest.TestCase):
     #     self.assertTrue(mock_musicalbeeps_player.called)
     #     time.sleep(3)
     #     self.assertFalse(mock_time_time.called)
+    #
+    #     # Force stop this test after all assertions are made
     #     return
