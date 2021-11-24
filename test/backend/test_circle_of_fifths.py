@@ -50,7 +50,7 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_num_flats = [3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3]
 
         for i in range(len(major_notes)):
-            self.assertEqual(cof.get_num_flats(major_notes[i]), expected_num_flats[i])
+            self.assertEqual(cof.get_num_of_white_keys(major_notes[i]), expected_num_flats[i])
 
     def test_get_num_flats_with_alternative_major_notes(self):
         cof = CircleOfFifths()
@@ -58,7 +58,7 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_num_flats = [3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3]
 
         for i in range(len(alternative_major_notes)):
-            self.assertEqual(cof.get_num_flats(alternative_major_notes[i]), expected_num_flats[i])
+            self.assertEqual(cof.get_num_of_white_keys(alternative_major_notes[i]), expected_num_flats[i])
 
     def test_get_num_flats_with_minor_notes(self):
         cof = CircleOfFifths()
@@ -66,7 +66,7 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_num_flats = [3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3]
 
         for i in range(len(minor_notes)):
-            self.assertEqual(cof.get_num_flats(minor_notes[i]), expected_num_flats[i])
+            self.assertEqual(cof.get_num_of_white_keys(minor_notes[i]), expected_num_flats[i])
 
     def test_get_num_flats_with_alternative_minor_notes(self):
         cof = CircleOfFifths()
@@ -74,7 +74,7 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_num_flats = [3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3]
 
         for i in range(len(alternative_minor_notes)):
-            self.assertEqual(cof.get_num_flats(alternative_minor_notes[i]), expected_num_flats[i])
+            self.assertEqual(cof.get_num_of_white_keys(alternative_minor_notes[i]), expected_num_flats[i])
 
     def test_get_num_sharps_with_major_notes(self):
         cof = CircleOfFifths()
@@ -82,7 +82,7 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_num_sharps = [3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 3]
 
         for i in range(len(major_notes)):
-            self.assertEqual(cof.get_num_sharps(major_notes[i]), expected_num_sharps[i])
+            self.assertEqual(cof.get_num_of_black_keys(major_notes[i]), expected_num_sharps[i])
 
     def test_get_num_sharps_with_alternative_major_notes(self):
         cof = CircleOfFifths()
@@ -90,7 +90,7 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_num_sharps = [3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 3]
 
         for i in range(len(alternative_major_notes)):
-            self.assertEqual(cof.get_num_sharps(alternative_major_notes[i]), expected_num_sharps[i])
+            self.assertEqual(cof.get_num_of_black_keys(alternative_major_notes[i]), expected_num_sharps[i])
 
     def test_get_num_sharps_with_minor_notes(self):
         cof = CircleOfFifths()
@@ -98,7 +98,7 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_num_sharps = [3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
 
         for i in range(len(minor_notes)):
-            self.assertEqual(cof.get_num_sharps(minor_notes[i]), expected_num_sharps[i])
+            self.assertEqual(cof.get_num_of_black_keys(minor_notes[i]), expected_num_sharps[i])
 
     def test_get_num_sharps_with_alternative_minor_notes(self):
         cof = CircleOfFifths()
@@ -106,4 +106,4 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_num_sharps = [3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
 
         for i in range(len(alternative_minor_notes)):
-            self.assertEqual(cof.get_num_sharps(alternative_minor_notes[i]), expected_num_sharps[i])
+            self.assertEqual(cof.get_num_of_black_keys(alternative_minor_notes[i]), expected_num_sharps[i])
