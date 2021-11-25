@@ -127,3 +127,19 @@ class CircleOfFifths:
             return self.THREE_FLATS
 
         return self.BASE_NOTE_NOT_FOUND
+
+    def get_perfect_cadence(self, base_key):
+        if base_key in self.major_notes:
+            base_key_index = self.major_notes.index(base_key)
+
+            if base_key_index == len(self.major_notes) - 1:
+                return base_key, self.major_notes[0]
+
+            return base_key, self.major_notes[base_key_index + 1]
+        elif base_key in self.minor_notes:
+            base_key_index = self.minor_notes.index(base_key)
+
+            if base_key_index == len(self.minor_notes) - 1:
+                return base_key, self.minor_notes[0]
+
+            return base_key, self.minor_notes[base_key_index + 1]
