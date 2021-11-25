@@ -21,6 +21,15 @@ class CircleOfFifths:
     B_ALTERNATIVE_MINOR_NOTE_INDEX = 2
     A_SHARP_ALTERNATIVE_MINOR_NOTE_INDEX = 7
 
+    G_MAJOR_OR_E_MINOR_NOTE_INDEX = 1
+    C_SHARP_MAJOR_OR_A_SHARP_NOTE_INDEX = 7
+    F_MAJOR_OR_D_MINOR_NOTE_INDEX = 1
+    B_MAJOR_OR_C_FLAT_MINOR_NOTE_INDEX = 7
+
+    ZERO_SHARPS = 0
+
+    INITIAL_NOTE_INDEX_VALUE = -1
+
     # Code -1 to signify that the provided note is not within a COF list
     BASE_NOTE_NOT_FOUND = -1
     BASE_KEY_NOT_FOUND = ()
@@ -156,3 +165,47 @@ class CircleOfFifths:
             return self.minor_notes[base_key_index + 1], base_key
 
         return self.BASE_KEY_NOT_FOUND
+
+    def get_num_of_sharps_in_note(self, note):
+        note_index = self.INITIAL_NOTE_INDEX_VALUE
+
+        if note in self.major_notes:
+            note_index = self.major_notes.index(note)
+        elif note in self.minor_notes:
+            note_index = self.minor_notes.index(note)
+
+        return self.__get_num_of_sharps(note_index)
+
+    def __get_num_of_sharps(self, note_index):
+        if note_index == self.INITIAL_NOTE_INDEX_VALUE:
+            return self.BASE_NOTE_NOT_FOUND
+        elif self.G_MAJOR_OR_E_MINOR_NOTE_INDEX <= note_index <= self.C_SHARP_MAJOR_OR_A_SHARP_NOTE_INDEX:
+            return note_index
+
+        return self.ZERO_SHARPS
+
+    def get_num_of_flats_in_note(self, note):
+        note_index = self.INITIAL_NOTE_INDEX_VALUE
+        cof_major_notes = self.__get_reversed_cof_list(self.major_notes)
+        cof_minor_notes = self.__get_reversed_cof_list(self.minor_notes)
+
+        if note in cof_major_notes:
+            note_index = cof_major_notes.index(note)
+        elif note in cof_minor_notes:
+            note_index = cof_minor_notes.index(note)
+
+        return self.__get_num_of_flats(note_index)
+
+    def __get_num_of_flats(self, note_index):
+        if note_index == self.INITIAL_NOTE_INDEX_VALUE:
+            return self.BASE_NOTE_NOT_FOUND
+        elif self.F_MAJOR_OR_D_MINOR_NOTE_INDEX <= note_index <= self.B_MAJOR_OR_C_FLAT_MINOR_NOTE_INDEX:
+            return note_index
+
+        return self.ZERO_SHARPS
+
+    def __get_reversed_cof_list(self, cof_list):
+        cof_list_copy = cof_list.copy()
+        note = cof_list_copy.pop(0)
+        cof_list_copy.append(note)
+        return cof_list_copy.reverse()
