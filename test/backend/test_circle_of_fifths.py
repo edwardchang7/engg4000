@@ -105,27 +105,27 @@ class TestCircleOfFifths(unittest.TestCase):
             )
 
     def test_get_perfect_cadence_with_major_key(self):
-        expected_perfect_cadence = ('C', 'G')
+        expected_perfect_cadence = ('G', 'C')
         actual_perfect_cadence = self.cof.get_perfect_cadence('C')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
-        expected_perfect_cadence = ('B', '_G')
+        expected_perfect_cadence = ('_G', 'B')
         actual_perfect_cadence = self.cof.get_perfect_cadence('B')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
-        expected_perfect_cadence = ('F', 'C')
+        expected_perfect_cadence = ('C', 'F')
         actual_perfect_cadence = self.cof.get_perfect_cadence('F')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
     def test_get_perfect_cadence_with_minor_key(self):
-        expected_perfect_cadence = ('a', 'e')
+        expected_perfect_cadence = ('e', 'a')
         actual_perfect_cadence = self.cof.get_perfect_cadence('a')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
-        expected_perfect_cadence = ('^g', '^d')
+        expected_perfect_cadence = ('^d', '^g')
         actual_perfect_cadence = self.cof.get_perfect_cadence('^g')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
-        expected_perfect_cadence = ('d', 'a')
+        expected_perfect_cadence = ('a', 'd')
         actual_perfect_cadence = self.cof.get_perfect_cadence('d')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)

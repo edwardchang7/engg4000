@@ -23,6 +23,7 @@ class CircleOfFifths:
 
     # Code -1 to signify that the provided note is not within a COF list
     BASE_NOTE_NOT_FOUND = -1
+    BASE_KEY_NOT_FOUND = ()
 
     def get_cof(self, base_note: str) -> list:
         """
@@ -128,18 +129,30 @@ class CircleOfFifths:
 
         return self.BASE_NOTE_NOT_FOUND
 
-    def get_perfect_cadence(self, base_key):
+    def get_perfect_cadence(self, base_key: str) -> tuple:
+        """
+        Gets the perfect cadence as a tuple, which the first index is the fifth of the provided base_key and the second
+        index is the provided base_key. Returns an empty tuple if the provided base_key cannot be found from any of the
+        COF lists.
+
+        :param base_key: A key to get the perfect cadence with.
+        :return: A tuple which the first index is the fifth of the provided base_key and the second index is the
+            provided base_key. Returns an empty tuple instead if the provided base_key cannot be found from any of the
+            COF lists.
+        """
         if base_key in self.major_notes:
-            base_key_index = self.major_notes.index(base_key)
+            base_key_index: int = self.major_notes.index(base_key)
 
             if base_key_index == len(self.major_notes) - 1:
-                return base_key, self.major_notes[0]
+                return self.major_notes[0], base_key
 
-            return base_key, self.major_notes[base_key_index + 1]
+            return self.major_notes[base_key_index + 1], base_key
         elif base_key in self.minor_notes:
-            base_key_index = self.minor_notes.index(base_key)
+            base_key_index: int = self.minor_notes.index(base_key)
 
             if base_key_index == len(self.minor_notes) - 1:
-                return base_key, self.minor_notes[0]
+                return self.minor_notes[0], base_key
 
-            return base_key, self.minor_notes[base_key_index + 1]
+            return self.minor_notes[base_key_index + 1], base_key
+
+        return self.BASE_KEY_NOT_FOUND
