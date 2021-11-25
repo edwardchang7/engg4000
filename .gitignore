@@ -1,4 +1,5 @@
 yarn.lock
 /.pnp
 .pnp.js
+.pnp.cjs
 __pycache__
