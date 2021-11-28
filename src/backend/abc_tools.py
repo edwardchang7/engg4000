@@ -49,6 +49,10 @@ False --> Monophonic
 def is_polyphonic(abc_file_path:str):
 
   num_voices=get_header(abc_file_path,"V")
+  for voice in num_voices:
+    if len(voice)>4:{
+      num_voices.remove(voice)
+    }
   # if there is more than 1 voicing, return True
   return (len(num_voices)>1)
 
