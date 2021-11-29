@@ -129,3 +129,199 @@ class TestCircleOfFifths(unittest.TestCase):
         expected_perfect_cadence = ('a', 'd')
         actual_perfect_cadence = self.cof.get_perfect_cadence('d')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
+
+    def test_get_num_of_sharps_in_each_major_note(self):
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('C')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 1
+        actual_result = self.cof.get_num_of_sharps_in_note('G')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 2
+        actual_result = self.cof.get_num_of_sharps_in_note('D')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 3
+        actual_result = self.cof.get_num_of_sharps_in_note('A')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 4
+        actual_result = self.cof.get_num_of_sharps_in_note('E')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 5
+        actual_result = self.cof.get_num_of_sharps_in_note('B')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 6
+        actual_result = self.cof.get_num_of_sharps_in_note('_G')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 7
+        actual_result = self.cof.get_num_of_sharps_in_note('_D')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('_A')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('_E')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('_B')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('F')
+        self.assertEqual(expected_result, actual_result)
+
+    def test_get_num_of_sharps_in_each_minor_note(self):
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('a')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 1
+        actual_result = self.cof.get_num_of_sharps_in_note('e')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 2
+        actual_result = self.cof.get_num_of_sharps_in_note('b')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 3
+        actual_result = self.cof.get_num_of_sharps_in_note('^f')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 4
+        actual_result = self.cof.get_num_of_sharps_in_note('^c')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 5
+        actual_result = self.cof.get_num_of_sharps_in_note('^g')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 6
+        actual_result = self.cof.get_num_of_sharps_in_note('^d')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 7
+        actual_result = self.cof.get_num_of_sharps_in_note('_b')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('f')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('c')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('g')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_sharps_in_note('d')
+        self.assertEqual(expected_result, actual_result)
+
+    def test_get_num_of_flats_in_each_major_note(self):
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('C')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('G')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('D')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('A')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('E')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 7
+        actual_result = self.cof.get_num_of_flats_in_note('B')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 6
+        actual_result = self.cof.get_num_of_flats_in_note('_G')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 5
+        actual_result = self.cof.get_num_of_flats_in_note('_D')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 4
+        actual_result = self.cof.get_num_of_flats_in_note('_A')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 3
+        actual_result = self.cof.get_num_of_flats_in_note('_E')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 2
+        actual_result = self.cof.get_num_of_flats_in_note('_B')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 1
+        actual_result = self.cof.get_num_of_flats_in_note('F')
+        self.assertEqual(expected_result, actual_result)
+
+    def test_get_num_of_flats_in_each_minor_note(self):
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('a')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('e')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('b')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('^f')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 0
+        actual_result = self.cof.get_num_of_flats_in_note('^c')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 7
+        actual_result = self.cof.get_num_of_flats_in_note('^g')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 6
+        actual_result = self.cof.get_num_of_flats_in_note('^d')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 5
+        actual_result = self.cof.get_num_of_flats_in_note('_b')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 4
+        actual_result = self.cof.get_num_of_flats_in_note('f')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 3
+        actual_result = self.cof.get_num_of_flats_in_note('c')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 2
+        actual_result = self.cof.get_num_of_flats_in_note('g')
+        self.assertEqual(expected_result, actual_result)
+
+        expected_result = 1
+        actual_result = self.cof.get_num_of_flats_in_note('d')
+        self.assertEqual(expected_result, actual_result)

@@ -167,6 +167,13 @@ class CircleOfFifths:
         return self.BASE_KEY_NOT_FOUND
 
     def get_num_of_sharps_in_note(self, note):
+        """
+        Gets the number of sharps in a COF note.
+
+        :param note: The COF note to get the number of sharps from.
+        :return: The number of sharps in the given COF note. If an incorrect COF note was provided, this method returns
+            -1 instead.
+        """
         note_index = self.INITIAL_NOTE_INDEX_VALUE
 
         if note in self.major_notes:
@@ -176,15 +183,14 @@ class CircleOfFifths:
 
         return self.__get_num_of_sharps(note_index)
 
-    def __get_num_of_sharps(self, note_index):
-        if note_index == self.INITIAL_NOTE_INDEX_VALUE:
-            return self.BASE_NOTE_NOT_FOUND
-        elif self.G_MAJOR_OR_E_MINOR_NOTE_INDEX <= note_index <= self.C_SHARP_MAJOR_OR_A_SHARP_NOTE_INDEX:
-            return note_index
-
-        return self.ZERO_SHARPS
-
     def get_num_of_flats_in_note(self, note):
+        """
+        Gets the number of flats in a COF note.
+
+        :param note: The COF note to get the number of flats from.
+        :return: The number of flats in the given COF note. If an incorrect COF note was provided, this method returns
+            -1 instead.
+        """
         note_index = self.INITIAL_NOTE_INDEX_VALUE
         cof_major_notes = self.__get_reversed_cof_list(self.major_notes)
         cof_minor_notes = self.__get_reversed_cof_list(self.minor_notes)
@@ -195,6 +201,14 @@ class CircleOfFifths:
             note_index = cof_minor_notes.index(note)
 
         return self.__get_num_of_flats(note_index)
+
+    def __get_num_of_sharps(self, note_index):
+        if note_index == self.INITIAL_NOTE_INDEX_VALUE:
+            return self.BASE_NOTE_NOT_FOUND
+        elif self.G_MAJOR_OR_E_MINOR_NOTE_INDEX <= note_index <= self.C_SHARP_MAJOR_OR_A_SHARP_NOTE_INDEX:
+            return note_index
+
+        return self.ZERO_SHARPS
 
     def __get_num_of_flats(self, note_index):
         if note_index == self.INITIAL_NOTE_INDEX_VALUE:
@@ -208,4 +222,5 @@ class CircleOfFifths:
         cof_list_copy = cof_list.copy()
         note = cof_list_copy.pop(0)
         cof_list_copy.append(note)
-        return cof_list_copy.reverse()
+        cof_list_copy.reverse()
+        return cof_list_copy
