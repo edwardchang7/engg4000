@@ -172,7 +172,7 @@ class CircleOfFifths:
 
         return self.BASE_KEY_NOT_FOUND
 
-    def get_num_of_sharps_in_note(self, note):
+    def get_num_of_sharps_in_note(self, note: str) -> int:
         """
         Gets the number of sharps in a COF note.
 
@@ -180,7 +180,7 @@ class CircleOfFifths:
         :return: The number of sharps in the given COF note. If an incorrect COF note was provided, this method returns
             -1 instead.
         """
-        note_index = self.INITIAL_NOTE_INDEX_VALUE
+        note_index: int = self.INITIAL_NOTE_INDEX_VALUE
 
         if note in self.major_notes:
             note_index = self.major_notes.index(note)
@@ -189,7 +189,7 @@ class CircleOfFifths:
 
         return self.__get_num_of_sharps(note_index)
 
-    def get_num_of_flats_in_note(self, note):
+    def get_num_of_flats_in_note(self, note: str) -> int:
         """
         Gets the number of flats in a COF note.
 
@@ -197,9 +197,9 @@ class CircleOfFifths:
         :return: The number of flats in the given COF note. If an incorrect COF note was provided, this method returns
             -1 instead.
         """
-        note_index = self.INITIAL_NOTE_INDEX_VALUE
-        cof_major_notes = self.__get_reversed_cof_list(self.major_notes)
-        cof_minor_notes = self.__get_reversed_cof_list(self.minor_notes)
+        note_index: int = self.INITIAL_NOTE_INDEX_VALUE
+        cof_major_notes: list = self.__get_reversed_cof_list(self.major_notes)
+        cof_minor_notes: list = self.__get_reversed_cof_list(self.minor_notes)
 
         if note in cof_major_notes:
             note_index = cof_major_notes.index(note)
@@ -208,14 +208,15 @@ class CircleOfFifths:
 
         return self.__get_num_of_flats(note_index)
 
-    def get_sharps_in_note(self, note):
+    def get_sharps_in_note(self, note: str) -> list:
         """
         Gets the sharp notes in the provided COF note.
 
         :param note: The COF note to get the sharp notes from.
-        :return: The sharp notes in the provided COF note.
+        :return: The sharp notes in the provided COF note. If an incorrect COF note was provided, this method returns
+            None instead.
         """
-        num_of_sharps_in_note = self.get_num_of_sharps_in_note(note)
+        num_of_sharps_in_note: int = self.get_num_of_sharps_in_note(note)
 
         if num_of_sharps_in_note == 0:
             return []
@@ -224,14 +225,17 @@ class CircleOfFifths:
         elif note in self.minor_notes:
             return self.cof_minor_sharp_notes[0:num_of_sharps_in_note]
 
-    def get_flats_in_note(self, note):
+        return None
+
+    def get_flats_in_note(self, note: str) -> list:
         """
         Gets the flat notes in the provided COF note.
 
         :param note: The COF note to get the flat notes from.
-        :return: The flat notes in the provided COF note.
+        :return: The flat notes in the provided COF note. If an incorrect COF note was provided, this method returns
+            None instead.
         """
-        num_of_flats_in_note = self.get_num_of_flats_in_note(note)
+        num_of_flats_in_note: int = self.get_num_of_flats_in_note(note)
 
         if num_of_flats_in_note == 0:
             return []
@@ -239,6 +243,8 @@ class CircleOfFifths:
             return self.cof_major_flat_notes[0:num_of_flats_in_note]
         elif note in self.minor_notes:
             return self.cof_minor_flat_notes[0:num_of_flats_in_note]
+
+        return None
 
     def __get_num_of_sharps(self, note_index):
         if note_index == self.INITIAL_NOTE_INDEX_VALUE:
