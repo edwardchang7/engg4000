@@ -5,6 +5,12 @@ class CircleOfFifths:
     minor_notes: list = ['a', 'e', 'b', '^f', '^c', '^g', '^d', '_b', 'f', 'c', 'g', 'd']
     alternative_minor_notes: list = ['a', 'e', 'b', '^f', '^c', '_a', '_e', '^a', 'f', 'c', 'g', 'd']
 
+    # List of sharps and flats IN a COF note
+    cof_major_sharp_notes = ['^F', '^C', '^G', '^D', '^A', '^E', '^B']
+    cof_major_flat_notes = ['_B', '_E', '_A', '_D', '_G', '_C', '_F']
+    cof_minor_sharp_notes = ['^f', '^c', '^g', '^d', '^a', '^e', '^b']
+    cof_minor_flat_notes = ['_b', '_e', '_a', '_d', '_g', '_c', '_f']
+
     # The number of sharps and flats BETWEEN two certain notes
     TWO_SHARPS = 2
     THREE_SHARPS = 3
@@ -201,6 +207,38 @@ class CircleOfFifths:
             note_index = cof_minor_notes.index(note)
 
         return self.__get_num_of_flats(note_index)
+
+    def get_sharps_in_note(self, note):
+        """
+        Gets the sharp notes in the provided COF note.
+
+        :param note: The COF note to get the sharp notes from.
+        :return: The sharp notes in the provided COF note.
+        """
+        num_of_sharps_in_note = self.get_num_of_sharps_in_note(note)
+
+        if num_of_sharps_in_note == 0:
+            return []
+        elif note in self.major_notes:
+            return self.cof_major_sharp_notes[0:num_of_sharps_in_note]
+        elif note in self.minor_notes:
+            return self.cof_minor_sharp_notes[0:num_of_sharps_in_note]
+
+    def get_flats_in_note(self, note):
+        """
+        Gets the flat notes in the provided COF note.
+
+        :param note: The COF note to get the flat notes from.
+        :return: The flat notes in the provided COF note.
+        """
+        num_of_flats_in_note = self.get_num_of_flats_in_note(note)
+
+        if num_of_flats_in_note == 0:
+            return []
+        elif note in self.major_notes:
+            return self.cof_major_flat_notes[0:num_of_flats_in_note]
+        elif note in self.minor_notes:
+            return self.cof_minor_flat_notes[0:num_of_flats_in_note]
 
     def __get_num_of_sharps(self, note_index):
         if note_index == self.INITIAL_NOTE_INDEX_VALUE:
