@@ -1,5 +1,5 @@
 """
-This file will be filled with the functions required to extract and save 
+This file will be filled with the functions required to extract and save
 rhythmic patterns from an abc file
 
 1. If polyphonic - seperate
@@ -10,46 +10,71 @@ rhythmic patterns from an abc file
 """
 import re
 from typing import List
-from abc_tools import get_header,is_polyphonic,get_voicings,get_music
+from abc_tools import get_header, is_polyphonic, get_voicings, get_music
 
-def extract_rhythmic_patterns(file_path:str):
-  voicings=get_voicings(file_path)
-  meter=get_header(file_path,'M')
-  encoded_voicings=encode_voicings(voicings)
-  
+
+def extract_rhythmic_patterns(file_path: str):
+    voicings = get_voicings(file_path)
+    meter = get_header(file_path, 'M')
+    encoded_voicings = encode_voicings(voicings)
+
 
 # Function to isolate the notes in a single bar
-def format_bar(bar:str):
-  has_notes=re.search('[A-Ga-g]',bar)
-  if not has_notes:
-    bar=None
-  else:
-    bar=re.sub('%[0-9][0-9]?[0-9]?',"",bar)
-    bar=re.sub('"[^"]*"',"",bar)
-    bar=re.sub('![^"]*!',"",bar)
-    bar=re.sub('[[A-Z]:[^"]*]',"",bar)
-    bar=bar.replace("\n","")
-    bar=bar.replace("$","")
-    bar=bar.strip()
-  return bar
+def format_bar(bar: str):
+    has_notes = re.search('[A-Ga-g]', bar)
+    if not has_notes:
+        bar = None
+    else:
+        bar = re.sub('%[0-9][0-9]?[0-9]?', "", bar)
+        # added
+        bar = re.sub('[0-9]', "", bar)
+        bar = re.sub(':', "", bar)
+        bar = re.sub("{/f'}", "", bar)
+        bar = re.sub("=", "", bar)
+        # end
+        bar = re.sub('"[^"]*"', "", bar)
+        bar = re.sub('![^"]*!', "", bar)
+        bar = re.sub('[[A-Z]:[^"]*]', "", bar)
+        bar = bar.replace("\n", "")
+        bar = bar.replace("$", "")
+        bar = bar.strip()
+    return bar
 
 # Function to encode a musical bar into numbers representing the note lengths
 # def encode_bar(bar:str):
 
+
 def encode_voicings(voicings):
-  #1. isolate notes
+    # 1. isolate notes
     # split into sections
     # split sections into bars
-  for voice in voicings:
-    sections=voice.split('||')
-    for section in sections:
-      bars=section.split("|")
-      for bar in bars:
-        bar=format_bar(bar)
-        print("--> "+bar)
-        # if(bar):
-        #   bar=encode_bar(bar)
-        
-  #2. Change notes in bars into a number
+    for voice in voicings:
+        sections = voice.split('||')
+        for section in sections:
+            bars = section.split("|")
+            for bar in bars:
+                bar = format_bar(bar)
+                if(bar):
+                    # each bar_list holds a seperated bar element
+                    bar_list = encode_bar(bar)
+                    print(bar_list)
+                    
+                # if(bar):
+                #   bar=encode_bar(bar)
 
-extract_rhythmic_patterns('mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc')
+    # 2. Change notes in bars into a number
+
+
+def encode_bar(bar) -> list:
+    bar_list = []
+
+    bar = bar.split()
+
+    for e in bar:
+        bar_list.append(e)
+
+    return bar_list
+
+
+extract_rhythmic_patterns(
+    'src/backend/mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc')
