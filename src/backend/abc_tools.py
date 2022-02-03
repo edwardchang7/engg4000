@@ -1,4 +1,3 @@
-import math
 import re
 
 """
@@ -35,7 +34,7 @@ def get_header(abc_file_path:str, header:str) -> str:
   f.close()
   
   # if there is only 1 element in the list, just return that element
-  if len(header_list)==1:
+  if len(header_list)==1 or header=='M':
     return header_list[0]
 
   # otherwise return the list
@@ -96,7 +95,7 @@ def get_voicings(abc_file_path:str):
 
   #otherwise split them and return a list of voicings
   else:
-    music = get_music(abc_file_path);
+    music = get_music(abc_file_path)
     lines=re.split('V:[0-9]+',music)
     lines=lines[1:]
     return lines

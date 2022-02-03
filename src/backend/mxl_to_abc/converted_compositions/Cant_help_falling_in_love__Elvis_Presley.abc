@@ -16,3 +16,14 @@ V:1
  B6 | C2 F- FAc | B6 | A2 A- A3- |$ A2 F- FAF | G6 | A6 || d6 | a6 | d6- | d3 z ef |$ g6 | f6 | %36
  e6- | e4 z A | B6 | c6 | d6 |$ e2 f2 g2 | f6 | e6 | d6- | d4 z A | B6 | c6 |$ d4 z2 | e2 f2 g2 | %50
 "^rit."[Q:3/8=55] f6[Q:3/8=50] |[Q:3/8=45] e6 |[Q:3/8=40] d6- | d6[Q:3/8=30] |] %54
+V:2
+"^pizz." D,,3 F, z F, | A,,3 F, z F, | D,,3 F, z F, | A,,3 A,,B,,C, |: D,,D,F, A,F,D, | %5
+ F,,C,F, A,F,C, |$ B,,D,F, B,F,D, | A,,D,F, A,F,D, | G,,B,,D, G,D,B,, | D,,D,F, DF,D, | %10
+ A,,C,E, A,E,C, | A,,C,E, A,E,A,, | G,,B,,D, G,D,B,, |$ A,,C,E, G,E,C, | B,,D,F, B,F,D, | %15
+ E,,G,,B,, E,B,,G,, | A,,D,F, A,F,D, | A,,C,E, A,E,C, | D,F,A, DA,D, | FDA, AFD :|$ %20
+"^arco" F,,3 F,3 | C,3 C,,=F,,^G,, | F,,3 F,3 | C,3 C,,=F,,^G,, | F,,3 F,3 | C,3 C,=F,^G, | %26
+ ^F,3 ^F,,3 |$ B,,3 B,,^D,F, | E,3- E,C,B,, | A,,3 A,3 ||"^pizz." D,,D,F, A,F,D, | F,,C,F, A,F,C, | %32
+ B,,D,F, B,F,D, | A,,D,F, A,F,D, |$ G,,B,,D, G,D,B,, | D,,A,,F, DF,D, | A,,C,E, A,E,C, | %37
+ A,,C,E, A,E,A,, | G,,B,,D, G,D,B,, | A,,C,E, G,E,C, | B,,D,F, B,F,D, |$ E,,G,,B,, E,B,,G,, | %42
+ A,,D,F, A,F,D, | A,,C,E, A,E,C, | D,F,A, DA,F, | FA,F, A,F,D, | G,,D,G, B,G,D, | A,,E,G, CG,E, |$ %48
+ B,,F,B, DB,F, | E,G,B, EB,G, | A,,D,F, A,F,D, | A,,C,E, A,E,C, | D,,A,,D, A,F,D, | DA,F, FA,A |] %54
