@@ -1,0 +1,18 @@
+X:1
+T:I Can't Help Falling in Love
+C:Elvis
+Z:arr. Cathy Donnelly
+%%score 1 2
+L:1/8
+Q:3/8=60
+M:6/8
+I:linebreak $
+K:D
+V:1 treble nm="Violin" snm="Vln."
+V:2 bass nm="Violoncello" snm="Vc."
+V:1
+ z"^pizz." Ad fdA | z Ac ecA | z FA dAF | fdA afd |:"_arco" D6 | A6 |$ D6- | D3 z EF | G6 | F6 | %10
+ E6- | E4 z A, | B,6 |$ C6 | D6 | E2 F2 G2 | F6 | E6 | D6- | D4 z2 :|$ C2 F- FAc | B6 | C2 F- FAc | %23
+ B6 | C2 F- FAc | B6 | A2 A- A3- |$ A2 F- FAF | G6 | A6 || d6 | a6 | d6- | d3 z ef |$ g6 | f6 | %36
+ e6- | e4 z A | B6 | c6 | d6 |$ e2 f2 g2 | f6 | e6 | d6- | d4 z A | B6 | c6 |$ d4 z2 | e2 f2 g2 | %50
+"^rit."[Q:3/8=55] f6[Q:3/8=50] |[Q:3/8=45] e6 |[Q:3/8=40] d6- | d6[Q:3/8=30] |] %54
