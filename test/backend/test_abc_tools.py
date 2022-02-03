@@ -1,8 +1,8 @@
 import unittest
 from src.backend.abc_tools import get_header, is_polyphonic, get_music, get_voicings
 
-mono_test_composition_path = "test/backend/test_composition/Cant_help_falling_in_love__Elvis_Presley.abc"
-poly_test_composition_path ="test/backend/test_composition/Dancing_in_the_Moonlight.abc"
+mono_test_composition_path = "test/backend/test_composition/Monophonic_Cant_help_falling_in_love__Elvis_Presley.abc"
+poly_test_composition_path ="test/backend/test_composition/Cant_help_falling_in_love__Elvis_Presley.abc"
 test_music_string="""V:1
  z"^pizz." Ad fdA | z Ac ecA | z FA dAF | fdA afd |:"_arco" D6 | A6 |$ D6- | D3 z EF | G6 | F6 | %10
  E6- | E4 z A, | B,6 |$ C6 | D6 | E2 F2 G2 | F6 | E6 | D6- | D4 z2 :|$ C2 F- FAc | B6 | C2 F- FAc | %23
