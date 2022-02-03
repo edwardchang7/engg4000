@@ -131,6 +131,25 @@ def is_pattern_match(pattern_type, root, prev):
             return whole_step(root, True) == prev
 
 
+def get_notes_from_abc(analyze_str):
+    # list of symbols to keep track of
+    exceptions = ["'", ",", "_", "^", "|"]
+
+    analyze_str = ""
+    flag = True
+
+    for char in input_string:
+        if char == '"':  # removes any strings within ""
+            flag = not flag
+
+        if flag:
+            if char.isalpha() or char in exceptions:  # removes rythmyic related things
+                analyze_str += char
+
+    # hardcoded for now to test pattern freq
+
+    print(frequency_of_pattern(analyze_str, key, pattern))
+
 '''
 COPY THIS FORMAT BELOW TO ADD MORE PATTERN TYPES
 
