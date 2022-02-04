@@ -25,18 +25,27 @@ def format_bar(bar: str):
     if not has_notes:
         bar = None
     else:
-        bar = re.sub('%[0-9][0-9]?[0-9]?', "", bar)
+        bar = re.sub('%[0-9]+', "", bar)
         # added
-        bar = re.sub('[0-9]', "", bar)
         bar = re.sub(':', "", bar)
-        bar = re.sub("{/f'}", "", bar)
+        bar = re.sub("{/[a-z]'}", "", bar)
         bar = re.sub("=", "", bar)
+        bar = re.sub("Q[0-9]+", "", bar)
+        bar = re.sub("[[0-9]+]","",bar)
+        # bar = re.sub("[[A-Z][A-Z]]", "", bar)
+        # bar = re.sub("[[A-Z][0-9]/[0-9]]","",bar)
         # end
         bar = re.sub('"[^"]*"', "", bar)
         bar = re.sub('![^"]*!', "", bar)
-        bar = re.sub('[[A-Z]:[^"]*]', "", bar)
+        # bar = re.sub('[[A-Z]:[^"]*]', "", bar)
         bar = bar.replace("\n", "")
         bar = bar.replace("$", "")
+        
+        #added
+        bar = bar.replace("^", "")
+        bar = bar.replace("_", "")
+        bar = bar.replace("/", "16")
+        #end
         bar = bar.strip()
     return bar
 
@@ -64,17 +73,40 @@ def encode_voicings(voicings):
 
     # 2. Change notes in bars into a number
 
-
+'''
+Takes in a bar (str) and splits them by white space. The beats of the note are
+shown in numbers beside the note.
+EX:
+8 = 1 (whole) note
+6 = 1/2 note with "."
+4 = 1/2 note
+3 = 1/4 note with "."
+2 = 1/4 note
+1 = 1/8 note
+0 = 16th note
+[xxx]n = the chord contains all n type of notes (refer to top for n)
+'''
 def encode_bar(bar) -> list:
     bar_list = []
 
     bar = bar.split()
 
-    for e in bar:
-        bar_list.append(e)
+    for note in bar:
+        # checks if the given string have numbers in it, if so then we dont need add a number
+        # to show the type of note
+
+        contains_num = any(map(str.isdigit, note))
+
+        exception_chars = {'Q','z','x','M'}
+
+        if not contains_num:
+            note += '1'
+
+        if note not in exception_chars:
+            bar_list.append(note)
 
     return bar_list
 
 
 extract_rhythmic_patterns(
-    'src/backend/mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc')
+    'src/backend/mxl_to_abc/converted_compositions/Cant_help_falling_in_love__Elvis_Presley.abc')
