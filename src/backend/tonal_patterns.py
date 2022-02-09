@@ -2,32 +2,42 @@ from src.backend.music_tools import *
 from src.backend.scales import *
 import itertools
 
-def analyze_patterns(key = 'GM', input_string = "E'/ | G A/ (B3/4 c/4) ^B/", pattern=None):
+# Falling in love with you test pattern~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+test_pattern = "D6 | A6 |$ D6- | D3 z EF | G6 | F6 | %10 E6- | E4 z A, | B,6 |$ C6 | D6 | E2 F2 G2 | F6 | E6 | D6-"
+test_key = "D"
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    # list of symbols to keep track of
+# Function to remove all rhythmic and tonal related symbols from pattern leaving just the note names
+def format_pattern(key:str, input_string:str, pattern):
+
+    # symbols that we want to keep in the pattern
     exceptions = ["'", ",", "_", "^", "|"]
 
-    analyze_str = ""
-    flag = True
+    formatted_pattern = ""
+    is_note = True
 
+    # removes any strings within ""
     for char in input_string:
-        if char == '"': #removes any strings within ""
-            flag = not flag
-        
-        if flag:
-            if char.isalpha() or char in exceptions: #removes rythmyic related things
-                analyze_str += char
+        if char == '"':
+            is_note = not is_note
 
-    #hardcoded for now to test pattern freq
+        if is_note:
+            # removes rhythmic related things
+            if char.isalpha() or char in exceptions:
+                formatted_pattern += char
 
-    print(frequency_of_pattern(analyze_str, key, pattern))
+    # hardcoded for now to test pattern freq
+    return formatted_pattern
 
+
+# Function to ???
 def frequency_of_pattern(analyze_str,key, pattern):
 
     prev_chars = ""
     prev_notes = []
     total = 0
     is_flat = False
+
 
     for char in analyze_str:
         if char == "'" or char == ",":
@@ -44,7 +54,8 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
                 prev_chars = ""
 
-            if is_flat is True: #if it is a flat, set it to the sharp equivalent
+            #if it is a flat, set it to the sharp equivalent
+            if is_flat is True:
                 char = whole_step(char, False)
                 is_flat = False
 
@@ -81,3 +92,48 @@ def frequency_of_pattern(analyze_str,key, pattern):
             total += 1
 
     return total
+
+
+
+# Function to transpose all notes in input_string to their tonal values (dom=5, tonic=1 etc)
+# Rests are appended as 0
+def config_input_string(key:str, input_str:str):
+    # 1. get the notes in the key
+    notes_in_key=get_scale("D","M")
+
+    # Do some note formatting
+    #TODO consider the key signature here and how it will affect removing/adding flats and sharps for now just removing sharps
+    notes_in_key=[note.replace("#","") for note in notes_in_key]
+    notes_in_key=[note.upper() for note in notes_in_key]
+
+    print(notes_in_key)
+    # 2. (note_index + 1) =  their tonal value
+    # 3. Transpose all the notes in the extracted pattern
+    tonal_val_dict={}
+    for note in input_str:
+        if note.isalpha():
+            if note == "z":
+                tonal_val_dict += "0"
+            else:
+                tonal_val_dict += str(notes_in_key.index(note)+1)
+    print(tonal_val_dict)
+
+def tonic_to_tonic_filter(tonal_val_str:str):
+
+
+
+# TESTING STUFF~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+print("FORMATTED PATTERN:")
+print(format_pattern(test_key, test_pattern, pattern=None))
+
+config_input_string(test_key, test_pattern)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+
+
+
+
