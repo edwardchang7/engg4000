@@ -8,9 +8,15 @@ rhythmic patterns from an abc file
 4. Analyze numbers looking for patterns
 5. Cross reference those sections with original music to get actual musical pattern
 """
+from ast import pattern
+from itertools import combinations_with_replacement
 import re
 from typing import List
 from abc_tools import get_header, is_polyphonic, get_voicings, get_music
+
+
+pattern_dict = {}
+bars_list = []
 
 
 def extract_rhythmic_patterns(file_path: str):
@@ -44,7 +50,7 @@ def format_bar(bar: str):
         #added
         bar = bar.replace("^", "")
         bar = bar.replace("_", "")
-        bar = bar.replace("/", "16")
+        bar = bar.replace("/", "0")
         #end
         bar = bar.strip()
     return bar
@@ -57,16 +63,42 @@ def encode_voicings(voicings):
     # 1. isolate notes
     # split into sections
     # split sections into bars
+
+    # combines 4 bars toghether
+    combination_of_bars = ""
+    # keeps track of the number of bars combined
+    counter = 0
+    # flag to check if it has already been added into the combination
+
     for voice in voicings:
         sections = voice.split('||')
         for section in sections:
             bars = section.split("|")
+
+
+            '''
+            Combine 4 bars together, then send to encode_bars
+            '''
             for bar in bars:
                 bar = format_bar(bar)
+
                 if(bar):
-                    # each bar_list holds a seperated bar element
-                    bar_list = encode_bar(bar)
-                    print(bar_list)
+                    if counter < 2:
+                        combination_of_bars += str(bar) + " "
+                        counter += 1
+
+                    else:
+                        combination_of_bars += str(bar) + " " # the last one to add to the combination, else it would always skip 1
+                        bars_list.append(combination_of_bars)
+                        counter = 0
+                        combination_of_bars = ""
+
+            # for bar in bars:
+            #     bar = format_bar(bar)
+            #     if(bar):
+            #         # each bar_list holds a seperated bar element
+            #         bar_list = encode_bar(bar)
+            #         print(bar_list)
                     
                 # if(bar):
                 #   bar=encode_bar(bar)
@@ -86,7 +118,7 @@ EX:
 0 = 16th note
 [xxx]n = the chord contains all n type of notes (refer to top for n)
 '''
-def encode_bar(bar) -> list:
+def encode_bars(bar) -> list:
     bar_list = []
 
     bar = bar.split()
@@ -108,5 +140,25 @@ def encode_bar(bar) -> list:
     return bar_list
 
 
+def extract_patterns(bars):
+    # checks if the given bar already exist within the dict
+    if bars in pattern_dict:
+        count = pattern_dict.get(bars)
+        count += 1
+        # update the count of that given string
+        pattern_dict[bars] = count
+    else:
+        pattern_dict[bars] = 1
+
+    
+
+
 extract_rhythmic_patterns(
-    'src/backend/mxl_to_abc/converted_compositions/Cant_help_falling_in_love__Elvis_Presley.abc')
+    'src/backend/mxl_to_abc/converted_compositions/mary_had_a_little_lamb.abc')
+
+for line_of_bars in bars_list:
+    extract_patterns(line_of_bars)
+
+
+for key,value in pattern_dict.items():
+    print(f"{key} : {value}")
