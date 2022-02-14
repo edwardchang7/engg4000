@@ -3,7 +3,7 @@ from src.backend.scales import *
 import itertools
 
 # Falling in love with you test pattern~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-test_pattern = "D6 | A6 |$ D6- | D3 z EF | G6 | F6 | %10 E6- | E4 z A, | B,6 |$ C6 | D6 | E2 F2 G2 | F6 | E6 | D6-"
+test_pattern = "D6 | A6 |$ D6- | D3 z EF | G6 | F6 | %10 E6- | E4 z A, | B,6 |$ C6 | D6 | E2 F2 G2 | F6 | E6 | D6- | D4 z2 :|$ C2 F- FAc |"
 test_key = "D"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -106,21 +106,76 @@ def config_input_string(key:str, input_str:str):
     notes_in_key=[note.replace("#","") for note in notes_in_key]
     notes_in_key=[note.upper() for note in notes_in_key]
 
+    #preset flags
+    higher = False
+    lower = False
+    octave = -99
+    temp_note = ""
+
     print(notes_in_key)
     # 2. (note_index + 1) =  their tonal value
     # 3. Transpose all the notes in the extracted pattern
-    tonal_val_dict={}
+    # 4. Octave referenced to middle C (0 relates to original Scale's octave)
+    tonal_val_dict_list=[]
     for note in input_str:
+        if higher:
+            if note=="'":
+                octave += 1
+            else:
+                tonal_val_dict_list.append(
+                    {"note": temp_note, "degree": str(notes_in_key.index(temp_note.upper()) + 1), "octave": octave})
+                higher = False
+        elif lower:
+            if note==",":
+                octave -= 1
+            else:
+                tonal_val_dict_list.append(
+                    {"note": temp_note, "degree": str(notes_in_key.index(temp_note) + 1), "octave": octave})
+                lower = False
         if note.isalpha():
             if note == "z":
-                tonal_val_dict += "0"
+                tonal_val_dict_list.append({"note": "z", "degree": "0", "octave": "na"})
             else:
-                tonal_val_dict += str(notes_in_key.index(note)+1)
-    print(tonal_val_dict)
+                if note.islower():
+                    higher = True
+                    octave = 1
+                    temp_note = note
+                else:
+                    lower = True
+                    octave = 0
+                    temp_note = note
+        elif note == "|":
+            tonal_val_dict_list.append({"note": "|", "degree": "-1", "octave": "na"})
 
-def tonic_to_tonic_filter(tonal_val_str:str):
+    print(tonal_val_dict_list)
+    tonic_to_tonic_filter(key, tonal_val_dict_list)
 
+#Function which extracts a tonic-tonic pattern in the given list of notes
+#Currently reset to look at a pattern of a certain length of bars (or find one close to there)
+def tonic_to_tonic_filter(key:str, tonal_val_list:list):
+    #1. Set range to analyze
+    bars = 16
 
+    pattern = []
+    start_note = {}
+    end_note = {}
+    for note in tonal_val_list:
+        if bars < 1:
+            #check pattern
+            print(pattern)
+            break
+        elif note["degree"] == -1:
+            bars -= 1
+        else:
+            try:
+                if start_note["degree"] != 0 and note["degree"] != 0:
+                    end_note = note
+                    pattern.append(check_interval(key, start_note, end_note)) #check_interval in music_tools (seemed like a better spot for that type of function)
+                    start_note = end_note
+            except KeyError:
+                start_note = note
+            except:
+                print("Unknown Error")
 
 # TESTING STUFF~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print("FORMATTED PATTERN:")

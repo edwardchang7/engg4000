@@ -1,3 +1,5 @@
+from src.backend.scales import get_scale
+
 notes = ['C', '#C', 'D', '#D', 'E', 'F',  '#F', 'G', '#G', 'A', '#A', 'B']
 
 '''
@@ -130,26 +132,6 @@ def is_pattern_match(pattern_type, root, prev):
         else:
             return whole_step(root, True) == prev
 
-
-def get_notes_from_abc(analyze_str):
-    # list of symbols to keep track of
-    exceptions = ["'", ",", "_", "^", "|"]
-
-    analyze_str = ""
-    flag = True
-
-    for char in input_string:
-        if char == '"':  # removes any strings within ""
-            flag = not flag
-
-        if flag:
-            if char.isalpha() or char in exceptions:  # removes rythmyic related things
-                analyze_str += char
-
-    # hardcoded for now to test pattern freq
-
-    print(frequency_of_pattern(analyze_str, key, pattern))
-
 '''
 COPY THIS FORMAT BELOW TO ADD MORE PATTERN TYPES
 
@@ -160,3 +142,29 @@ elif 'keyword.lower()' or 'keyword.upper()' in pattern_type:
   else:
     return 'function_name_to_check' == prev
 '''
+
+def check_interval(key:str, starting_note:str, end_note:str):
+    '''
+          Checks and returns what kind of interval (i.e. H, W, P5, wtc.) is between end_note and starting_note
+
+          Param:
+            key: key relating the input scale
+            scale: reference scale
+            starting_note: note to start the interval on
+            end_note: note to end the interval on
+
+          Return:
+            The type of interval as a str
+        '''
+
+    try:
+        scale = get_scale(key[0], key[1])
+    except IndexError:
+        scale = get_scale(key, "M")
+
+    ##must account for sharps/flats in Key for proper intervals
+
+    #if starting_note's index in scale < end_note
+        #easy case, check if starting_note + half_step, or + whole_step etc. == end_note
+    #if starting_notes's index in scale > end_note
+        #octave change within interval, keep track
