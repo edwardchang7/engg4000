@@ -1,4 +1,4 @@
-from src.backend.scales import get_scale
+import src.backend.scales
 
 notes = ['C', '#C', 'D', '#D', 'E', 'F',  '#F', 'G', '#G', 'A', '#A', 'B']
 
@@ -6,10 +6,9 @@ notes = ['C', '#C', 'D', '#D', 'E', 'F',  '#F', 'G', '#G', 'A', '#A', 'B']
 
   Within utility functions:
     input_note    : note to change frequency of
-    up_frequency  : bool value which deleniates whether frequency of note is increasing or decreasing
+    up_frequency  : bool value which denotes whether frequency of note is increasing or decreasing
 
 '''
-
 
 def half_step(input_note, up_frequency):
 
@@ -158,9 +157,9 @@ def check_interval(key:str, starting_note:str, end_note:str):
         '''
 
     try:
-        scale = get_scale(key[0], key[1])
+        scale = src.backend.scales.get_scale(key[0], key[1])
     except IndexError:
-        scale = get_scale(key, "M")
+        scale = src.backend.scales.get_scale(key, "M")
 
     ##must account for sharps/flats in Key for proper intervals
 

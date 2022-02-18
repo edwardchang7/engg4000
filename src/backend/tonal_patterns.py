@@ -1,5 +1,5 @@
-from src.backend.music_tools import *
-from src.backend.scales import *
+from src.backend.music_tools import whole_step, check_interval
+from src.backend.scales import get_scale
 import itertools
 
 # Falling in love with you test pattern~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,14 +95,14 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
 
 
-# Function to transpose all notes in input_string to their tonal values (dom=5, tonic=1 etc)
-# Rests are appended as 0
+# Function to translate from input string to list of patterns (pattern = dictionary of relevant info about note)
 def config_input_string(key:str, input_str:str):
     # 1. get the notes in the key
     notes_in_key=get_scale("D","M")
 
     # Do some note formatting
-    #TODO consider the key signature here and how it will affect removing/adding flats and sharps for now just removing sharps
+    #TODO consider the key signature here and how it will affect removing/adding flats and sharps
+    # -->for now just removing sharps
     notes_in_key=[note.replace("#","") for note in notes_in_key]
     notes_in_key=[note.upper() for note in notes_in_key]
 
@@ -112,7 +112,6 @@ def config_input_string(key:str, input_str:str):
     octave = -99
     temp_note = ""
 
-    print(notes_in_key)
     # 2. (note_index + 1) =  their tonal value
     # 3. Transpose all the notes in the extracted pattern
     # 4. Octave referenced to middle C (0 relates to original Scale's octave)
@@ -146,8 +145,8 @@ def config_input_string(key:str, input_str:str):
                     temp_note = note
         elif note == "|":
             tonal_val_dict_list.append({"note": "|", "degree": "-1", "octave": "na"})
-
-    print(tonal_val_dict_list)
+    for item in tonal_val_dict_list:
+        print(item)
     tonic_to_tonic_filter(key, tonal_val_dict_list)
 
 #Function which extracts a tonic-tonic pattern in the given list of notes
@@ -170,7 +169,8 @@ def tonic_to_tonic_filter(key:str, tonal_val_list:list):
             try:
                 if start_note["degree"] != 0 and note["degree"] != 0:
                     end_note = note
-                    pattern.append(check_interval(key, start_note, end_note)) #check_interval in music_tools (seemed like a better spot for that type of function)
+                    # check_interval in music_tools (seemed like a better spot for that type of function)
+                    pattern.append(check_interval(key, start_note, end_note))
                     start_note = end_note
             except KeyError:
                 start_note = note

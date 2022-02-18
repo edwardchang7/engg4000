@@ -1,4 +1,4 @@
-from src.backend.music_tools import *
+import src.backend.music_tools
 
 # notes = ['C', 'C#', 'D', 'D#', 'E', 'F',  'F#', 'G', 'G#', 'A', 'A#', 'B']
 
@@ -13,6 +13,13 @@ from src.backend.music_tools import *
 
 # # Minor Pentatonic Scale
 # P_minor = 'PWWP'
+
+# local instances to avoid cyclical imports
+def whole_step(note, up_frequency):
+    return src.backend.music_tools.whole_step(note,up_frequency)
+
+def half_step(note, up_frequency):
+    return src.backend.music_tools.half_step(note,up_frequency)
 
 
 def get_scale(root, type):
