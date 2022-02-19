@@ -2,10 +2,17 @@ from src.backend.music_tools import whole_step, check_interval
 from src.backend.scales import get_scale
 import itertools
 
-# Falling in love with you test pattern~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CONSTANTS_____________________________________________
+# values are in bars
+min_pattern_length=3
+max_pattern_length=16
+# ______________________________________________________
+
+
+# TEST PATTERN__________________________________________
 test_pattern = "D6 | A6 |$ D6- | D3 z EF | G6 | F6 | %10 E6- | E4 z A, | B,6 |$ C6 | D6 | E2 F2 G2 | F6 | E6 | D6- | D4 z2 :|$ C2 F- FAc |"
 test_key = "D"
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ______________________________________________________
 
 # Function to remove all rhythmic and tonal related symbols from pattern leaving just the note names
 def format_pattern(key:str, input_string:str, pattern):
@@ -95,10 +102,10 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
 
 
-# Function to translate from input string to list of patterns (pattern = dictionary of relevant info about note)
+# Function to translate from input string to list of note dictionaries
 def config_input_string(key:str, input_str:str):
     # 1. get the notes in the key
-    notes_in_key=get_scale("D","M")
+    notes_in_key=get_scale(key,"M")
 
     # Do some note formatting
     #TODO consider the key signature here and how it will affect removing/adding flats and sharps
@@ -145,43 +152,67 @@ def config_input_string(key:str, input_str:str):
                     temp_note = note
         elif note == "|":
             tonal_val_dict_list.append({"note": "|", "degree": "-1", "octave": "na"})
-    for item in tonal_val_dict_list:
-        print(item)
-    tonic_to_tonic_filter(key, tonal_val_dict_list)
+    return tonal_val_dict_list
 
-#Function which extracts a tonic-tonic pattern in the given list of notes
-#Currently reset to look at a pattern of a certain length of bars (or find one close to there)
-def tonic_to_tonic_filter(key:str, tonal_val_list:list):
-    #1. Set range to analyze
-    bars = 16
+# Function will check if pattern length in bars is within the min to max range
+def confirm_pattern_length(start_index, end_index, bar_indices):
+    pattern_length = 1
+    for i in range(start_index, end_index):
+        if i in bar_indices:
+            pattern_length += 1
 
-    pattern = []
-    start_note = {}
-    end_note = {}
-    for note in tonal_val_list:
-        if bars < 1:
-            #check pattern
-            print(pattern)
-            break
-        elif note["degree"] == -1:
-            bars -= 1
-        else:
-            try:
-                if start_note["degree"] != 0 and note["degree"] != 0:
-                    end_note = note
-                    # check_interval in music_tools (seemed like a better spot for that type of function)
-                    pattern.append(check_interval(key, start_note, end_note))
-                    start_note = end_note
-            except KeyError:
-                start_note = note
-            except:
-                print("Unknown Error")
+    if (pattern_length >= min_pattern_length) and (pattern_length <= max_pattern_length):
+        return True
+    else:
+        return False
+
+# Function to take in a string of notes and extract the tonic-to-tonic patterns
+def tonic_to_tonic_filter(key:str, input_str:str):
+    """
+    Pro strat: Much more time efficient - lets use this one
+    1. Configure the input string into a list of dictionaries
+    2. Iterate through entire list of dictionaries saving the position of all tonic notes
+    3. Find intervals between tonic notes that are longer than min length and shorter than max length
+    4. Extract those intervals
+    """
+    # 1. Configure the input string into a list of dictionaries
+    note_list=config_input_string(key,input_str)
+
+    # 2. Iterate through entire list of dictionaries saving the position of all tonic notes and bar lines
+    num_notes=len(note_list)
+    tonic_note_indices = []
+    bar_indices=[]
+    for i in range(0,num_notes):
+        if note_list[i]["degree"]=='1':
+            tonic_note_indices.append(i)
+        if note_list[i]["degree"]=='-1':
+            bar_indices.append(i)
+    print(tonic_note_indices)
+    # 3. Find intervals between tonic notes that are longer than min length and shorter than max length
+    # need to take into consideration the bar positions since the min and max lengths are in bars
+    for start_index in tonic_note_indices:
+        for end_index in reversed(tonic_note_indices):
+
+            if not confirm_pattern_length(start_index,end_index, bar_indices):
+                break
+            else:
+                # these are patterns of acceptable length -->ready to store in database
+                pattern = note_list[start_index:end_index+1]
+
+                #TEST PRINT so you can see the patterns
+                print(str(start_index) + "->" + str(end_index))
+                for note in pattern:
+                    print(note)
+
+
+
+
 
 # TESTING STUFF~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print("FORMATTED PATTERN:")
 print(format_pattern(test_key, test_pattern, pattern=None))
 
-config_input_string(test_key, test_pattern)
+tonic_to_tonic_filter(test_key, test_pattern)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
