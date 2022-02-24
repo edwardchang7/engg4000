@@ -1,6 +1,4 @@
-import src.backend.scales
-
-notes = ['C', '#C', 'D', '#D', 'E', 'F',  '#F', 'G', '#G', 'A', '#A', 'B']
+notes = ['C', 'C#', 'D', 'D#', 'E', 'F',  'F#', 'G', 'G#', 'A', 'A#', 'B']
 
 '''
 
@@ -19,9 +17,8 @@ def half_step(input_note, up_frequency):
     flag = False
 
     if len(input_note) > 1:
-        if input_note[0] == '#':
-            letter = input_note[1]
-            comp_note = '#' + input_note[1].upper()
+        if input_note[1] == '#':
+            comp_note += "#"
             octave = input_note[2:]
 
     if up_frequency:
@@ -142,7 +139,7 @@ elif 'keyword.lower()' or 'keyword.upper()' in pattern_type:
     return 'function_name_to_check' == prev
 '''
 
-def check_interval(key:str, starting_note:str, end_note:str):
+def check_interval(key:str, starting_note:dict, end_note:dict, scale:list):
     '''
           Checks and returns what kind of interval (i.e. H, W, P5, wtc.) is between end_note and starting_note
 
@@ -156,14 +153,72 @@ def check_interval(key:str, starting_note:str, end_note:str):
             The type of interval as a str
         '''
 
-    try:
-        scale = src.backend.scales.get_scale(key[0], key[1])
-    except IndexError:
-        scale = src.backend.scales.get_scale(key, "M")
+    # Format sharps correctly
+    scale = [note[1].upper() + "#" if note.find("#") == 0 else note.upper() for note in scale]
 
+    print(starting_note)
+    print(end_note)
     ##must account for sharps/flats in Key for proper intervals
 
-    #if starting_note's index in scale < end_note
-        #easy case, check if starting_note + half_step, or + whole_step etc. == end_note
-    #if starting_notes's index in scale > end_note
-        #octave change within interval, keep track
+    higher_note = {}
+    lower_note = {}
+
+    if starting_note["octave"] == end_note["octave"]:
+        if scale.index(starting_note["note"].upper()) < scale.index(end_note["note"].upper()):
+            print("End")
+            higher_note = end_note
+            lower_note = starting_note
+        elif scale.index(starting_note["note"].upper()) > scale.index(end_note["note"].upper()):
+            print("Start")
+            higher_note = starting_note
+            lower_note = end_note
+        else:
+            print("Same") #No interval
+            return 2
+    else:
+        if starting_note["octave"] < end_note["octave"]:
+            print("End_O")
+            higher_note = end_note
+            lower_note = starting_note
+        elif starting_note["octave"] > end_note["octave"]:
+            print("Start_O")
+            higher_note = starting_note
+            lower_note = end_note
+
+    interval = []
+
+    if change_octave(lower_note["note"], True) == higher_note["note"]:
+        if higher_note == end_note:
+            interval.append("o")
+        else:
+            interval.append("-o")
+    elif P5(lower_note["note"], True) == higher_note["note"]:
+        if higher_note == end_note:
+            interval.append("P5")
+        else:
+            interval.append("-P5")
+    elif M3(lower_note["note"], True) == higher_note["note"]:
+        if higher_note == end_note:
+            interval.append("M3")
+        else:
+            interval.append("-M3")
+    elif m3(lower_note["note"], True) == higher_note["note"]:
+        if higher_note == end_note:
+            interval.append("m3")
+        else:
+            interval.append("-m3")
+    elif whole_step(lower_note["note"], True) == higher_note["note"]:
+        if higher_note == end_note:
+            interval.append("w")
+        else:
+            interval.append("-w")
+    else:
+        while lower_note["note"] != higher_note["note"]:
+            lower_note["note"] = half_step(lower_note["note"], True)
+            if higher_note == end_note:
+                interval.append("h")
+            else:
+                interval.append("-h")
+
+    return interval
+

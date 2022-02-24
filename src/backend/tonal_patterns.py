@@ -82,7 +82,8 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
     for i in range(1, len(prev_notes)):
         # checks for half notes upwards and downwards
-        if is_pattern_match(pattern[pattern_index], prev_notes[i-1], prev_notes[i]):
+        if True:
+            #is_pattern_match(pattern[pattern_index], prev_notes[i-1], prev_notes[i]):
             pattern_index += 1
         else:
             # if the pattern is broken, reset the counter for the pattern
@@ -106,10 +107,17 @@ def frequency_of_pattern(analyze_str,key, pattern):
 def config_input_string(key:str, input_str:str):
     # 1. get the notes in the key
     notes_in_key=get_scale(key,"M")
-
+    # Format sharps correctly
+    notes_in_key=[note[1] + "#" if note.find("#") == 0 else note for note in notes_in_key]
     # Do some note formatting
     #TODO consider the key signature here and how it will affect removing/adding flats and sharps
     # -->for now just removing sharps
+
+    # Boolean indicates if notee
+    degree_with_sharp = [True if note[-1] == "#" else False for note in notes_in_key]
+    print("Tahng")
+    print(degree_with_sharp)
+    print(notes_in_key)
     notes_in_key=[note.replace("#","") for note in notes_in_key]
     notes_in_key=[note.upper() for note in notes_in_key]
 
@@ -122,21 +130,30 @@ def config_input_string(key:str, input_str:str):
     # 2. (note_index + 1) =  their tonal value
     # 3. Transpose all the notes in the extracted pattern
     # 4. Octave referenced to middle C (0 relates to original Scale's octave)
+    # 5. Add Sharps to notes which require it from the Key
     tonal_val_dict_list=[]
     for note in input_str:
         if higher:
             if note=="'":
                 octave += 1
             else:
-                tonal_val_dict_list.append(
-                    {"note": temp_note, "degree": str(notes_in_key.index(temp_note.upper()) + 1), "octave": octave})
+                if degree_with_sharp[notes_in_key.index(temp_note.upper())]:
+                    tonal_val_dict_list.append(
+                        {"note": temp_note + "#", "degree": str(notes_in_key.index(temp_note.upper()) + 1), "octave": octave})
+                else:
+                    tonal_val_dict_list.append(
+                        {"note": temp_note, "degree": str(notes_in_key.index(temp_note.upper()) + 1), "octave": octave})
                 higher = False
         elif lower:
             if note==",":
                 octave -= 1
             else:
-                tonal_val_dict_list.append(
-                    {"note": temp_note, "degree": str(notes_in_key.index(temp_note) + 1), "octave": octave})
+                if degree_with_sharp[notes_in_key.index(temp_note.upper())]:
+                    tonal_val_dict_list.append(
+                        {"note": temp_note + "#", "degree": str(notes_in_key.index(temp_note) + 1), "octave": octave})
+                else:
+                    tonal_val_dict_list.append(
+                        {"note": temp_note, "degree": str(notes_in_key.index(temp_note) + 1), "octave": octave})
                 lower = False
         if note.isalpha():
             if note == "z":
@@ -201,9 +218,24 @@ def tonic_to_tonic_filter(key:str, input_str:str):
 
                 #TEST PRINT so you can see the patterns
                 print(str(start_index) + "->" + str(end_index))
+
+                start_note = {}
+                end_note = {}
+                pattern_interval = []
+
                 for note in pattern:
                     print(note)
-
+                    if note["note"] != "|" and note["note"] != "z":
+                        if start_note == {}:
+                            start_note = note
+                        else:
+                            end_note = note
+                            if key[-1] == "m":
+                                pattern_interval.append(check_interval(key, start_note, end_note, get_scale(key[:-1], key[-1])))
+                            else:
+                                pattern_interval.append(check_interval(key, start_note, end_note, get_scale(key, "M")))
+                            print(pattern_interval)
+                            start_note = end_note
 
 
 
@@ -214,12 +246,3 @@ print(format_pattern(test_key, test_pattern, pattern=None))
 
 tonic_to_tonic_filter(test_key, test_pattern)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-
-
-
-
-
-
