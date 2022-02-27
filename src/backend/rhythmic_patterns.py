@@ -1,13 +1,8 @@
 """
 This file will be filled with the functions required to extract and save
 rhythmic patterns from an abc file
-
-1. If polyphonic - seperate
-2. Get meter and time signature
-3. Translate notes in bars into numbers representing note lengths
-4. Analyze numbers looking for patterns
-5. Cross reference those sections with original music to get actual musical pattern
 """
+<<<<<<< HEAD
 from ast import pattern
 from itertools import combinations_with_replacement
 import re
@@ -54,10 +49,20 @@ def format_bar(bar: str):
         #end
         bar = bar.strip()
     return bar
+=======
 
-# Function to encode a musical bar into numbers representing the note lengths
-# def encode_bar(bar:str):
+from abc_tools import get_header,is_polyphonic,get_voicings,get_music
 
+
+# Testing for the abc_tools
+voicings=get_voicings('mxl_to_abc\converted_compositions\Cant_help_falling_in_love__Elvis_Presley.abc')
+>>>>>>> parent of 6e1898b (Added initial rhythmic pattern encoding)
+
+for voice in voicings:
+  print(voice)
+  print("\n\n")
+
+<<<<<<< HEAD
 
 def encode_voicings(voicings):
     # 1. isolate notes
@@ -162,3 +167,7 @@ for line_of_bars in bars_list:
 
 for key,value in pattern_dict.items():
     print(f"{key} : {value}")
+=======
+print(len(voicings))
+
+>>>>>>> parent of 6e1898b (Added initial rhythmic pattern encoding)
