@@ -3,6 +3,7 @@ This file will be filled with the functions required to extract and save
 rhythmic patterns from an abc file
 """
 <<<<<<< HEAD
+<<<<<<< HEAD
 from ast import pattern
 from itertools import combinations_with_replacement
 import re
@@ -57,10 +58,19 @@ from abc_tools import get_header,is_polyphonic,get_voicings,get_music
 # Testing for the abc_tools
 voicings=get_voicings('mxl_to_abc\converted_compositions\Cant_help_falling_in_love__Elvis_Presley.abc')
 >>>>>>> parent of 6e1898b (Added initial rhythmic pattern encoding)
+=======
+
+from abc_tools import get_header,is_polyphonic,get_voicings,get_music
+
+
+# Testing for the abc_tools
+voicings=get_voicings('mxl_to_abc\converted_compositions\Cant_help_falling_in_love__Elvis_Presley.abc')
+>>>>>>> parent of 6e1898b (Added initial rhythmic pattern encoding)
 
 for voice in voicings:
   print(voice)
   print("\n\n")
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 
@@ -168,6 +178,11 @@ for line_of_bars in bars_list:
 for key,value in pattern_dict.items():
     print(f"{key} : {value}")
 =======
+print(len(voicings))
+
+>>>>>>> parent of 6e1898b (Added initial rhythmic pattern encoding)
+=======
+
 print(len(voicings))
 
 >>>>>>> parent of 6e1898b (Added initial rhythmic pattern encoding)
