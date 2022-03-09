@@ -10,7 +10,7 @@ max_pattern_length=16
 
 
 # TEST PATTERN__________________________________________
-test_pattern = "D6 | A6 |$ D6- | D3 z EF | G6 | F6 | %10 E6- | E4 z A, | B,6 |$ C6 | D6 | E2 F2 G2 | F6 | E6 | D6- | D4 z2 :|$ C2 F- FAc |"
+test_pattern = "D6 | A6 |$ D6- | D3 z EF | G6 | F6 | %10 E6- | E4 z A,, | B,6 |$ C6 | D6 | E2 F2 G2 | F6 | E6 | D6- | D4 z2 :|$ C2 F- FAc |"
 test_key = "D"
 # ______________________________________________________
 
@@ -38,6 +38,7 @@ def format_pattern(key:str, input_string:str, pattern):
 
 
 # Function to ???
+# Take into account length
 def frequency_of_pattern(analyze_str,key, pattern):
 
     prev_chars = ""
@@ -207,6 +208,7 @@ def tonic_to_tonic_filter(key:str, input_str:str):
     print(tonic_note_indices)
     # 3. Find intervals between tonic notes that are longer than min length and shorter than max length
     # need to take into consideration the bar positions since the min and max lengths are in bars
+    for_DB = []
     for start_index in tonic_note_indices:
         for end_index in reversed(tonic_note_indices):
 
@@ -222,21 +224,24 @@ def tonic_to_tonic_filter(key:str, input_str:str):
                 start_note = {}
                 end_note = {}
                 pattern_interval = []
+                interval = []
+                value = False
 
                 for note in pattern:
-                    print(note)
                     if note["note"] != "|" and note["note"] != "z":
                         if start_note == {}:
                             start_note = note
                         else:
                             end_note = note
-                            if key[-1] == "m":
-                                pattern_interval.append(check_interval(key, start_note, end_note, get_scale(key[:-1], key[-1])))
-                            else:
-                                pattern_interval.append(check_interval(key, start_note, end_note, get_scale(key, "M")))
-                            print(pattern_interval)
+                            interval, octave = check_interval(start_note, end_note)
                             start_note = end_note
+                            pattern_interval.append(interval)
+                            if octave:
+                                value = True
 
+                for_DB.append({"Key": key, "Pattern": pattern_interval, "Octave_Change": value})
+
+    print(for_DB)
 
 
 

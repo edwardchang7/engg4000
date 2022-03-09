@@ -1,3 +1,6 @@
+from re import S
+
+
 notes = ['C', 'C#', 'D', 'D#', 'E', 'F',  'F#', 'G', 'G#', 'A', 'A#', 'B']
 
 '''
@@ -139,7 +142,7 @@ elif 'keyword.lower()' or 'keyword.upper()' in pattern_type:
     return 'function_name_to_check' == prev
 '''
 
-def check_interval(key:str, starting_note:dict, end_note:dict, scale:list):
+def check_interval(starting_note:dict, end_note:dict):
     '''
           Checks and returns what kind of interval (i.e. H, W, P5, wtc.) is between end_note and starting_note
 
@@ -153,80 +156,68 @@ def check_interval(key:str, starting_note:dict, end_note:dict, scale:list):
             The type of interval as a str
         '''
 
-    # Format sharps correctly
-    scale = [note[1].upper() + "#" if note.find("#") == 0 else note.upper() for note in scale]
-
-    print(starting_note)
-    print(end_note)
-    ##must account for sharps/flats in Key for proper intervals
-
-    higher_note = {}
-    lower_note = {}
-    octave_check = False
-
-    if starting_note["octave"] == end_note["octave"]:
-        if scale.index(starting_note["note"].upper()) < scale.index(end_note["note"].upper()):
-            print("End")
-            higher_note = end_note
-            lower_note = starting_note
-        elif scale.index(starting_note["note"].upper()) > scale.index(end_note["note"].upper()):
-            print("Start")
-            higher_note = starting_note
-            lower_note = end_note
-        else:
-            print("Same") #No interval
-            return 2
-    else:
-        if starting_note["octave"] < end_note["octave"]:
-            print("End_O")
-            octave_check = True
-            higher_note = end_note
-            lower_note = starting_note
-        elif starting_note["octave"] > end_note["octave"]:
-            print("Start_O")
-            octave_check = True
-            higher_note = starting_note
-            lower_note = end_note
-
     interval = []
+    to_append = []
+    octave = False
+    start_reference = pad_octave_notation(starting_note["octave"], starting_note["note"])
+    end_reference = pad_octave_notation(end_note["octave"], end_note["note"])
 
-    if octave_check:
-        octave_val = lower_note["octave"]
-        while octave_val != higher_note["octave"]:
-            octave_val += 1
-            lower_note["note"] = change_octave(lower_note["note"], True)
-            if higher_note == end_note:
-                interval.append("o")
-            else:
-                interval.append("-o")
-    else:
-        if P5(lower_note["note"], True) == higher_note["note"]:
-            if higher_note == end_note:
-                interval.append("P5")
-            else:
-                interval.append("-P5")
-        elif M3(lower_note["note"], True) == higher_note["note"]:
-            if higher_note == end_note:
-                interval.append("M3")
-            else:
-                interval.append("-M3")
-        elif m3(lower_note["note"], True) == higher_note["note"]:
-            if higher_note == end_note:
-                interval.append("m3")
-            else:
-                interval.append("-m3")
-        elif whole_step(lower_note["note"], True) == higher_note["note"]:
-            if higher_note == end_note:
-                interval.append("w")
-            else:
-                interval.append("-w")
+    if start_reference == end_reference:
+        return ["0"], octave
+
+    up_temp = start_reference
+    down_temp = start_reference
+    down = False
+
+    while True:
+
+        if up_temp == end_reference:
+            break
+        elif down_temp == end_reference:
+            down = True
+            break
         else:
-            while lower_note["note"] != higher_note["note"]:
-                lower_note["note"] = half_step(lower_note["note"], True)
-                if higher_note == end_note:
-                    interval.append("h")
-                else:
-                    interval.append("-h")
+            interval.append("h")
+            up_temp = half_step(up_temp, True)
+            down_temp = half_step(down_temp, False)
 
-    return interval
+    while len(interval) >= 12:
+        interval = interval[:-12]
+        to_append.append("o")
+        octave = True
 
+    if len(interval) >= 7:
+        interval = interval[:-7]
+        to_append.append("P5")
+
+    if len(interval) >= 4:
+        interval = interval[:-4]
+        to_append.append("M3")
+
+    if len(interval) >= 3:
+        interval = interval[:-3]
+        to_append.append("m3")
+
+    if len(interval) >= 2:
+        interval = interval[:-2]
+        to_append.append("w")
+
+    interval += to_append
+
+    if down:
+        interval = ["-" + current for current in interval]
+
+    return interval, octave
+
+def pad_octave_notation(octave:int, note:str):
+    
+    if octave > 0:
+        while octave != 1:
+            note += "'"
+            octave -= 1
+        return note.lower()
+    else:
+        while octave != 0:
+            note += ","
+            octave += 1
+        return note
