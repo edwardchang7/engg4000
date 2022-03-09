@@ -1,5 +1,5 @@
 class RhythmicPatternModel:
-    _key = None
+    _song_name = None
 
-    def __init__(self, _key):
-        self._key = _key
+    def __init__(self, _song_name):
+        self._song_name = _song_name
