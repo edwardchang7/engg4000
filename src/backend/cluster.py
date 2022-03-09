@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from models.rhythmic_pattern_model import RhythmicPatternModel
 
 
 class Cluster:
@@ -39,3 +40,20 @@ class Cluster:
             self.is_admin = new_is_admin
 
         return self
+
+    def insert_model(self, model) -> bool:
+        """
+        This method inserts the provided model into the database. This method will return true if the provided
+        model was successfully inserted into the database. Otherwise, this method will return false.
+
+        :param model: The model to insert into the database.
+        :return A boolean that is True if the provided model was successfully inserted into the database. Returns
+            False if the provided model failed to be inserted into the database.
+        """
+        # Make sure that the database is connected before trying to insert the provided model
+        if (self.database is None or self.database_name is None or
+                self.collection_name is None or self.is_admin is None):
+            return False
+        
+        insert_action = self.insert_one(model.__dict__)
+        return insert_action.acknowledged
