@@ -10,9 +10,9 @@ rhythmic patterns from an abc file
 """
 
 import re
-from hashlib import new
-from math import comb
-from typing import List
+
+from backend.cluster import Cluster
+# from backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
 from abc_tools import (get_header, get_melodic_and_rythmic, get_music,
                        get_voicings, is_polyphonic)
@@ -220,28 +220,6 @@ def extract_pattern():
                 break
 
 
-    # sets the keys for the dictionary for V1
-    # for counter in range(3, 6):
-    #     for bar in v1_combination:
-    #         if count == counter:
-    #             count = 0
-    #             v1_keys.append(v1_temp)
-    #             v1_temp = []
-    #         else:
-    #             count += 1
-    #             v1_temp.append(bar)
-    
-    # sets the keys for the dictionary for V1
-    # for counter in range(3, 6):
-    #     for bar in v2_combination:
-    #         if count == counter:
-    #             count = 0
-    #             v2_keys.append(v2_temp)
-    #             v2_temp = []
-    #         else:
-    #             count += 1
-    #             v2_temp.append(bar)
-
     
     for set_of_bars in v1_keys:
         if str(set_of_bars) in v1_pattern.keys():
@@ -260,8 +238,16 @@ def extract_pattern():
 extract_rhythmic_patterns('src/backend/mxl_to_abc/converted_compositions/sweet_child.abc')
 extract_pattern()
 
-for key,value in v1_pattern.items():
-    print(f"{value} : {key}")
-print("-----------------------------------------------------------------------------")
-for key,value in v2_pattern.items():
-    print(f"{value} : {key}")
+database = Cluster("elliot", "rhythmic_patterns",False)
+# model = RhythmicPatternModel(v1_pattern)
+# passed = database.insert_model(model)
+
+# print(passed)
+
+# if v2_pattern:
+#     model = RhythmicPatternModel(v2_pattern)
+#     passed = database.insert_model(model)
+#     print(passed)
+
+
+
