@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from models.rhythmic_pattern_model import RhythmicPatternModel
+from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
 
 class Cluster:
@@ -54,6 +54,6 @@ class Cluster:
         if (self.database is None or self.database_name is None or
                 self.collection_name is None or self.is_admin is None):
             return False
-        
-        insert_action = self.insert_one(model.__dict__)
+
+        insert_action = self.collection.insert_one(model.__dict__)
         return insert_action.acknowledged

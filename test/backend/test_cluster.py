@@ -85,7 +85,7 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(cluster_instance.collection_name, collection_name)
         self.assertEqual(cluster_instance.is_admin, is_admin_value)
 
-        # Assert that our our model can be stored in the database
+        # Assert that our model can be stored in the database
         rp_model = rhythmic_pattern_model.RhythmicPatternModel(100)        
-        insert_model_result = cluster_instance.insert_model(rp_model)
-        self.assertTrue(insert_model_action)
+        insert_model_result = cluster_instance.insert_model(cluster_instance, rp_model)
+        self.assertTrue(insert_model_result)
