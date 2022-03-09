@@ -10,7 +10,7 @@ rhythmic patterns from an abc file
 """
 
 import re
-
+import os
 from src.backend.cluster import Cluster
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
@@ -170,7 +170,8 @@ def _keep_beats_only(note, beat):
             new_note += c
 
     return new_note
-    
+
+
 def extract_pattern():
     # get 3 combined bars
     v1_temp = []
@@ -235,19 +236,22 @@ def extract_pattern():
             v2_pattern[str(set_of_bars)] = 1
 
 
-extract_rhythmic_patterns('mxl_to_abc/converted_compositions/sweet_child.abc')
+file_path='mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc'
+composition_name=get_header(file_path, 'T').replace(" ", "_")
+extract_rhythmic_patterns(file_path)
 extract_pattern()
 
 database = Cluster("elliot", "rhythmic_patterns", False)
-model = RhythmicPatternModel("sweet_child", v1_pattern)
+model = RhythmicPatternModel("v1 - "+composition_name, v1_pattern)
 passed = database.insert_model(database, model)
 
-print(passed)
+print("Successfully uploaded "+composition_name)
 
 if v2_pattern:
-    model = RhythmicPatternModel("sweet_child", v2_pattern)
+    model = RhythmicPatternModel("v2 - "+composition_name, v2_pattern)
     passed = database.insert_model(database, model)
-    print(passed)
+    print("Successfully uploaded "+composition_name)
+
 
 
 
