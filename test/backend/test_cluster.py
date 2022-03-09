@@ -1,6 +1,8 @@
 import unittest
 
 from src.backend import cluster
+from src.backend.models import rhythmic_pattern_model
+from src.backend.models import tonal_pattern_model
 
 
 class TestCluster(unittest.TestCase):
@@ -68,3 +70,24 @@ class TestCluster(unittest.TestCase):
 
         insert_action = collection_instance.insert_one(example_data)
         self.assertTrue(insert_action.acknowledged)
+
+    def test_insert_rhythmic_pattern_model(self):
+        """
+        This test case tests that our rhythmic pattern models can be stored in the database successfully.
+        """
+        # create a cluster instance and assert that it has been connected successfully
+        database_name = "database"
+        collection_name = "test"
+        is_admin_value = False
+        cluster_instance = cluster.Cluster(database_name, collection_name, is_admin_value)
+        self.assertIsNotNone(cluster_instance)
+        self.assertEqual(cluster_instance.database_name, database_name)
+        self.assertEqual(cluster_instance.collection_name, collection_name)
+        self.assertEqual(cluster_instance.is_admin, is_admin_value)
+
+        # Assert that our rhythmic pattern model can be stored in the database successfully
+        example_song_name = "Baby Shark"
+        example_value = { "[['4','4'], ['8'], ['8']]":1, "[['1'], ['1']]" : 13, "[['3'], ['10', '5']]" : 1 }
+        rp_model = rhythmic_pattern_model.RhythmicPatternModel(example_song_name, example_value)        
+        insert_model_result = cluster_instance.insert_model(cluster_instance, rp_model)
+        self.assertTrue(insert_model_result)
