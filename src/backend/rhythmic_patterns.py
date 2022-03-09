@@ -11,8 +11,8 @@ rhythmic patterns from an abc file
 
 import re
 
-from backend.cluster import Cluster
-# from backend.models.rhythmic_pattern_model import RhythmicPatternModel
+from src.backend.cluster import Cluster
+from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
 from abc_tools import (get_header, get_melodic_and_rythmic, get_music,
                        get_voicings, is_polyphonic)
@@ -235,19 +235,19 @@ def extract_pattern():
             v2_pattern[str(set_of_bars)] = 1
 
 
-extract_rhythmic_patterns('src/backend/mxl_to_abc/converted_compositions/sweet_child.abc')
+extract_rhythmic_patterns('mxl_to_abc/converted_compositions/sweet_child.abc')
 extract_pattern()
 
-database = Cluster("elliot", "rhythmic_patterns",False)
-# model = RhythmicPatternModel(v1_pattern)
-# passed = database.insert_model(model)
+database = Cluster("elliot", "rhythmic_patterns", False)
+model = RhythmicPatternModel("sweet_child", v1_pattern)
+passed = database.insert_model(database, model)
 
-# print(passed)
+print(passed)
 
-# if v2_pattern:
-#     model = RhythmicPatternModel(v2_pattern)
-#     passed = database.insert_model(model)
-#     print(passed)
+if v2_pattern:
+    model = RhythmicPatternModel("sweet_child", v2_pattern)
+    passed = database.insert_model(database, model)
+    print(passed)
 
 
 
