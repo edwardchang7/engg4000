@@ -9,27 +9,44 @@ rhythmic patterns from an abc file
 5. Cross reference those sections with original music to get actual musical pattern
 """
 
+import re
 from hashlib import new
 from math import comb
-import re
 from typing import List
-from abc_tools import get_header,is_polyphonic,get_voicings,get_music
 
+from abc_tools import (get_header, get_melodic_and_rythmic, get_music,
+                       get_voicings, is_polyphonic)
 
-keys = []
-pattern_extraction = {}
-combination_bar = []
+v1_keys = []
+v2_keys = []
+
+v1_pattern = {}
+v2_pattern = {}
+
+v1_combination = []
+v2_combination = []
 
 
 def extract_rhythmic_patterns(file_path:str):
   voicings=get_voicings(file_path)
   meter=get_header(file_path,'M')
-  encoded_voicings=encode_voicings(voicings)
+
+  # Gets the seperated list of v1 and v2
+  v1,v2 = get_melodic_and_rythmic(file_path)
+
+  '''
+  1. Seperates each bar
+  2. Remove unnecessary notation
+  3. Replace all notes with the beat counts
+  4. Combine all bars
+  5. extract patterns
+  '''
+  encode_voicings(v1, v2)
   
 
 # Function to isolate the notes in a single bar
 def format_bar(bar:str):
-  has_notes=re.search('[A-Ga-g]',bar)
+  has_notes=re.search('[A-Ga-g]',bar) or 'z' in bar
   if not has_notes:
     bar=None
   else:
@@ -45,34 +62,38 @@ def format_bar(bar:str):
   return bar
 
 
-def encode_voicings(voicings):
+def encode_voicings(v1, v2):
   #1. isolate notes
     # split into sections
     # split sections into bars
-  for voice in voicings:
-    sections=voice.split('||')
-    for section in sections:
-      bars=section.split("|")
+
+  for v in v1:
+      bars = v.split('|')
       for bar in bars:
-        bar=format_bar(bar)
+          # Strips all unnecessary notation
+          bar = format_bar(bar)
 
-        if(bar):
-            # now each bar has just the note, and the beat count (if any)
-            bar = encode_bar(bar) 
-            if(bar):  
-                combination_bar.extend(bar)
+          if(bar):
+              # At this point, each bar only has the notes and the pitch
+              bar = encode_bar(bar)
+              # Here the bar only has the beat count itself
+              if(bar):
+                  v1_combination.append(bar)
 
+  for v in v2:
+      bars = v.split('|')
+      for bar in bars:
+          # Strips all unnecessary notation
+          bar = format_bar(bar)
 
-
-
-
-
-        # if(bar):
-        #   bar=encode_bar(bar)
-
-
-        
-  #2. Change notes in bars into a number
+          if(bar):
+              
+              # At this point, each bar only has the notes and the pitch
+              bar = encode_bar(bar)
+              # Here the bar only has the beat count itself
+              if(bar):
+                  v2_combination.append(bar)
+  
 
 
 '''
@@ -137,40 +158,66 @@ def _keep_beats_only(note, beat):
     exception_list = {'x'}
     new_note = ''
 
+    # If this is a chord, keep the sqr brackets
     for c in note:
-        if c.isalpha() and c not in exception_list:
-            new_note += beat
+        if c == 'z':
+            # moreve c
+            new_note += '(' + beat + ')'
+        elif c.isalpha() and c not in exception_list:
+            # remove c
+            new_note +=  beat
         elif c  == '[' or c == ']':
             new_note += c
 
     return new_note
     
-def pattern(seq):
+def extract_pattern():
     # get 3 combined bars
     count = 3
-    temp = []
+    v1_temp = []
+    v2_temp = []
 
-    # sets the keys for the dictionary
+    # sets the keys for the dictionary for V1
     for counter in range(3, 6):
-        for bar in combination_bar:
+        for bar in v1_combination:
             if count == counter:
                 count = 0
-                keys.append(temp)
-                temp = []
+                v1_keys.append(v1_temp)
+                v1_temp = []
             else:
                 count += 1
-                temp.append(bar)
+                v1_temp.append(bar)
+    
+    for counter in range(3, 6):
+        for bar in v2_combination:
+            if count == counter:
+                count = 0
+                v2_keys.append(v2_temp)
+                v2_temp = []
+            else:
+                count += 1
+                v2_temp.append(bar)
 
     
-    for set_of_bars in keys:
-        if str(set_of_bars) in pattern_extraction.keys():
-            pattern_extraction[str(set_of_bars)] += 1
+    for set_of_bars in v1_keys:
+        if str(set_of_bars) in v1_pattern.keys():
+            v1_pattern[str(set_of_bars)] += 1
         else:
-            pattern_extraction[str(set_of_bars)] = 1
+            v1_pattern[str(set_of_bars)] = 1
+
+
+    for set_of_bars in v2_keys:
+        if str(set_of_bars) in v2_pattern.keys():
+            v2_pattern[str(set_of_bars)] += 1
+        else:
+            v2_pattern[str(set_of_bars)] = 1
 
 
 extract_rhythmic_patterns('src/backend/mxl_to_abc/converted_compositions/mary_had_a_little_lamb.abc')
-pattern(combination_bar)
+extract_pattern()
 
-for key,value in pattern_extraction.items():
+for key,value in v1_pattern.items():
+    print(f"{value} : {key}")
+print("-----------------------------------------------------------------------------")
+for key,value in v2_pattern.items():
     print(f"{value} : {key}")
