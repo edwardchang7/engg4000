@@ -136,6 +136,7 @@ def encode_bar(bar):
     for note in all_beats_bar:
         beat = note[-1]
 
+        # if the beat is placed at the start instead
         if not beat.isdigit():
             beat = note[0]
 
@@ -172,50 +173,68 @@ def _keep_beats_only(note, beat):
     return new_note
     
 def extract_pattern():
-    # get 3 combined bars
     v1_temp = []
     v2_temp = []
 
+    # This loop extracts a bar with the min length of 3 and max length of 5 from v1
     for counter in range(3,6):
         i = 0
         count = 0
         index = 0
+        # This ensures that it only extract information from v1
         while(True):
+            # if the combination length (count) is counter, it means the max length is reached
             if count == counter:
+                # resets the combination length counter (count)
                 count = 0
+                # saves a 'set' of combined bars to v1_keys
                 v1_keys.append(v1_temp)
                 v1_temp = []
+                # increases the index to know which bar to start from again
                 index += 1
                 i = index
+            # if the combination length (count) != counter
             else:
                 count += 1
+                # if the index is the length of the combined bars, then decrease it by 1 else you would get IndexOutOfBounds
                 if i >= len(v1_combination):
                     i -= 1
                 v1_temp.append(v1_combination[i])
                 i +=  1
 
+            # If the index  == length, it means you reached the end of v1, so break from the while loop, and increase
+            # the max line for the combination
             if index == len(v1_combination):
                 break
     
+    # This loop extracts a bar with the min length of 3 and max length of 5 from v1
     for counter in range(3,6):
         i = 0
         count = 0
         index = 0
         while(True):
+             # if the combination length (count) is counter, it means the max length is reached
             if count == counter:
+                # resets the combination length counter (count)
                 count = 0
+                 # saves a 'set' of combined bars to v2_keys
                 v2_keys.append(v2_temp)
                 v2_temp = []
+                # increases the index to know which bar to start from again
                 index += 1
                 i = index
+            # if the combination length (count) != counter
             else:
                 if(v2_combination):
                     count += 1
+                    # if the index is the length of the combined bars, then decrease it by 1 else you would get IndexOutOfBounds
                     if i >= len(v2_combination):
                         i -= 1
                     v2_temp.append(v2_combination[i])
                     i +=  1
 
+            # If the index  == length, it means you reached the end of v1, so break from the while loop, and increase
+            # the max line for the combination
             if index == len(v2_combination):
                 break
 
