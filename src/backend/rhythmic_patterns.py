@@ -165,7 +165,7 @@ def _keep_beats_only(note, beat):
             new_note += '(' + beat + ')'
         elif c.isalpha() and c not in exception_list:
             # remove c
-            new_note +=  beat
+            new_note += beat
         elif c  == '[' or c == ']':
             new_note += c
 
@@ -173,30 +173,74 @@ def _keep_beats_only(note, beat):
     
 def extract_pattern():
     # get 3 combined bars
-    count = 3
     v1_temp = []
     v2_temp = []
 
-    # sets the keys for the dictionary for V1
-    for counter in range(3, 6):
-        for bar in v1_combination:
+    for counter in range(3,6):
+        i = 0
+        count = 0
+        index = 0
+        while(True):
             if count == counter:
                 count = 0
                 v1_keys.append(v1_temp)
                 v1_temp = []
+                index += 1
+                i = index
             else:
                 count += 1
-                v1_temp.append(bar)
+                if i >= len(v1_combination):
+                    i -= 1
+                v1_temp.append(v1_combination[i])
+                i +=  1
+
+            if index == len(v1_combination):
+                break
     
-    for counter in range(3, 6):
-        for bar in v2_combination:
+    for counter in range(3,6):
+        i = 0
+        count = 0
+        index = 0
+        while(True):
             if count == counter:
                 count = 0
                 v2_keys.append(v2_temp)
                 v2_temp = []
+                index += 1
+                i = index
             else:
-                count += 1
-                v2_temp.append(bar)
+                if(v2_combination):
+                    count += 1
+                    if i >= len(v2_combination):
+                        i -= 1
+                    v2_temp.append(v2_combination[i])
+                    i +=  1
+
+            if index == len(v2_combination):
+                break
+
+
+    # sets the keys for the dictionary for V1
+    # for counter in range(3, 6):
+    #     for bar in v1_combination:
+    #         if count == counter:
+    #             count = 0
+    #             v1_keys.append(v1_temp)
+    #             v1_temp = []
+    #         else:
+    #             count += 1
+    #             v1_temp.append(bar)
+    
+    # sets the keys for the dictionary for V1
+    # for counter in range(3, 6):
+    #     for bar in v2_combination:
+    #         if count == counter:
+    #             count = 0
+    #             v2_keys.append(v2_temp)
+    #             v2_temp = []
+    #         else:
+    #             count += 1
+    #             v2_temp.append(bar)
 
     
     for set_of_bars in v1_keys:
@@ -213,6 +257,11 @@ def extract_pattern():
             v2_pattern[str(set_of_bars)] = 1
 
 
-extract_rhythmic_patterns('src/backend/mxl_to_abc/converted_compositions/mary_had_a_little_lamb.abc')
+extract_rhythmic_patterns('src/backend/mxl_to_abc/converted_compositions/sweet_child.abc')
 extract_pattern()
 
+for key,value in v1_pattern.items():
+    print(f"{value} : {key}")
+print("-----------------------------------------------------------------------------")
+for key,value in v2_pattern.items():
+    print(f"{value} : {key}")
