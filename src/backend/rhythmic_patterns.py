@@ -216,8 +216,3 @@ def extract_pattern():
 extract_rhythmic_patterns('src/backend/mxl_to_abc/converted_compositions/mary_had_a_little_lamb.abc')
 extract_pattern()
 
-for key,value in v1_pattern.items():
-    print(f"{value} : {key}")
-print("-----------------------------------------------------------------------------")
-for key,value in v2_pattern.items():
-    print(f"{value} : {key}")
