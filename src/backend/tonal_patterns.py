@@ -1,5 +1,7 @@
 from src.backend.music_tools import whole_step, check_interval
 from src.backend.scales import get_scale
+from src.backend.cluster import Cluster
+from src.backend.models.tonal_pattern_model import TonalPatternModel
 import itertools
 
 # CONSTANTS_____________________________________________
@@ -241,13 +243,24 @@ def tonic_to_tonic_filter(key:str, input_str:str):
 
                 for_DB.append({"Key": key, "Pattern": pattern_interval, "Octave_Change": value})
 
-    print(for_DB)
+    return for_DB
 
+def tonal_patterns():
 
+    for_db = tonic_to_tonic_filter(test_key, test_pattern)
+
+    database = Cluster("thomas", "tonal_patterns", False)
+
+    for pattern in for_db:
+        t_model = TonalPatternModel(pattern["Key"], pattern["Pattern"], pattern["Octave_Change"])
+        result = database.insert_model(t_model)
+        if result:
+            print("success")
+        else:
+            print("Failure")
 
 # TESTING STUFF~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print("FORMATTED PATTERN:")
-print(format_pattern(test_key, test_pattern, pattern=None))
+print("FInput PATTERN:")
 
-tonic_to_tonic_filter(test_key, test_pattern)
+tonal_patterns()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
