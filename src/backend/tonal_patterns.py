@@ -253,7 +253,7 @@ def tonal_patterns():
 
     for pattern in for_db:
         t_model = TonalPatternModel(pattern["Key"], pattern["Pattern"], pattern["Octave_Change"])
-        result = database.insert_model(t_model)
+        result = database.insert_model(database, t_model)
         if result:
             print("success")
         else:
