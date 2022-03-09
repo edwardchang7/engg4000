@@ -162,6 +162,7 @@ def check_interval(key:str, starting_note:dict, end_note:dict, scale:list):
 
     higher_note = {}
     lower_note = {}
+    octave_check = False
 
     if starting_note["octave"] == end_note["octave"]:
         if scale.index(starting_note["note"].upper()) < scale.index(end_note["note"].upper()):
@@ -178,47 +179,54 @@ def check_interval(key:str, starting_note:dict, end_note:dict, scale:list):
     else:
         if starting_note["octave"] < end_note["octave"]:
             print("End_O")
+            octave_check = True
             higher_note = end_note
             lower_note = starting_note
         elif starting_note["octave"] > end_note["octave"]:
             print("Start_O")
+            octave_check = True
             higher_note = starting_note
             lower_note = end_note
 
     interval = []
 
-    if change_octave(lower_note["note"], True) == higher_note["note"]:
-        if higher_note == end_note:
-            interval.append("o")
-        else:
-            interval.append("-o")
-    elif P5(lower_note["note"], True) == higher_note["note"]:
-        if higher_note == end_note:
-            interval.append("P5")
-        else:
-            interval.append("-P5")
-    elif M3(lower_note["note"], True) == higher_note["note"]:
-        if higher_note == end_note:
-            interval.append("M3")
-        else:
-            interval.append("-M3")
-    elif m3(lower_note["note"], True) == higher_note["note"]:
-        if higher_note == end_note:
-            interval.append("m3")
-        else:
-            interval.append("-m3")
-    elif whole_step(lower_note["note"], True) == higher_note["note"]:
-        if higher_note == end_note:
-            interval.append("w")
-        else:
-            interval.append("-w")
-    else:
-        while lower_note["note"] != higher_note["note"]:
-            lower_note["note"] = half_step(lower_note["note"], True)
+    if octave_check:
+        octave_val = lower_note["octave"]
+        while octave_val != higher_note["octave"]:
+            octave_val += 1
+            lower_note["note"] = change_octave(lower_note["note"], True)
             if higher_note == end_note:
-                interval.append("h")
+                interval.append("o")
             else:
-                interval.append("-h")
+                interval.append("-o")
+    else:
+        if P5(lower_note["note"], True) == higher_note["note"]:
+            if higher_note == end_note:
+                interval.append("P5")
+            else:
+                interval.append("-P5")
+        elif M3(lower_note["note"], True) == higher_note["note"]:
+            if higher_note == end_note:
+                interval.append("M3")
+            else:
+                interval.append("-M3")
+        elif m3(lower_note["note"], True) == higher_note["note"]:
+            if higher_note == end_note:
+                interval.append("m3")
+            else:
+                interval.append("-m3")
+        elif whole_step(lower_note["note"], True) == higher_note["note"]:
+            if higher_note == end_note:
+                interval.append("w")
+            else:
+                interval.append("-w")
+        else:
+            while lower_note["note"] != higher_note["note"]:
+                lower_note["note"] = half_step(lower_note["note"], True)
+                if higher_note == end_note:
+                    interval.append("h")
+                else:
+                    interval.append("-h")
 
     return interval
 
