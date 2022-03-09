@@ -71,9 +71,9 @@ class TestCluster(unittest.TestCase):
         insert_action = collection_instance.insert_one(example_data)
         self.assertTrue(insert_action.acknowledged)
 
-    def test_insert_model(self):
+    def test_insert_rhythmic_pattern_model(self):
         """
-        This test case tests that our models can be stored in the database.
+        This test case tests that our rhythmic pattern models can be stored in the database successfully.
         """
         # create a cluster instance and assert that it has been connected successfully
         database_name = "database"
@@ -85,8 +85,9 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(cluster_instance.collection_name, collection_name)
         self.assertEqual(cluster_instance.is_admin, is_admin_value)
 
-        # Assert that our model can be stored in the database
+        # Assert that our rhythmic pattern model can be stored in the database successfully
+        example_song_name = "Baby Shark"
         example_value = { "[['4','4'], ['8'], ['8']]":1, "[['1'], ['1']]" : 13, "[['3'], ['10', '5']]" : 1 }
-        rp_model = rhythmic_pattern_model.RhythmicPatternModel(example_value)        
+        rp_model = rhythmic_pattern_model.RhythmicPatternModel(example_song_name, example_value)        
         insert_model_result = cluster_instance.insert_model(cluster_instance, rp_model)
         self.assertTrue(insert_model_result)
