@@ -9,13 +9,17 @@ rhythmic patterns from an abc file
 5. Cross reference those sections with original music to get actual musical pattern
 """
 
-import re
 import os
-from src.backend.cluster import Cluster
-from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
+import re
 
 from abc_tools import (get_header, get_melodic_and_rythmic, get_music,
                        get_voicings, is_polyphonic)
+from Collections.Song_Collection import Song_Collection
+from Collections.Rhythmic_Pattern import Rhythmic_Pattern
+
+from src.backend.cluster import Cluster
+from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
+
 
 v1_keys = []
 v2_keys = []
@@ -25,6 +29,8 @@ v2_pattern = {}
 
 v1_combination = []
 v2_combination = []
+
+song_list = []
 
 
 def extract_rhythmic_patterns(file_path:str):
@@ -248,6 +254,8 @@ def extract_pattern():
             v1_pattern[str(set_of_bars)] = 1
 
 
+
+
     for set_of_bars in v2_keys:
         if str(set_of_bars) in v2_pattern.keys():
             v2_pattern[str(set_of_bars)] += 1
@@ -255,11 +263,20 @@ def extract_pattern():
             v2_pattern[str(set_of_bars)] = 1
 
 
+'''
+takes in a song_collection object and adds a pattern to it
+'''
+def add_patterns(song, pattern):
+    pass
+
+
 # file_path='mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc'
 
 
 # the main dir 
-str_dir = 'src/backend/mxl_to_abc/converted_compositions'
+str_dir = 'mxl_to_abc/converted_compositions'
+
+count = 0
 
 # gets each file from the given directory
 directory = os.fsencode(str_dir)
@@ -282,32 +299,71 @@ for file in os.listdir(directory):
         # converts the header into a string if it returns a list
         actual_header = ""
 
+        # replacing the name 
+        composition_name=get_header(file_path, 'T')
+
         # converting list to a string header
         if type(composition_name) == list:
             for header in composition_name:
+                header = header.replace(" ", "_")
                 actual_header += str(header)
         else:
-            actual_header = composition_name
+            actual_header = composition_name.replace(" ", "_")
 
-        # replacing the name 
-        composition_name=get_header(file_path, 'T').replace(" ", "_")\
+        # creates the song object
+        song = Song_Collection(actual_header)
+
+        # appends the song object to the song_list
+        song_list.append(song)
+
 
         # The actual extraction process
         extract_rhythmic_patterns(file_path)
         extract_pattern()
 
-# adding to the database
-database = Cluster("elliot", "rhythmic_patterns", False)
-model = RhythmicPatternModel("v1 - "+composition_name, v1_pattern)
-passed = database.insert_model(database, model)
+        for k,v in v1_pattern.items():
+            pattern = Rhythmic_Pattern(k,v, True)
+            song.add_pattern(pattern)
 
-print("Successfully uploaded "+composition_name)
+        for k,v in v2_pattern.items():
+            pattern = Rhythmic_Pattern(k,v, False)
+            song.add_pattern(pattern)
 
-# if there is a v2 then add it to the database too
-if v2_pattern:
-    model = RhythmicPatternModel("v2 - "+composition_name, v2_pattern)
-    passed = database.insert_model(database, model)
-    print("Successfully uploaded "+composition_name)
+        # Reset the global variables for the next song
+        v1_pattern = {}
+        v2_pattern = {}
+
+        v1_keys = []
+        v2_keys = []
+
+        v1_combination = []
+        v2_combination = []
+
+        
+
+
+for song in song_list:
+    database = Cluster("elliot", song.song_name, False)
+    v1,v2 = song.get_patterns()
+
+    model = RhythmicPatternModel(song.song_name, v1)
+    passed = database.insert_rhythmic_pattern_model(database, model)
+
+    if v2:
+        pass    
+       
+# # adding to the database
+# database = Cluster("elliot", "rhythmic_patterns", False)
+# model = RhythmicPatternModel("v1 - "+composition_name, v1_pattern)
+# passed = database.insert_model(database, model)
+
+# print("Successfully uploaded "+composition_name)
+
+# # if there is a v2 then add it to the database too
+# if v2_pattern:
+#     model = RhythmicPatternModel("v2 - "+composition_name, v2_pattern)
+#     passed = database.insert_model(database, model)
+#     print("Successfully uploaded "+composition_name)
 
 
 
