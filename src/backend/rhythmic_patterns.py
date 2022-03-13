@@ -255,17 +255,55 @@ def extract_pattern():
             v2_pattern[str(set_of_bars)] = 1
 
 
-file_path='mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc'
-composition_name=get_header(file_path, 'T').replace(" ", "_")
-extract_rhythmic_patterns(file_path)
-extract_pattern()
+# file_path='mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc'
 
+
+# the main dir 
+str_dir = 'src/backend/mxl_to_abc/converted_compositions'
+
+# gets each file from the given directory
+directory = os.fsencode(str_dir)
+
+# for each file within the given directory, extract patterns from this
+for file in os.listdir(directory):
+
+    # gets the filename of the given file
+    filename = os.fsdecode(file)
+
+    # checks if hte given file ends with the right extension
+    if filename.endswith('.abc'):
+
+        # concat the directory with the file name
+        file_path = str_dir + "/" + filename
+
+        # extracts the header from the given abc file
+        composition_name = get_header(file_path, 'T')
+        
+        # converts the header into a string if it returns a list
+        actual_header = ""
+
+        # converting list to a string header
+        if type(composition_name) == list:
+            for header in composition_name:
+                actual_header += str(header)
+        else:
+            actual_header = composition_name
+
+        # replacing the name 
+        composition_name=get_header(file_path, 'T').replace(" ", "_")\
+
+        # The actual extraction process
+        extract_rhythmic_patterns(file_path)
+        extract_pattern()
+
+# adding to the database
 database = Cluster("elliot", "rhythmic_patterns", False)
 model = RhythmicPatternModel("v1 - "+composition_name, v1_pattern)
 passed = database.insert_model(database, model)
 
 print("Successfully uploaded "+composition_name)
 
+# if there is a v2 then add it to the database too
 if v2_pattern:
     model = RhythmicPatternModel("v2 - "+composition_name, v2_pattern)
     passed = database.insert_model(database, model)
