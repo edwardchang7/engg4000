@@ -41,12 +41,12 @@ class Cluster:
 
         return self
 
-    def insert_rhythmic_pattern_model(self: Cluster, rhythmic_pattern_model: RhythmicPatternModel) -> bool:
+    def insert_rhythmic_pattern_model(self, rhythmic_pattern_model: RhythmicPatternModel) -> bool:
         if (self.database is None or self.database_name is None or
                 self.collection_name is None or self.is_admin is None):
             return False
 
-        if (self.collection != rhythmic_pattern_model.collection_name)
+        if (self.collection_name != rhythmic_pattern_model.collection_name):
             return False
         
 

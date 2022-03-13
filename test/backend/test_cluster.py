@@ -78,7 +78,7 @@ class TestCluster(unittest.TestCase):
         """
         # instantiate test case variables
         example_collection_name = "Baby Shark"
-        example_pattern = [['[111]'], ['[111]'], ['[111]'], ['[111]']]
+        example_pattern = "[['[111]'], ['[111]'], ['[111]'], ['[111]']]"
         example_num_of_beats_value = 1
         example_frequency_value = 1
         example_length_value = 1
@@ -99,4 +99,4 @@ class TestCluster(unittest.TestCase):
         list_of_rp = [rp, rp, rp, rp,  rp]
         rp_model = rhythmic_pattern_model.RhythmicPatternModel(example_collection_name, list_of_rp)        
         insert_rp_model_result = cluster_instance.insert_rhythmic_pattern_model(cluster_instance, rp_model)
-        self.assertTrue(insert_model_result)
+        self.assertTrue(insert_rp_model_result)
