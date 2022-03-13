@@ -3,6 +3,7 @@ import unittest
 from src.backend import cluster
 from src.backend.models import rhythmic_pattern_model
 from src.backend.models import tonal_pattern_model
+from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
 
 
 class TestCluster(unittest.TestCase):
@@ -75,9 +76,17 @@ class TestCluster(unittest.TestCase):
         """
         This test case tests that our rhythmic pattern models can be stored in the database successfully.
         """
+        # instantiate test case variables
+        example_collection_name = "Baby Shark"
+        example_pattern = "[['[111]'], ['[111]'], ['[111]'], ['[111]']]"
+        example_num_of_beats_value = 1
+        example_frequency_value = 1
+        example_length_value = 1
+        example_is_v1_value = True
+
         # create a cluster instance and assert that it has been connected successfully
         database_name = "database"
-        collection_name = "test"
+        collection_name = example_collection_name
         is_admin_value = False
         cluster_instance = cluster.Cluster(database_name, collection_name, is_admin_value)
         self.assertIsNotNone(cluster_instance)
@@ -86,8 +95,8 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(cluster_instance.is_admin, is_admin_value)
 
         # Assert that our rhythmic pattern model can be stored in the database successfully
-        example_song_name = "Baby Shark"
-        example_value = { "[['4','4'], ['8'], ['8']]":1, "[['1'], ['1']]" : 13, "[['3'], ['10', '5']]" : 1 }
-        rp_model = rhythmic_pattern_model.RhythmicPatternModel(example_song_name, example_value)        
-        insert_model_result = cluster_instance.insert_model(cluster_instance, rp_model)
-        self.assertTrue(insert_model_result)
+        rp = Rhythmic_Pattern(example_pattern, example_frequency_value, example_is_v1_value)
+        list_of_rp = [rp, rp, rp, rp,  rp]
+        rp_model = rhythmic_pattern_model.RhythmicPatternModel(example_collection_name, list_of_rp)        
+        insert_rp_model_result = cluster_instance.insert_rhythmic_pattern_model(cluster_instance, rp_model)
+        self.assertTrue(insert_rp_model_result)
