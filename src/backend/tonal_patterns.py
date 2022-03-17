@@ -1,7 +1,10 @@
-from src.backend.music_tools import whole_step, check_interval
+from re import S
+from src.backend.music_tools import whole_step, check_interval, half_step
 from src.backend.scales import get_scale
-from src.backend.cluster import Cluster
+#from src.backend.cluster import Cluster
 from src.backend.models.tonal_pattern_model import TonalPatternModel
+from src.backend.abc_tools import (get_header, get_melodic_and_rythmic, get_music,
+                       get_voicings, is_polyphonic)
 import itertools
 
 # CONSTANTS_____________________________________________
@@ -107,7 +110,7 @@ def frequency_of_pattern(analyze_str,key, pattern):
 
 
 # Function to translate from input string to list of note dictionaries
-def config_input_string(key:str, input_str:str):
+def config_input_string(key:str, input_str:str, mask:bool):
     # 1. get the notes in the key
     notes_in_key=get_scale(key,"M")
     # Format sharps correctly
@@ -121,12 +124,14 @@ def config_input_string(key:str, input_str:str):
     print("Tahng")
     print(degree_with_sharp)
     print(notes_in_key)
+    print(input_str)
     notes_in_key=[note.replace("#","") for note in notes_in_key]
     notes_in_key=[note.upper() for note in notes_in_key]
 
     #preset flags
     higher = False
     lower = False
+    wait = False
     octave = -99
     temp_note = ""
 
@@ -136,42 +141,48 @@ def config_input_string(key:str, input_str:str):
     # 5. Add Sharps to notes which require it from the Key
     tonal_val_dict_list=[]
     for note in input_str:
-        if higher:
-            if note=="'":
-                octave += 1
-            else:
-                if degree_with_sharp[notes_in_key.index(temp_note.upper())]:
-                    tonal_val_dict_list.append(
-                        {"note": temp_note + "#", "degree": str(notes_in_key.index(temp_note.upper()) + 1), "octave": octave})
+        if wait:
+            if note == "!" or note == "}":
+                wait = False
+        else:
+            if higher:
+                if note=="'":
+                    octave += 1
                 else:
-                    tonal_val_dict_list.append(
-                        {"note": temp_note, "degree": str(notes_in_key.index(temp_note.upper()) + 1), "octave": octave})
-                higher = False
-        elif lower:
-            if note==",":
-                octave -= 1
-            else:
-                if degree_with_sharp[notes_in_key.index(temp_note.upper())]:
-                    tonal_val_dict_list.append(
-                        {"note": temp_note + "#", "degree": str(notes_in_key.index(temp_note) + 1), "octave": octave})
+                    if degree_with_sharp[notes_in_key.index(temp_note.upper())]:
+                        tonal_val_dict_list.append(
+                            {"note": temp_note + "#", "degree": str(notes_in_key.index(temp_note.upper()) + 1), "octave": octave})
+                    else:
+                        tonal_val_dict_list.append(
+                            {"note": temp_note, "degree": str(notes_in_key.index(temp_note.upper()) + 1), "octave": octave})
+                    higher = False
+            elif lower:
+                if note==",":
+                    octave -= 1
                 else:
-                    tonal_val_dict_list.append(
-                        {"note": temp_note, "degree": str(notes_in_key.index(temp_note) + 1), "octave": octave})
-                lower = False
-        if note.isalpha():
-            if note == "z":
-                tonal_val_dict_list.append({"note": "z", "degree": "0", "octave": "na"})
-            else:
-                if note.islower():
-                    higher = True
-                    octave = 1
-                    temp_note = note
+                    if degree_with_sharp[notes_in_key.index(temp_note.upper())]:
+                        tonal_val_dict_list.append(
+                            {"note": temp_note + "#", "degree": str(notes_in_key.index(temp_note) + 1), "octave": octave})
+                    else:
+                        tonal_val_dict_list.append(
+                            {"note": temp_note, "degree": str(notes_in_key.index(temp_note) + 1), "octave": octave})
+                    lower = False
+            if note == "!" or note == "{":
+                wait = True
+            elif note.isalpha():
+                if note == "z":
+                    tonal_val_dict_list.append({"note": "z", "degree": "0", "octave": "na"})
                 else:
-                    lower = True
-                    octave = 0
-                    temp_note = note
-        elif note == "|":
-            tonal_val_dict_list.append({"note": "|", "degree": "-1", "octave": "na"})
+                    if note.islower():
+                        higher = True
+                        octave = 1
+                        temp_note = note
+                    else:
+                        lower = True
+                        octave = 0
+                        temp_note = note
+            elif note == "|":
+                tonal_val_dict_list.append({"note": "|", "degree": "-1", "octave": "na"})
     return tonal_val_dict_list
 
 # Function will check if pattern length in bars is within the min to max range
@@ -187,7 +198,7 @@ def confirm_pattern_length(start_index, end_index, bar_indices):
         return False
 
 # Function to take in a string of notes and extract the tonic-to-tonic patterns
-def tonic_to_tonic_filter(key:str, input_str:str):
+def tonic_to_tonic_filter(key:str, input_str:str, mask:bool):
     """
     Pro strat: Much more time efficient - lets use this one
     1. Configure the input string into a list of dictionaries
@@ -196,7 +207,7 @@ def tonic_to_tonic_filter(key:str, input_str:str):
     4. Extract those intervals
     """
     # 1. Configure the input string into a list of dictionaries
-    note_list=config_input_string(key,input_str)
+    note_list=config_input_string(key,input_str, mask)
 
     # 2. Iterate through entire list of dictionaries saving the position of all tonic notes and bar lines
     num_notes=len(note_list)
@@ -245,22 +256,36 @@ def tonic_to_tonic_filter(key:str, input_str:str):
 
     return for_DB
 
-def tonal_patterns():
+def extract_tonal_patterns(file_path:str):
 
-    for_db = tonic_to_tonic_filter(test_key, test_pattern)
+    key = get_header(file_path, 'K')[0]
+    
+    key, flat_mask = check_for_flat(key)
 
-    database = Cluster("thomas", "tonal_patterns", False)
+    v1,v2 = get_melodic_and_rythmic(file_path)
 
-    for pattern in for_db:
-        t_model = TonalPatternModel(pattern["Key"], pattern["Pattern"], pattern["Octave_Change"])
-        result = database.insert_model(database, t_model)
-        if result:
-            print("success")
+    for item in v1:
+
+        if item != "V:1\n":
+            print(tonic_to_tonic_filter(key, item, flat_mask))
+    #for_db = tonic_to_tonic_filter()
+
+    #database = Cluster("thomas", "tonal_patterns", False)
+
+    #for pattern in for_db:
+        #t_model = TonalPatternModel(pattern["Key"], pattern["Pattern"], pattern["Octave_Change"])
+        #result = database.insert_model(database, t_model)
+        #if result:
+        #    print("success")
+        #else:
+        #    print("Failure")
+
+def check_for_flat(key:str):
+
+    if len(key) > 1:
+        if key[1] == "b":
+            return half_step(key[0], False), True
         else:
-            print("Failure")
-
-# TESTING STUFF~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print("FInput PATTERN:")
-
-tonal_patterns()
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            return key, False
+    else:
+        return key, False

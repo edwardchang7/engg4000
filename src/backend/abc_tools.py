@@ -100,3 +100,26 @@ def get_voicings(abc_file_path:str):
     lines=lines[1:]
     return lines
 
+def get_melodic_and_rythmic(abc_file_path):
+  lines = []
+  found1, found2 = False, False
+  v1 = []
+  v2 = []
+
+  with open(abc_file_path) as f:
+    lines = f.readlines()
+
+  for line in lines:
+    if len(line) == 4 and line == 'V:1\n':
+      found1 = True
+    elif len(line) == 4 and line == 'V:2\n':
+      found1 = False
+      found2 = True
+
+    if(found1 and not found2):
+      v1.append(line)
+
+    if(found2 and not found1):
+      v2.append(line)
+
+  return v1,v2
