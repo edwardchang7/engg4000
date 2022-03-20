@@ -12,8 +12,8 @@ rhythmic patterns from an abc file
 import os
 import re
 
-from abc_tools import (get_header, get_melodic_and_rythmic, get_music,
-                       get_voicings, is_polyphonic)
+from abc_tools import (get_header, get_melodic_and_rythmic,
+                       get_voicings)
 from src.backend.Collections.Song_Collection import Song_Collection
 from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
 
@@ -96,7 +96,6 @@ def encode_voicings(v1, v2):
           bar = format_bar(bar)
 
           if(bar):
-              
               # At this point, each bar only has the notes and the pitch
               bar = encode_bar(bar)
               # Here the bar only has the beat count itself
@@ -313,8 +312,6 @@ def extract_pattern():
             # the max line for the combination
             if index == len(v2_combination):
                 break
-
-
     
     for set_of_bars in v1_keys:
         if str(set_of_bars) in v1_pattern.keys():
@@ -322,19 +319,11 @@ def extract_pattern():
         else:
             v1_pattern[str(set_of_bars)] = 1
 
-
-
-
     for set_of_bars in v2_keys:
         if str(set_of_bars) in v2_pattern.keys():
             v2_pattern[str(set_of_bars)] += 1
         else:
             v2_pattern[str(set_of_bars)] = 1
-
-
-
-# file_path='mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc'
-
 
 # the main dir 
 str_dir = 'mxl_to_abc/converted_compositions'
@@ -427,18 +416,6 @@ for song in song_list:
 
        print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
 
-# # adding to the database
-# database = Cluster("elliot", "rhythmic_patterns", False)
-# model = RhythmicPatternModel("v1 - "+composition_name, v1_pattern)
-# passed = database.insert_model(database, model)
-
-# print("Successfully uploaded "+composition_name)
-
-# # if there is a v2 then add it to the database too
-# if v2_pattern:
-#     model = RhythmicPatternModel("v2 - "+composition_name, v2_pattern)
-#     passed = database.insert_model(database, model)
-#     print("Successfully uploaded "+composition_name)
 
 
 
