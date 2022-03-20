@@ -70,20 +70,22 @@ class Cluster:
         if self.collection_name != song_name:
             return None
 
-        all_rhythmic_patterns = self.collection.find({self.RHYTHMIC_PATTERN: {'$exists': True}})
+        all_rhythmic_pattern_documents = self.collection.find({self.RHYTHMIC_PATTERN: {'$exists': True}})
         queried_rhythmic_patterns = []
 
-        iterator = 0
-        for rhythmic_pattern in all_rhythmic_patterns:
-            curr_rhythmic_pattern = rhythmic_pattern.get(self.RHYTHMIC_PATTERN)[iterator]
-            iterator = iterator + 1
+        for rhythmic_pattern_document in all_rhythmic_pattern_documents:
+            for rhythmic_pattern in rhythmic_pattern_document.get(self.RHYTHMIC_PATTERN):
+                current_rhythmic_pattern_length: int = rhythmic_pattern.get('length')
 
-            current_rhythmic_pattern_length: int = curr_rhythmic_pattern.get('length')
-
-            if current_rhythmic_pattern_length is not None and current_rhythmic_pattern_length == curr_rhythmic_pattern.get('length'):
-                queried_rhythmic_patterns.append(
-                    Rhythmic_Pattern(curr_rhythmic_pattern.get('pattern'), curr_rhythmic_pattern.get('frequency'), curr_rhythmic_pattern.get('is_v1'))
-                )
+                if (current_rhythmic_pattern_length is not None and
+                        current_rhythmic_pattern_length == rhythmic_pattern.get('length')):
+                    queried_rhythmic_patterns.append(
+                        Rhythmic_Pattern(
+                            rhythmic_pattern.get('pattern'),
+                            rhythmic_pattern.get('frequency'),
+                            rhythmic_pattern.get('is_v1')
+                        )
+                    )
 
         return queried_rhythmic_patterns
 

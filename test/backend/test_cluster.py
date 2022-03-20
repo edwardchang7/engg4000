@@ -1,5 +1,7 @@
 import unittest
 
+from typing import Final
+
 from src.backend import cluster
 from src.backend.models import rhythmic_pattern_model
 from src.backend.models import tonal_pattern_model
@@ -7,6 +9,8 @@ from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
 
 
 class TestCluster(unittest.TestCase):
+    test_collection_name: Final = "BABY SHARK"
+
     def test_cluster_new_method(self):
         """
         Creates a new cluster instance and assert that its connection to the database was successful.
@@ -77,14 +81,13 @@ class TestCluster(unittest.TestCase):
         This test case tests that our rhythmic pattern models can be stored in the database successfully.
         """
         # instantiate test case variables
-        example_collection_name = "Baby Shark"
         example_pattern = "[['[111]'], ['[111]'], ['[111]'], ['[111]']]"
         example_frequency_value = 1
         example_is_v1_value = True
 
         # create a cluster instance and assert that it has been connected successfully
         database_name = "database"
-        collection_name = example_collection_name
+        collection_name = self.test_collection_name
         is_admin_value = False
         cluster_instance = cluster.Cluster(database_name, collection_name, is_admin_value)
         self.assertIsNotNone(cluster_instance)
@@ -92,10 +95,13 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(cluster_instance.collection_name, collection_name)
         self.assertEqual(cluster_instance.is_admin, is_admin_value)
 
+        # drop collection if it exists
+        cluster_instance.collection.drop()
+
         # Assert that our rhythmic pattern model can be stored in the database successfully
         rp = Rhythmic_Pattern(example_pattern, example_frequency_value, example_is_v1_value)
         list_of_rp = [rp, rp, rp, rp, rp]
-        rp_model = rhythmic_pattern_model.RhythmicPatternModel(example_collection_name, list_of_rp)        
+        rp_model = rhythmic_pattern_model.RhythmicPatternModel(self.test_collection_name, list_of_rp)
         insert_rp_model_result = cluster_instance.insert_rhythmic_pattern_model(cluster_instance, rp_model)
         self.assertTrue(insert_rp_model_result)
 
@@ -108,15 +114,16 @@ class TestCluster(unittest.TestCase):
 
         # create a cluster instance and assert that it has been connected successfully
         database_name = "database"
-        collection_name = "Baby Shark"
         is_admin_value = False
-        cluster_instance = cluster.Cluster(database_name, collection_name, is_admin_value)
+        cluster_instance = cluster.Cluster(database_name, self.test_collection_name, is_admin_value)
         self.assertIsNotNone(cluster_instance)
         self.assertEqual(cluster_instance.database_name, database_name)
-        self.assertEqual(cluster_instance.collection_name, collection_name)
+        self.assertEqual(cluster_instance.collection_name, self.test_collection_name)
         self.assertEqual(cluster_instance.is_admin, is_admin_value)
 
-        rhythmic_pattern_results = cluster_instance.query_rhythmic_patterns(cluster_instance, collection_name, example_rhythmic_pattern_length)
+        rhythmic_pattern_results = cluster_instance.query_rhythmic_patterns(
+            cluster_instance, self.test_collection_name, example_rhythmic_pattern_length
+        )
         
         for rhythmic_pattern in rhythmic_pattern_results:
-            self.assertEqual(rhythmic_pattern.length == example_rhythmic_pattern_length)
+            self.assertEqual(rhythmic_pattern.length, example_rhythmic_pattern_length)
