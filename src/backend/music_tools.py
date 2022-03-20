@@ -62,7 +62,12 @@ def half_step(input_note, up_frequency):
                 index = (i-1) % (len(notes))
 
     if flag or letter.islower():
-        return notes[index].lower() + octave
+        if up_frequency and input_note == "c":
+            return notes[index].lower() + octave
+        elif not up_frequency and input_note == "c":
+            return notes[index] + octave
+        else:
+            return notes[index].lower() + octave
     else:
         return notes[index] + octave
 
@@ -158,17 +163,16 @@ def check_interval(starting_note:dict, end_note:dict):
 
     interval = []
     to_append = []
-    octave = False
     start_reference = pad_octave_notation(starting_note["octave"], starting_note["note"])
     end_reference = pad_octave_notation(end_note["octave"], end_note["note"])
 
     if start_reference == end_reference:
-        return ["0"], octave
+        return ["0"]
 
     up_temp = start_reference
     down_temp = start_reference
     down = False
-
+    
     while True:
 
         if up_temp == end_reference:
@@ -184,7 +188,6 @@ def check_interval(starting_note:dict, end_note:dict):
     while len(interval) >= 12:
         interval = interval[:-12]
         to_append.append("o")
-        octave = True
 
     if len(interval) >= 7:
         interval = interval[:-7]
@@ -207,7 +210,7 @@ def check_interval(starting_note:dict, end_note:dict):
     if down:
         interval = ["-" + current for current in interval]
 
-    return interval, octave
+    return interval
 
 def pad_octave_notation(octave:int, note:str):
     
