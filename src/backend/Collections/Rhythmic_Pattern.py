@@ -8,9 +8,9 @@ class Rhythmic_Pattern:
 
     def __init__(self, pattern, frequency, is_v1):
         # converts a string in the format of a list to an actual list object
-        self.pattern = ast.literal_eval(pattern)
+        self.pattern = pattern
         self.frequency = frequency
-        self.length = len(self.pattern)
+        self.length = len(ast.literal_eval(self.pattern))
         self.beats = _get_beats_length(pattern)
         self.is_v1 = is_v1
 
@@ -37,7 +37,4 @@ def _get_beats_length(pattern):
         elif char.isdigit() and not to_count:
             to_count = True
 
-
     return length
-
-
