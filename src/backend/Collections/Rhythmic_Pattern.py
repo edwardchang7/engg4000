@@ -1,12 +1,9 @@
-'''
-A class to hold a rhythmic pattern
-'''
-
 import ast
 
 class Rhythmic_Pattern:
 
     def __init__(self, pattern, frequency, is_v1):
+
         # converts a string in the format of a list to an actual list object
         self.pattern = pattern
         self.frequency = frequency
@@ -25,7 +22,7 @@ def _get_beats_length(pattern):
     length = 0
     to_count = True
 
-    # counts t he length of each bar within the combined pattern
+    # counts the length of each bar within the combined pattern
     for char in pattern:
         if char == '(':
             to_count = False
