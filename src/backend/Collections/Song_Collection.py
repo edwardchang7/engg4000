@@ -23,10 +23,11 @@ class Song_Collection:
     adds a given pattern to either v1 / v2
     '''
     def add_pattern(self, pattern) -> None:
-        if pattern.is_v1:
-            self.v1_patterns.append(pattern)
-        else:
-            self.v2_patterns.append(pattern)
+        if pattern.frequency > 1:
+            if pattern.is_v1:
+                self.v1_patterns.append(pattern)
+            else:
+                self.v2_patterns.append(pattern)
 
 
     '''

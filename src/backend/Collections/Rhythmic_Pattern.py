@@ -3,6 +3,8 @@ import ast
 class Rhythmic_Pattern:
 
     def __init__(self, pattern, frequency, is_v1):
+
+        # converts a string in the format of a list to an actual list object
         self.pattern = pattern
         self.frequency = frequency
         self.length = len(ast.literal_eval(self.pattern))
@@ -25,13 +27,11 @@ def _get_beats_length(pattern):
         if char == '(':
             to_count = False
 
+        # if its a digit, then check if to_count is true (to_count will be false if its a rest's beat)
         if char.isdigit() and to_count:
             length += 1
 
         elif char.isdigit() and not to_count:
             to_count = True
 
-
     return length
-
-

@@ -12,10 +12,10 @@ rhythmic patterns from an abc file
 import os
 import re
 
-from abc_tools import (get_header, get_melodic_and_rythmic, get_music,
-                       get_voicings, is_polyphonic)
-from Collections.Song_Collection import Song_Collection
-from Collections.Rhythmic_Pattern import Rhythmic_Pattern
+from abc_tools import (get_header, get_melodic_and_rythmic,
+                       get_voicings)
+from src.backend.Collections.Song_Collection import Song_Collection
+from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
 
 from src.backend.cluster import Cluster
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
@@ -32,10 +32,13 @@ v2_combination = []
 
 song_list = []
 
+meter = -1
 
 def extract_rhythmic_patterns(file_path:str):
+  global meter
+
   voicings=get_voicings(file_path)
-  meter=get_header(file_path,'M')
+  meter = get_header(file_path,'M')
 
   # Gets the seperated list of v1 and v2
   v1,v2 = get_melodic_and_rythmic(file_path)
@@ -93,7 +96,6 @@ def encode_voicings(v1, v2):
           bar = format_bar(bar)
 
           if(bar):
-              
               # At this point, each bar only has the notes and the pitch
               bar = encode_bar(bar)
               # Here the bar only has the beat count itself
@@ -155,7 +157,10 @@ def encode_bar(bar):
             new_bar.remove(note)
         
     if(new_bar):
-        return new_bar
+        if(_check_valid_beats(new_bar)):
+            return new_bar
+
+    return None
 
 '''
 Replaces each note with the given beat (keeps square bracket to signify that its a chord)
@@ -179,6 +184,64 @@ def _keep_beats_only(note, beat):
     return new_note
 
 
+'''
+checks if the given bar matches the meter
+'''
+def _check_valid_beats(bar):
+
+    beat_count = 0
+
+    for note_beat in bar:
+
+        # If its a combination of chords
+        if note_beat.count("[") >= 1:
+            notes = note_beat.split("[")
+
+            for note in notes:
+                if note:
+                    beat = note[0]
+                    if beat == '0':
+                        beat_count += 1/4
+                    elif beat == '1':
+                        beat_count += 1/2
+                    elif beat == '2':
+                        beat_count += 1
+                    elif beat == '3':
+                        beat_count += 1.5
+                    elif beat == '4':
+                        beat_count += 2
+                    elif beat == '6':
+                        beat_count += 3
+                    elif beat == '8':
+                        beat_count += 4
+
+        else:
+            for beat in note_beat:
+                    if beat.isdigit():
+                        if beat == '0':
+                            beat_count += 1/4
+                        elif beat == '1':
+                            beat_count += 1/2
+                        elif beat == '2':
+                            beat_count += 1
+                        elif beat == '3':
+                            beat_count += 1.5
+                        elif beat == '4':
+                            beat_count += 2
+                        elif beat == '6':
+                            beat_count += 3
+                        elif beat == '8':
+                            beat_count += 4
+
+
+
+    if beat_count == int(meter[0]):
+        return True
+    
+    return False
+            
+
+
 def extract_pattern():
     v1_temp = []
     v2_temp = []
@@ -188,6 +251,7 @@ def extract_pattern():
         i = 0
         count = 0
         index = 0
+
         # This ensures that it only extract information from v1
         while(True):
             # if the combination length (count) is counter, it means the max length is reached
@@ -206,6 +270,10 @@ def extract_pattern():
                 # if the index is the length of the combined bars, then decrease it by 1 else you would get IndexOutOfBounds
                 if i >= len(v1_combination):
                     i -= 1
+                
+                if(i < 0):
+                    break
+
                 v1_temp.append(v1_combination[i])
                 i +=  1
 
@@ -244,8 +312,6 @@ def extract_pattern():
             # the max line for the combination
             if index == len(v2_combination):
                 break
-
-
     
     for set_of_bars in v1_keys:
         if str(set_of_bars) in v1_pattern.keys():
@@ -253,25 +319,11 @@ def extract_pattern():
         else:
             v1_pattern[str(set_of_bars)] = 1
 
-
-
-
     for set_of_bars in v2_keys:
         if str(set_of_bars) in v2_pattern.keys():
             v2_pattern[str(set_of_bars)] += 1
         else:
             v2_pattern[str(set_of_bars)] = 1
-
-
-'''
-takes in a song_collection object and adds a pattern to it
-'''
-def add_patterns(song, pattern):
-    pass
-
-
-# file_path='mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc'
-
 
 # the main dir 
 str_dir = 'mxl_to_abc/converted_compositions'
@@ -321,6 +373,7 @@ for file in os.listdir(directory):
         extract_rhythmic_patterns(file_path)
         extract_pattern()
 
+        # for each pattern and frequency, create a Rhythmic_Pattern object and add it to the given song
         for k,v in v1_pattern.items():
             pattern = Rhythmic_Pattern(k,v, True)
             song.add_pattern(pattern)
@@ -339,31 +392,30 @@ for file in os.listdir(directory):
         v1_combination = []
         v2_combination = []
 
+
+# file_path = str_dir + "/mary_had_a_little_lamb.abc"
+
+extract_rhythmic_patterns(file_path)
+extract_pattern()
+
         
 
-
 for song in song_list:
+
     database = Cluster("elliot", song.song_name, False)
     v1,v2 = song.get_patterns()
 
     model = RhythmicPatternModel(song.song_name, v1)
     passed = database.insert_rhythmic_pattern_model(database, model)
 
+    print(f"V1 of song {song.song_name} has been {str(passed).upper()} added")
+
     if v2:
-        pass    
-       
-# # adding to the database
-# database = Cluster("elliot", "rhythmic_patterns", False)
-# model = RhythmicPatternModel("v1 - "+composition_name, v1_pattern)
-# passed = database.insert_model(database, model)
+       model = RhythmicPatternModel(song.song_name, v2)
+       passed = database.insert_rhythmic_pattern_model(database, model)
 
-# print("Successfully uploaded "+composition_name)
+       print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
 
-# # if there is a v2 then add it to the database too
-# if v2_pattern:
-#     model = RhythmicPatternModel("v2 - "+composition_name, v2_pattern)
-#     passed = database.insert_model(database, model)
-#     print("Successfully uploaded "+composition_name)
 
 
 
