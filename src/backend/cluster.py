@@ -1,5 +1,8 @@
+import certifi
+
 from pymongo import MongoClient
 from typing import Final
+
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
 
@@ -34,7 +37,8 @@ class Cluster:
 
             cluster = MongoClient(
                 f"mongodb+srv://{database_user_name}:{database_password}@cluster.yyiqn.mongodb.net"
-                f"/myFirstDatabase?retryWrites=true&w=majority"
+                f"/myFirstDatabase?retryWrites=true&w=majority",
+                tlsCAFile=certifi.where()
             )
 
             cls.database = cluster[new_database_name]
