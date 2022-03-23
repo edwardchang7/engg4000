@@ -2,7 +2,6 @@ from pymongo import MongoClient
 from typing import Final
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
-from src.backend.Collections.Rhythmic_Pattern import _get_beats_length
 
 
 class Cluster:
@@ -39,7 +38,10 @@ class Cluster:
             )
 
             cls.database = cluster[new_database_name]
-            cls.collection = cls.database[new_collection_name]
+            if new_collection_name is not None and new_collection_name != "":
+                cls.collection = cls.database[new_collection_name]
+            else:
+                cls.collection = None
             cls.database_name = new_database_name
             cls.collection_name = new_collection_name
             cls.is_admin = new_is_admin
@@ -78,7 +80,7 @@ class Cluster:
                 current_rhythmic_pattern_length: int = rhythmic_pattern.get('length')
 
                 if (current_rhythmic_pattern_length is not None and
-                        current_rhythmic_pattern_length == rhythmic_pattern.get('length')):
+                        current_rhythmic_pattern_length == length):
                     queried_rhythmic_patterns.append(
                         Rhythmic_Pattern(
                             rhythmic_pattern.get('pattern'),
@@ -88,6 +90,12 @@ class Cluster:
                     )
 
         return queried_rhythmic_patterns
+
+    def get_collection_names(self) -> list:
+        if self is None or self.database_name is None:
+            return None
+
+        return self.database.list_collection_names()
 
     def _is_connected_to_database(self) -> bool:
         connected = False

@@ -4,7 +4,6 @@ from typing import Final
 
 from src.backend import cluster
 from src.backend.models import rhythmic_pattern_model
-from src.backend.models import tonal_pattern_model
 from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
 
 
@@ -127,3 +126,21 @@ class TestCluster(unittest.TestCase):
         
         for rhythmic_pattern in rhythmic_pattern_results:
             self.assertEqual(rhythmic_pattern.length, example_rhythmic_pattern_length)
+
+    def test_get_collection_names(self):
+        # create a collection called "BABY SHARK" if it doesn't exist
+        self.test_insert_rhythmic_pattern_model()
+
+        # create a cluster instance (with no collection name)
+        database_name = "database"
+        collection_name = ""
+        is_admin_value = False
+        cluster_instance = cluster.Cluster(database_name, collection_name, is_admin_value)
+        self.assertIsNotNone(cluster_instance)
+        self.assertEqual(cluster_instance.database_name, database_name)
+        self.assertEqual(cluster_instance.collection_name, collection_name)
+        self.assertEqual(cluster_instance.is_admin, is_admin_value)
+
+        # get collection names and assert that our created collection is in the result
+        result_collection_names: list = cluster_instance.get_collection_names(cluster_instance)
+        self.assertTrue(self.test_collection_name in result_collection_names)
