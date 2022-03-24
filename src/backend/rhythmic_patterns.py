@@ -229,8 +229,6 @@ def _check_valid_beats(bar):
                         elif beat == '8':
                             beat_count += 4
 
-
-
     return beat_count == int(meter[0])
 
 
