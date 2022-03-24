@@ -7,8 +7,15 @@ class Rhythmic_Pattern:
         # converts a string in the format of a list to an actual list object
         self.pattern = pattern
         self.frequency = frequency
-        self.length = len(ast.literal_eval(self.pattern))
-        self.beats = _get_beats_length(pattern)
+
+        if type(self.pattern) is list: 
+            self.length = len(self.pattern)
+            self.beats = _get_beats_length(str(pattern))
+        else:
+            self.pattern = len(ast.literal_eval(self.pattern))
+            self.beats = _get_beats_length(pattern)
+
+        
         self.is_v1 = is_v1
 
     '''
@@ -35,3 +42,4 @@ def _get_beats_length(pattern):
             to_count = True
 
     return length
+
