@@ -110,43 +110,6 @@ def change_octave(input_note, up_frequency):
       '''
     return whole_step(whole_step(whole_step(whole_step(whole_step(whole_step(input_note, up_frequency), up_frequency), up_frequency), up_frequency), up_frequency), up_frequency)
 
-
-def is_pattern_match(pattern_type, root, prev):
-    '''
-      Returns a boolean value of given notes are the pattern_type away from each other
-
-      Param:
-        pattern_type : the type of step (half step, whole step, etc)
-        root : the original note to step from
-        prev : the note to step to
-
-      Return:
-        a boolean value if the `prev` note matches the pattern_type given
-    '''
-
-    if 'h' in pattern_type or 'H' in pattern_type:
-        if '-' in pattern_type:
-            return half_step(root, False) == prev
-        else:
-            return half_step(root, True) == prev
-
-    elif 'w' in pattern_type or 'W' in pattern_type:
-        if '-' in pattern_type:
-            return whole_step(root, False) == prev
-        else:
-            return whole_step(root, True) == prev
-
-'''
-COPY THIS FORMAT BELOW TO ADD MORE PATTERN TYPES
-
-
-elif 'keyword.lower()' or 'keyword.upper()' in pattern_type:
-  if '-' in pattern_type:
-    return 'function_name_to_check' == prev
-  else:
-    return 'function_name_to_check' == prev
-'''
-
 def check_interval(starting_note:dict, end_note:dict):
     '''
           Checks and returns what kind of interval (i.e. H, W, P5, wtc.) is between end_note and starting_note
@@ -159,13 +122,14 @@ def check_interval(starting_note:dict, end_note:dict):
 
           Return:
             The type of interval as a str
-        '''
+    '''
 
     interval = []
     to_append = []
     start_reference = pad_octave_notation(starting_note["octave"], starting_note["note"])
     end_reference = pad_octave_notation(end_note["octave"], end_note["note"])
 
+    #Same note
     if start_reference == end_reference:
         return ["0"]
 
@@ -176,8 +140,10 @@ def check_interval(starting_note:dict, end_note:dict):
     while True:
 
         if up_temp == end_reference:
+            # if here, end is the higher frequency note
             break
         elif down_temp == end_reference:
+            # if here, start is the higher frequency note
             down = True
             break
         else:
@@ -185,35 +151,51 @@ def check_interval(starting_note:dict, end_note:dict):
             up_temp = half_step(up_temp, True)
             down_temp = half_step(down_temp, False)
 
+    # Replace 12 half steps with associate interval, octave
     while len(interval) >= 12:
         interval = interval[:-12]
         to_append.append("o")
 
+    # Replace 7 half steps with associate interval, perfect fifth
     if len(interval) >= 7:
         interval = interval[:-7]
         to_append.append("P5")
 
+    # Replace 4 half steps with associate interval, Major third
     if len(interval) >= 4:
         interval = interval[:-4]
         to_append.append("M3")
 
+    # Replace 3 half steps with associate interval, minor third
     if len(interval) >= 3:
         interval = interval[:-3]
         to_append.append("m3")
 
+    # Replace 2 half steps with associate interval, whole step
     if len(interval) >= 2:
         interval = interval[:-2]
         to_append.append("w")
 
     interval += to_append
 
+    # If start is higher note, is a negative interval so add notation
     if down:
         interval = ["-" + current for current in interval]
 
     return interval
 
 def pad_octave_notation(octave:int, note:str):
-    
+    '''
+          Add the necessary "'" and "," to the given note, given the octave
+
+          Param:
+            octave: the octave the note is in
+            note: the associated note
+
+          Return:
+            The note string with octave notation in it
+    '''
+
     if octave > 0:
         while octave != 1:
             note += "'"
