@@ -82,7 +82,6 @@ def get_music(abc_file_path:str):
 
   return music
 
-
 '''
 This function will return a list of strings
 Each element in the list will be an independant lines/voicing/melody of the passed in abc file
@@ -115,7 +114,7 @@ def get_melodic_and_rythmic(abc_file_path):
     elif len(line) == 4 and line == 'V:2\n':
       found1 = False
       found2 = True
-
+    
     if(found1 and not found2):
       v1.append(line)
 
@@ -123,3 +122,7 @@ def get_melodic_and_rythmic(abc_file_path):
       v2.append(line)
 
   return v1,v2
+
+    
+# # DEBUG
+# v1,v2 = get_v1('src/backend/mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc')
