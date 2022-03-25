@@ -12,14 +12,12 @@ rhythmic patterns from an abc file
 import os
 import re
 
-from abc_tools import (get_header, get_melodic_and_rythmic, get_music,
-                       get_voicings, is_polyphonic)
-from src.backend.Collections.Song_Collection import Song_Collection
-from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
-
 from src.backend.cluster import Cluster
+from src.backend.Collections.Rhythmic_Pattern import Rhythmic_Pattern
+from src.backend.Collections.Song_Collection import Song_Collection
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
+from abc_tools import get_header, get_melodic_and_rythmic, get_voicings
 
 v1_keys = []
 v2_keys = []
@@ -35,74 +33,71 @@ song_list = []
 meter = -1
 
 def extract_rhythmic_patterns(file_path:str):
-  global meter
+    global meter
 
-  voicings=get_voicings(file_path)
-  meter = get_header(file_path,'M')
+    voicings=get_voicings(file_path)
+    meter = get_header(file_path,'M')
 
-  # Gets the seperated list of v1 and v2
-  v1,v2 = get_melodic_and_rythmic(file_path)
+    # Gets the seperated list of v1 and v2
+    v1,v2 = get_melodic_and_rythmic(file_path)
 
-  '''
-  1. Seperates each bar
-  2. Remove unnecessary notation
-  3. Replace all notes with the beat counts
-  4. Combine all bars
-  5. extract patterns
-  '''
-  encode_voicings(v1, v2)
-  
+    '''
+    1. Seperates each bar
+    2. Remove unnecessary notation
+    3. Replace all notes with the beat counts
+    4. Combine all bars
+    5. extract patterns
+    '''
+    encode_voicings(v1, v2)
 
 # Function to isolate the notes in a single bar
 def format_bar(bar:str):
-  has_notes=re.search('[A-Ga-g]',bar) or 'z' in bar
-  if not has_notes:
-    bar=None
-  else:
-    bar=re.sub('%[0-9][0-9]?[0-9]?',"",bar)
-    bar=re.sub('"[^"]*"',"",bar)
-    bar=re.sub('![^"]*!',"",bar)
-    bar=re.sub('[[A-Z]:[^"]*]',"",bar)
-    bar=bar.replace("\n","")
-    bar=bar.replace("$","")
-    bar=bar.replace("{/f'}", "")
-    bar=bar.replace(":", "")
-    bar=bar.strip()
-  return bar
+    has_notes=re.search('[A-Ga-g]',bar) or 'z' in bar
+    if not has_notes:
+        bar=None
+    else:
+        bar=re.sub('%[0-9][0-9]?[0-9]?',"",bar)
+        bar=re.sub('"[^"]*"',"",bar)
+        bar=re.sub('![^"]*!',"",bar)
+        bar=re.sub('[[A-Z]:[^"]*]',"",bar)
+        bar=bar.replace("\n","")
+        bar=bar.replace("$","")
+        bar=bar.replace("{/f'}", "")
+        bar=bar.replace(":", "")
+        bar=bar.strip()
+
+    return bar
 
 
 def encode_voicings(v1, v2):
-  #1. isolate notes
+    #1. isolate notes   
     # split into sections
     # split sections into bars
+    for v in v1:
+        bars = v.split('|')
+        for bar in bars:
+        # Strips all unnecessary notation
+            bar = format_bar(bar)
 
-  for v in v1:
-      bars = v.split('|')
-      for bar in bars:
-          # Strips all unnecessary notation
-          bar = format_bar(bar)
+            if(bar):
+                # At this point, each bar only has the notes and the pitch
+                bar = encode_bar(bar)
+                # Here the bar only has the beat count itself
+                if(bar):
+                    v1_combination.append(bar)
 
-          if(bar):
-              # At this point, each bar only has the notes and the pitch
-              bar = encode_bar(bar)
-              # Here the bar only has the beat count itself
-              if(bar):
-                  v1_combination.append(bar)
+    for v in v2:
+        bars = v.split('|')
+        for bar in bars:
+        # Strips all unnecessary notation
+            bar = format_bar(bar)
 
-  for v in v2:
-      bars = v.split('|')
-      for bar in bars:
-          # Strips all unnecessary notation
-          bar = format_bar(bar)
-
-          if(bar):
-              
-              # At this point, each bar only has the notes and the pitch
-              bar = encode_bar(bar)
-              # Here the bar only has the beat count itself
-              if(bar):
-                  v2_combination.append(bar)
-  
+            if(bar):
+                # At this point, each bar only has the notes and the pitch
+                bar = encode_bar(bar)
+                # Here the bar only has the beat count itself
+                if(bar):
+                    v2_combination.append(bar)
 
 
 '''
@@ -132,7 +127,7 @@ def encode_bar(bar):
     # go through the new bars. for each note of the new bar, check if there is a beat
     # if there is no numbers, put 1
     for note in no_mod_bar:
-         # keeps track of whether given note or chord has a beat
+        # keeps track of whether given note or chord has a beat
         contains_beat = any(char.isdigit() for char in note)
 
         # create a new bar and put them in
@@ -234,13 +229,8 @@ def _check_valid_beats(bar):
                         elif beat == '8':
                             beat_count += 4
 
+    return beat_count == int(meter[0])
 
-
-    if beat_count == int(meter[0]):
-        return True
-    
-    return False
-            
 
 
 def extract_pattern():
@@ -289,11 +279,11 @@ def extract_pattern():
         count = 0
         index = 0
         while(True):
-             # if the combination length (count) is counter, it means the max length is reached
+            # if the combination length (count) is counter, it means the max length is reached
             if count == counter:
                 # resets the combination length counter (count)
                 count = 0
-                 # saves a 'set' of combined bars to v2_keys
+                # saves a 'set' of combined bars to v2_keys
                 v2_keys.append(v2_temp)
                 v2_temp = []
                 # increases the index to know which bar to start from again
@@ -313,8 +303,6 @@ def extract_pattern():
             # the max line for the combination
             if index == len(v2_combination):
                 break
-
-
     
     for set_of_bars in v1_keys:
         if str(set_of_bars) in v1_pattern.keys():
@@ -322,19 +310,11 @@ def extract_pattern():
         else:
             v1_pattern[str(set_of_bars)] = 1
 
-
-
-
     for set_of_bars in v2_keys:
         if str(set_of_bars) in v2_pattern.keys():
             v2_pattern[str(set_of_bars)] += 1
         else:
             v2_pattern[str(set_of_bars)] = 1
-
-
-
-# file_path='mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc'
-
 
 # the main dir 
 str_dir = 'mxl_to_abc/converted_compositions'
@@ -403,16 +383,7 @@ for file in os.listdir(directory):
         v1_combination = []
         v2_combination = []
 
-
-# file_path = str_dir + "/mary_had_a_little_lamb.abc"
-
-extract_rhythmic_patterns(file_path)
-extract_pattern()
-
-        
-
 for song in song_list:
-
     database = Cluster("elliot", song.song_name, False)
     v1,v2 = song.get_patterns()
 
@@ -422,23 +393,11 @@ for song in song_list:
     print(f"V1 of song {song.song_name} has been {str(passed).upper()} added")
 
     if v2:
-       model = RhythmicPatternModel(song.song_name, v2)
-       passed = database.insert_rhythmic_pattern_model(database, model)
+        model = RhythmicPatternModel(song.song_name, v2)
+        passed = database.insert_rhythmic_pattern_model(database, model)
 
-       print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
+        print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
 
-# # adding to the database
-# database = Cluster("elliot", "rhythmic_patterns", False)
-# model = RhythmicPatternModel("v1 - "+composition_name, v1_pattern)
-# passed = database.insert_model(database, model)
-
-# print("Successfully uploaded "+composition_name)
-
-# # if there is a v2 then add it to the database too
-# if v2_pattern:
-#     model = RhythmicPatternModel("v2 - "+composition_name, v2_pattern)
-#     passed = database.insert_model(database, model)
-#     print("Successfully uploaded "+composition_name)
 
 
 
