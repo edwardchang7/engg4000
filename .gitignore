@@ -1,3 +1,4 @@
+*.pyc
 yarn.lock
 /.pnp
 .pnp.js

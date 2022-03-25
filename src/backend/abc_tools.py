@@ -82,7 +82,6 @@ def get_music(abc_file_path:str):
 
   return music
 
-
 '''
 This function will return a list of strings
 Each element in the list will be an independant lines/voicing/melody of the passed in abc file
@@ -99,7 +98,6 @@ def get_voicings(abc_file_path:str):
     lines=re.split('V:[0-9]+',music)
     lines=lines[1:]
     return lines
-
 
 def get_melodic_and_rythmic(abc_file_path):
   lines = []

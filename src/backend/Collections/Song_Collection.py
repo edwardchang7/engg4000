@@ -49,4 +49,4 @@ class Song_Collection:
         for bar in self.v2_patterns:
             to_return += str(bar)
 
-        return to_return 
+        return to_return
