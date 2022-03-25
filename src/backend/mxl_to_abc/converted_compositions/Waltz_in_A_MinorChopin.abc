@@ -1,0 +1,53 @@
+X:1
+T:Waltz in A Minor
+T: Frederic Chopin
+T:B 150
+%%score { 1 | 2 }
+L:1/8
+Q:1/4=120
+M:3/4
+I:linebreak $
+K:C
+V:1 treble nm="Piano"
+V:2 bass 
+L:1/4
+V:1
+"^Allegretto" (E2 | AB c2) !1!c2 | (de f4) | (!1!B!2!c!3!d!5!agf) |{!2!e!3!f} (!1!e^d e4) |$ %5
+ (AB c2) !1!c2 | (de f4) | (!1!B!2!c!3!dagB | c2) z2 (E2 | AB c2) c2 |$ (de f4) | (Bcdagf) | %12
+{ef} (e^d e4) | (cd e2) !1!e2 | (fg a4) |$ (!3!g2 !2!^f!3!g!5!d'!2!=f | !1!e6) |: (e^f^g!1!abc' | %18
+{!2!b!4!c'} !3!bae!4!b a2) |{ab} (a^ge!4!f e2) |${ef} (e!2!cA!3!B A2) | %21
+ (3(E^GB (5:4:5e/^g/b/!8va(!e'/^g'/ b'>c'') |{b'c''} b'a'e'b' a'2 |{a'b'} (a'^g'e'e'' !4!e''2 | %24
+ a'4)!8va)! z2 ::$ (AB c2) c2 | (de f4) | (Bcdagf) |{ef} (e^d e4) | (cd e2) !2!e2 | (fg a4) |$ %31
+ (!2!^d!1!e !3!^f2) !2!f2 | (^ga b4) | (!1!b^c'd'^f'e'd' | P^c'b!5!c'!3!^ga^f) | %35
+{!1!e!4!^f} (!3!ed^G!5!^f e2) |$({!3!e^f} e^cAf e2) | (b^c'd'^f'e'd') | (P^c'bc'^ga^f) | %39
+({e^f} ed^GfeG | A2) z2 E2 :|$ (AB c2) c2 | (de f4) | (Bcdagf) |{ef} (e^d e4) | (AB c2) c2 | %46
+ (de f4) |$ (BcdagB | c2) z2 E2 | (AB c2) c2 | (de f4) | z (Pe^deb!2!=d |$ c4) z2 | z (c'bagf | %54
+ !4!ed^cdef) | (Te2 !3!^de!5!f!2!^G) | A4 z2 |] %57
+V:2
+!mp! z |!ped! A,,, [A,CE] [A,CE]!ped-up! |!ped! D,, [A,DF] [A,DF]!ped-up! | %3
+!ped! G,, [G,B,F] [G,B,F]!ped-up! |!ped! C, [G,CE] [G,CE]!ped-up! |$ %5
+!ped! A,, [A,CE] [A,CE]!ped-up! |!ped! D,, [A,DF] [A,DF]!ped-up! | %7
+!ped! G,, [G,B,F] [G,B,F]!ped-up! |!ped! C, [G,CE]!ped-up! z |!ped! A,,, [A,CE]!ped-up! [A,CE] |$ %10
+!ped! D,, [A,DF] [A,DF]!ped-up! |!ped! G,, [G,B,F] [G,B,F]!ped-up! | %12
+!ped! C, [G,CE] [G,CE]!ped-up! |!ped! A,, [A,CE] [A,CE]!ped-up! | %14
+!ped! D,, .[A,DF] [A,DF]!ped-up! |$!ped! G,, [G,B,=F] [G,B,F]!ped-up! | %16
+!ped! C, [G,CE] [G,CE]!ped-up! |:!ped! E,, [E,B,D] [E,^G,D]!ped-up! | %18
+!ped! A,, [E,A,C] [E,A,C]!ped-up! |!ped! E,, [E,B,D] [E,B,D]!ped-up! |$ %20
+!ped! A,, [E,A,C] [E,A,C]!ped-up! |!ped! E,, [E,B,D] [E,^G,D]!ped-up! | %22
+!ped! A,, [E,A,C] [E,A,C]!ped-up! |!ped! E,, [E,B,D] [E,B,D]!ped-up! | %24
+!ped! A,, [E,A,C] [E,A,C]!ped-up! ::$!ped! A,,, [A,CE] [A,CE]!ped-up! | %26
+!ped! D,, [A,DF] [A,DF]!ped-up! |!ped! G,, [G,B,F] [G,B,F]!ped-up! | %28
+!ped! C, [G,CE] [G,CE]!ped-up! |!ped! A,, [A,CE] [A,CE]!ped-up! |!ped! D,, [A,DF] [A,DF]!ped-up! |$ %31
+!ped! B,,, [A,B,^D] [A,B,^D]!ped-up! |!ped! E,, [E,B,=D]!ped-up! z!ped-up! | %33
+!ped! E,, [E,^G,D]!ped-up! [E,G,D] |!ped! A,, [E,A,^C] [E,A,C]!ped-up! | %35
+!ped! E,, [E,^G,D] [E,G,D]!ped-up! |$!ped! A,, [E,A,^C] [E,A,C]!ped-up! | %37
+!ped! E,, [E,^G,D] [E,G,D]!ped-up! |!ped! A,, [E,A,^C] [E,A,C]!ped-up! | %39
+!ped! E,, [E,^G,D] [E,G,D]!ped-up! |!ped! A,, [E,^C]!ped-up! z!ped-up! :|$ %41
+!ped! A,,, [A,CE]!ped-up! [A,CE] |!ped! D,, [A,DF] [A,DF]!ped-up! | %43
+!ped! G,, [G,B,F] [G,B,F]!ped-up! |!ped! C, [G,CE] [G,CE]!ped-up! | %45
+!ped! A,, [A,CE] [A,CE]!ped-up! |!ped! D,, [A,DF] [A,DF]!ped-up! |$ %47
+!ped! G,, [G,B,F] [G,B,F]!ped-up! |!ped! C, [G,E]!ped-up! z!ped-up! | %49
+!ped! A,,, [A,CE]!ped-up! [A,CE] |!ped! D,, [A,DF] [A,DF]!ped-up! | %51
+!ped! E,, [E,^G,=D] [E,G,D]!ped-up! |$!ped! A,, [E,A,C] [E,A,C]!ped-up! | %53
+!ped! C, [E,A,E] z!ped-up! |!ped! D, [A,B,F]!ped-up! z |!ped! E,, [E,C]!ped-up!!ped! [E,B,=D] | %56
+!ped! A,, [E,C] z!ped-up! |] %57
