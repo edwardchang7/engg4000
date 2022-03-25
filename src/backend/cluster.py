@@ -1,9 +1,4 @@
-import certifi
-
 from pymongo import MongoClient
-from typing import Final
-
-from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
 
 class Cluster:
@@ -34,8 +29,7 @@ class Cluster:
 
             cluster = MongoClient(
                 f"mongodb+srv://{database_user_name}:{database_password}@cluster.yyiqn.mongodb.net"
-                f"/myFirstDatabase?retryWrites=true&w=majority",
-                tlsCAFile=certifi.where()
+                f"/myFirstDatabase?retryWrites=true&w=majority"
             )
 
             self.database = cluster[new_database_name]
@@ -45,20 +39,3 @@ class Cluster:
             self.is_admin = new_is_admin
 
         return self
-
-    def insert_rhythmic_pattern_model(self, rhythmic_pattern_model: RhythmicPatternModel) -> bool:
-        if (self.database is None or self.database_name is None or
-                self.collection_name is None or self.is_admin is None):
-            return False
-
-        if (self.collection_name != rhythmic_pattern_model.collection_name):
-            return False
-        
-
-        parsed_rhythmic_pattern_objects = []
-        for i in range(len(rhythmic_pattern_model.rhythmic_pattern_objects)):
-            parsed_rhythmic_pattern_objects.append(rhythmic_pattern_model.rhythmic_pattern_objects[i].__dict__)
-        document_to_insert = {"rhythmic_pattern" : parsed_rhythmic_pattern_objects}
-        
-        insert_action = self.collection.insert_one(document_to_insert)
-        return insert_action.acknowledged
