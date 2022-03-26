@@ -1,0 +1,92 @@
+X:1
+T:Mary had a herd of Lambs
+%%score { ( 1 3 ) | 2 }
+L:1/8
+Q:1/4=120
+M:4/4
+I:linebreak $
+K:C
+V:1 treble nm="Piano" snm="Pno."
+V:3 treble 
+L:1/4
+V:2 bass 
+V:1
+"^Normal" E2 D2 C2 D2 | E2 E2 E4 | D2 D2 D4 | E2 G2 G4 | E2 D2 C2 D2 | E2 E2 E2 E2 | D2 D2 E2 D2 | %7
+ C8 ||"^Renaissance" EFED C2 D2 |$ E2 E2 E4 | D2 D2 D4 | E2 G2 GA G2 | EFED C2 D2 | E2 E2 E2 E2 | %14
+ DEDE FEDE | C8 ||$"^Baroque" cegc' gedb | c'geg c'4 | dfad' afeb | c'gec g4 | cegc' gedb | %21
+ c'geg c'gec |$ dfaf ecGB | c2 G2 C4 ||"^Classical" e/G/E/G/ d/G/E/G/ c/G/E/G/ d/G/E/G/ | %25
+ e/G/E/G/ e/G/E/G/ e4 |$ d/F/D/F/ d/F/D/F/ d4 | e/G/E/G/ g/G/E/G/ g4 | %28
+ e/G/E/G/ d/G/E/G/ c/G/E/G/ d/G/E/G/ |$ e/G/E/G/ e/G/E/G/ e/G/E/G/ e/G/E/G/ | %30
+ d/F/D/F/ d/F/D/F/ e/F/D/F/ d/G/E/G/ | C8 ||[M:3/4]"^Romantic"[Q:1/4=132] !arpeggio![Gce]4 [Gd]2 | %33
+ !arpeggio![EGc]4 [Gd]2 |$ !arpeggio![Gce]4 [Gce]2 | !arpeggio![Gce]6 | !arpeggio![GBd]4 [GBd]2 | %37
+ !arpeggio![GBd]6 | !arpeggio![Gce]4 [Gceg]2 | !arpeggio![Gceg]6 | !arpeggio![Gce]4 [Gd]2 | %41
+ !arpeggio![EGc]4 [Gd]2 | !arpeggio![Gce]4 [Gce]2 | !arpeggio![Gce]4 [Gce]2 |$ %44
+ !arpeggio![GBd]4 [GBd]2 | !arpeggio![GBe]4 [GBd]2 | !arpeggio![EGc]6 | %47
+[M:4/4] !arpeggio![ceg]6[Q:1/4=160] z[Q:1/4=168] E- ||"^Ragtime" E2 DC- C2 D2 | E3 E- EE- E2 | %50
+ D3 D- DD- D2 |$ E3 G- GG- G2 | E2 DC- C2 D2 | E3 E- EE- E2 | D^CD^D EDE=D | C2 G2 c2 z2 || %56
+"^Blues"[Q:1/4=108]"^Swing" _ECD_B, CG,DB, |$ _E^FGF E4 | D_EDE D4 | _E^FGF G4 | _ECD_B, CG,DB, | %61
+ _E^FG_B cBGF |$ D_EDE ^FED_B, | C8 || %64
+"^Boogie woogie"[Q:1/4=120] [Ge][_G_e][Fd][E_d] [_Ec][=Ed][F=d][^F^d] | %65
+ [Ge][Af][Ge][_G_e] [=G=e]4 |$ [Fd][G_e][Fd][E_d] [F=d]4 | [Ge][^G^f][^Ag][=Af] [^Ag]4 | %68
+ [Ge][_G_e][Fd][E_d] [_Ec][=Ed][F=d][^F^d] |$ [Ge][Af][Ge][_G_e] [=G=e][Af][Ge][_G_e] | %70
+ [Fd][F_d][Ge][Af] [Ge][Ge][F=d][Fd] | !-(!C4 !-)!c'4 ||"^Jazz"[Q:1/4=96] z E D2 C2 D2 | %73
+ EE- E2 E4 |$ DD- D2 D4 | EG- G2 G4 | z E D2 C2 D2 | E3 E- EE- E2 | D3 D E2 D2 | %79
+ !arpeggio![CGc]8 ||"^Latin Jazz"[Q:1/4=120] E2 D2 C2 D2 |$ E2 E2 E4 | D2 D2 D4 | E2 G2 G4 | %84
+ E2 D2 C2 D2 | E2 E2 E2 E2 | D2 D2 E2 D2 | C4 z Bcd ||$ %88
+[Q:1/4=140]"^Rock 'n' Roll" (3[ce][ce][ce] (3[Bd][Bd][Bd] (3[Gc][Gc][Gc] (3[Bd][Bd][Bd] | %89
+ (3e^d=d (3cd^d (3egb e'2 | (3d'^c'=c' (3bc'^c' (3d'd'd' d'2 |$ %91
+ (3[c'e'][c'e'][c'e'] (3[bd'][bd'][bd'] (3[gc'][gc'][gc'] (3[bd'][bd'][bd'] | %92
+ (3[c'e'][b^d'][c'e'] (3[c'e'][bd'][c'e'] (3[c'e'][_d'f'][=d'^f'] [e'g']2 |$ %93
+ (3[_bd'][=b^d'][_b=d'] (3[bd'][=b^d'][c'e'] (3[c'e'][d'^f'][c'e'] [b=d']2 | %94
+ (3[gc'][gc'][gc'] (3[gc'][gc'][gc'] [gc']4 || %95
+"^Boy band (cheesey key change)"[Q:1/4=108]"^Swing" E2 D2 C2 D2 | E2 E2 E4 |$ D2 D2 D4 | E2 G2 G4 | %99
+ E2 D2 C2 D2 | E2 E2 E2 E2 | D2 D2 E2 D2 |"^rit." C4 CGce ||$[K:D] [Ff]2 [Ee]2 [Dd]2 [Ee]2 | %104
+ [Ff]2 [Ff]2 [Ff]4 | [Ee]2 [Ee]2 [Ee]4 | [Ff]2 [Aa]2 [Aa]4 | [Ff]2 [Ee]2 [Dd]2 [Ee]2 |$ %108
+ [Ff]2 [Ff]2 [Ff]2 [Ff]2 | [Ee]2 [Ee]2 [Ff]2 [Ee]2 | [Dd]8 || %111
+[K:C]"^Pop (present day)" E2 D2 C2 D2 | E2 E2 E4 | D2 D2 D4 |$ E2 G2 G4 | E2 D2 C2 D2 | %116
+ E2 E2 E2 E2 | D2 D2 E2 D2 | [CEG]8 |] %119
+V:2
+ C,4 G,,4 | C,4 G,,4 | D,4 G,,4 | C,4 G,,4 | C,4 G,,4 | C,4 G,,4 | D,4 G,,4 | C,8 || C,8 |$ %9
+ E,F,E,D, C,2 D,2 | D,E,D,C, B,,C,B,,C, | E,F,E,D, C,2 D,2 | C,8 | E,F,E,D, C,2 D,2 | D,4 D,4 | %15
+ [C,E,]8 ||$ E,2 D,2 C,2 D,2 | E,2 E,2 E,4 | D,2 D,2 D,4 | E,2 G,2 G,4 | E,2 D,2 C,2 D,2 | %21
+ E,2 E,2 E,2 E,2 |$ D,2 D,2 E,2 D,2 | C,8 || C,,C,E,,C, G,,C,E,,C, | C,,C,E,,C, G,,C,E,,C, |$ %26
+ G,,G,B,,G, D,G,B,,G, | C,,C,E,,C, G,,C,E,,C, | C,,C,E,,C, G,,C,E,,C, |$ C,,C,E,,C, G,,C,E,,C, | %30
+ G,,G,B,,G, D,G,B,,G, | C,,C,E,,G,, C,,4 ||[M:3/4] C,2 [E,G,]2 [E,G,]2 | G,,2 [E,G,]2 [E,G,]2 |$ %34
+ C,2 [E,G,]2 [E,G,]2 | G,,2 [E,G,]2 [E,G,]2 | G,,2 [B,,D,]2 [B,,D,]2 | D,,2 [B,,D,]2 [B,,D,]2 | %38
+ C,2 [E,G,]2 [E,G,]2 | G,,2 [E,G,]2 [E,G,]2 | C,2 [E,G,]2 [E,G,]2 | G,,2 [E,G,]2 [E,G,]2 | %42
+ C,2 [E,G,]2 [E,G,]2 | G,,2 [E,G,]2 [E,G,]2 |$ G,,2 [B,,D,]2 [B,,D,]2 | D,,2 [B,,D,]2 [B,,D,]2 | %46
+ C,2 [E,G,]2 [E,G,]2 |[M:4/4] !arpeggio![C,E,G,C]2 [G,,,G,,]2 [A,,,A,,]2 [B,,,B,,]2 || %48
+ C,,2 [G,,C,]2 G,,,2 [G,,C,]2 | C,,2 [G,,C,]2 G,,,2 [G,,C,]2 | D,,2 [G,,A,,]2 G,,,2 [G,,A,,]2 |$ %51
+ C,,2 [G,,C,]2 G,,,2 [G,,C,]2 | C,,2 [G,,C,]2 G,,,2 [G,,C,]2 | C,,2 [G,,C,]2 G,,,2 [G,,C,]2 | %54
+ D,,2 [G,,A,,]2 G,,,2 [G,,A,,]2 | C,2 G,,2 C,,2 z2 || C,2 E,2 G,2 A,2 |$ _B,2 A,2 G,2 E,2 | %58
+ G,,2 B,,2 D,2 F,2 | C,2 E,2 G,2 A,2 | _B,2 A,2 G,2 E,2 | C,2 E,2 G,2 A,2 |$ G,,2 B,,2 D,2 F,2 | %63
+ [C,E,G,]8 || C,,C,E,,E, G,,G,A,,G, | _B,,_B,A,,A, G,,G,E,,E, |$ G,,G,B,,B, D,DE,D | %67
+ _B,,_B,A,,A, G,,G,E,,E, | C,,C,E,,E, G,,G,A,,G, |$ _B,,_B,A,,A, G,,G,E,,E, | %70
+ G,,G,A,,A, _B,,_B,=B,,=B, | !-(!C4 !-)!C,,4 || [A,,C,A,]4 G,2 F,2 | [A,,C,_G,]4 C,2 _G,,2 |$ %74
+ [G,,B,,F,]6 [F,,B,,][G,,F,] | [G,,G,]2 [F,,F,]2 [E,,E,]2 [D,,D,]2 | [C,^F,A,]4 G,2 =F,2 | %77
+ [A,,C,_G,]4 C,2 _G,,2 | [E,G,B,]4 [D,F,A,]2 [D,G,B,]2 | !arpeggio![C,E,G,_B,]8 || %80
+ C,,3 G,, C,C,-C,G,, |$ C,,3 G,, C,4 | D,,3 G,, D,D,-D,G,, | C,,3 G,, C,4 | C,,3 G,, C,C,-C,G,, | %85
+ C,,3 G,, C,4 | D,,3 G,, D,D,-D,G,, | [C,,C,]8 ||$ %88
+ [C,,G,,][C,,G,,][C,,A,,][C,,A,,] [C,,G,,][C,,G,,][C,,A,,][C,,A,,] | %89
+ [C,,G,,][C,,G,,][C,,A,,][C,,A,,] [C,,G,,][C,,G,,][C,,A,,][C,,A,,] | %90
+ [G,,D,][G,,D,][G,,E,][G,,E,] [G,,D,][G,,D,][G,,E,][G,,E,] |$ %91
+ [C,,G,,][C,,G,,][C,,A,,][C,,A,,] [C,,G,,][C,,G,,][C,,A,,][C,,A,,] | %92
+ [C,,G,,][C,,G,,][C,,A,,][C,,A,,] [C,,G,,][C,,G,,][C,,A,,][C,,A,,] |$ %93
+ [G,,D,][G,,D,][G,,E,][G,,E,] [G,,D,][G,,D,][G,,E,][G,,E,] | %94
+ [C,,G,,][C,,G,,][C,,A,,][C,,A,,] [C,,G,,]4 || C,,G,,C,G, C3 G, | C,,G,,C,G, C3 G, |$ %97
+ G,,,D,,G,,D, G,3 D, | C,,G,,C,G, C3 G, | C,,G,,C,G, C3 G, | C,,G,,C,G, C3 G, | %101
+ G,,,D,,G,,D, G,3 D, | C,,G,,C,G, z4 ||$[K:D] D,,A,,D,A, DA,D,A,, | D,,A,,D,A, DA,D,A,, | %105
+ A,,,E,,A,,E, A,E,A,,E,, | D,,A,,D,A, DA,D,A,, | D,,A,,D,A, DA,D,A,, |$ D,,A,,D,A, DA,D,A,, | %109
+ A,,,E,,A,,E, A,E,A,,E,, | [D,,D,]8 ||[K:C] [C,E,G,]3 [C,E,G,]- [C,E,G,]2 [C,E,G,]2 | %112
+ [C,E,G,]3 [C,E,G,]- [C,E,G,]2 [C,E,G,]2 | [G,,B,,D,]3 [G,,B,,D,]- [G,,B,,D,]2 [G,,B,,D,]2 |$ %114
+ [C,E,G,]3 [C,E,G,]- [C,E,G,]2 [C,E,G,]2 | [C,E,G,]3 [C,E,G,]- [C,E,G,]2 [C,E,G,]2 | %116
+ [C,E,G,]3 [C,E,G,]- [C,E,G,]2 [C,E,G,]2 | [G,,B,,D,]3 [G,,B,,D,]- [G,,B,,D,]2 [G,,B,,D,]2 | %118
+ [C,E,G,]8 |] %119
+V:3
+ x4 | x4 | x4 | x4 | x4 | x4 | x4 | x4 || x4 |$ x4 | x4 | x4 | x4 | x4 | x4 | x4 ||$ x4 | x4 | x4 | %19
+ x4 | x4 | x4 |$ x4 | x4 || x4 | x4 |$ x4 | x4 | x4 |$ x4 | x4 | x4 ||[M:3/4] x3 | x3 |$ x3 | x3 | %36
+ x3 | x3 | x3 | x3 | x3 | x3 | x3 | x3 |$ x3 | x3 | x3 |[M:4/4] x4 || x4 | x4 | x4 |$ x4 | x4 | %53
+ x4 | x4 | x4 || x4 |$ x4 | x4 | x4 | x4 | x4 |$ x4 | x4 || x4 | x4 |$ x4 | x4 | x4 |$ x4 | x4 | %71
+ x4 || x4 | x4 |$ x4 | x4 | x4 | x4 | x4 | x4 || G,4 |$ C4 | G,4 | C4 | G,4 | C4 | G,4 | x4 ||$ %88
+ x4 | x4 | x4 |$ x4 | x4 |$ x4 | x4 || x4 | x4 |$ x4 | x4 | x4 | x4 | x4 | x4 ||$[K:D] x4 | x4 | %105
+ x4 | x4 | x4 |$ x4 | x4 | x4 ||[K:C] x4 | x4 | x4 |$ x4 | x4 | x4 | x4 | x4 |] %119

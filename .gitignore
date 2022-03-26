@@ -1,3 +1,2 @@
-yarn.lock
-/.pnp
-.pnp.js
+__pycache__
+.idea

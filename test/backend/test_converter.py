@@ -1,16 +1,15 @@
-import unittest
-import shutil
 import os
+import shutil
+import unittest
+
 
 class TestConverter(unittest.TestCase):
-  
-  def test_batch_convert(self):
+    def test_batch_convert(self):
+        # Delete if converted_compositions already exists
+        if os.path.isdir("src/backend/mxl_to_abc/converted_compositions"):
+            shutil.rmtree("src/backend/mxl_to_abc/converted_compositions")
 
-    # check for converted_compositions directory if its there delete it
-    if(os.path.isdir("src/backend/mxl_to_abc/converted_compositions")):
-      shutil.rmtree("src/backend/mxl_to_abc/converted_compositions")
-    
-    os.system("python src/backend/mxl_to_abc/converter.py")
+        os.system("python src/backend/mxl_to_abc/converter.py")
 
-    # check if folder of compositions have been recreated
-    self.assertTrue(os.path.isdir("src/backend/mxl_to_abc/converted_compositions"))
+        # Check that converted_compositions was recreated
+        self.assertTrue(os.path.isdir("src/backend/mxl_to_abc/converted_compositions"))
