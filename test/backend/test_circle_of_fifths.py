@@ -37,487 +37,487 @@ class TestCircleOfFifths(unittest.TestCase):
         self.assertEqual(actual_result, expected_result)
 
     def test_get_num_flats_with_major_notes(self):
-        major_notes = self.cof.major_notes
+        major_notes = cof.major_notes
         expected_num_flats = [3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3]
 
         for i in range(len(major_notes)):
-            self.assertEqual(self.cof.get_num_of_flats_between_two_notes(major_notes[i]), expected_num_flats[i])
+            self.assertEqual(cof.get_num_of_flats_between_two_notes(major_notes[i]), expected_num_flats[i])
 
     def test_get_num_flats_with_alternative_major_notes(self):
-        alternative_major_notes = self.cof.alternative_major_notes
+        alternative_major_notes = cof.alternative_major_notes
         expected_num_flats = [3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3]
 
         for i in range(len(alternative_major_notes)):
             self.assertEqual(
-                self.cof.get_num_of_flats_between_two_notes(alternative_major_notes[i]),
+                cof.get_num_of_flats_between_two_notes(alternative_major_notes[i]),
                 expected_num_flats[i]
             )
 
     def test_get_num_flats_with_minor_notes(self):
-        minor_notes = self.cof.minor_notes
+        minor_notes = cof.minor_notes
         expected_num_flats = [3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3]
 
         for i in range(len(minor_notes)):
-            self.assertEqual(self.cof.get_num_of_flats_between_two_notes(minor_notes[i]), expected_num_flats[i])
+            self.assertEqual(cof.get_num_of_flats_between_two_notes(minor_notes[i]), expected_num_flats[i])
 
     def test_get_num_flats_with_alternative_minor_notes(self):
-        alternative_minor_notes = self.cof.alternative_minor_notes
+        alternative_minor_notes = cof.alternative_minor_notes
         expected_num_flats = [3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3]
 
         for i in range(len(alternative_minor_notes)):
             self.assertEqual(
-                self.cof.get_num_of_flats_between_two_notes(alternative_minor_notes[i]),
+                cof.get_num_of_flats_between_two_notes(alternative_minor_notes[i]),
                 expected_num_flats[i]
             )
 
     def test_get_num_sharps_with_major_notes(self):
-        major_notes = self.cof.major_notes
+        major_notes = cof.major_notes
         expected_num_sharps = [3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 3]
 
         for i in range(len(major_notes)):
-            self.assertEqual(self.cof.get_num_of_sharps_between_two_notes(major_notes[i]), expected_num_sharps[i])
+            self.assertEqual(cof.get_num_of_sharps_between_two_notes(major_notes[i]), expected_num_sharps[i])
 
     def test_get_num_sharps_with_alternative_major_notes(self):
-        alternative_major_notes = self.cof.alternative_major_notes
+        alternative_major_notes = cof.alternative_major_notes
         expected_num_sharps = [3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 3]
 
         for i in range(len(alternative_major_notes)):
             self.assertEqual(
-                self.cof.get_num_of_sharps_between_two_notes(alternative_major_notes[i]),
+                cof.get_num_of_sharps_between_two_notes(alternative_major_notes[i]),
                 expected_num_sharps[i]
             )
 
     def test_get_num_sharps_with_minor_notes(self):
-        minor_notes = self.cof.minor_notes
+        minor_notes = cof.minor_notes
         expected_num_sharps = [3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
 
         for i in range(len(minor_notes)):
-            self.assertEqual(self.cof.get_num_of_sharps_between_two_notes(minor_notes[i]), expected_num_sharps[i])
+            self.assertEqual(cof.get_num_of_sharps_between_two_notes(minor_notes[i]), expected_num_sharps[i])
 
     def test_get_num_sharps_with_alternative_minor_notes(self):
-        alternative_minor_notes = self.cof.alternative_minor_notes
+        alternative_minor_notes = cof.alternative_minor_notes
         expected_num_sharps = [3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
 
         for i in range(len(alternative_minor_notes)):
             self.assertEqual(
-                self.cof.get_num_of_sharps_between_two_notes(alternative_minor_notes[i]),
+                cof.get_num_of_sharps_between_two_notes(alternative_minor_notes[i]),
                 expected_num_sharps[i]
             )
 
     def test_get_perfect_cadence_with_major_key(self):
         expected_perfect_cadence = ('G', 'C')
-        actual_perfect_cadence = self.cof.get_perfect_cadence('C')
+        actual_perfect_cadence = cof.get_perfect_cadence('C')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
         expected_perfect_cadence = ('_G', 'B')
-        actual_perfect_cadence = self.cof.get_perfect_cadence('B')
+        actual_perfect_cadence = cof.get_perfect_cadence('B')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
         expected_perfect_cadence = ('C', 'F')
-        actual_perfect_cadence = self.cof.get_perfect_cadence('F')
+        actual_perfect_cadence = cof.get_perfect_cadence('F')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
     def test_get_perfect_cadence_with_minor_key(self):
         expected_perfect_cadence = ('e', 'a')
-        actual_perfect_cadence = self.cof.get_perfect_cadence('a')
+        actual_perfect_cadence = cof.get_perfect_cadence('a')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
         expected_perfect_cadence = ('^d', '^g')
-        actual_perfect_cadence = self.cof.get_perfect_cadence('^g')
+        actual_perfect_cadence = cof.get_perfect_cadence('^g')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
         expected_perfect_cadence = ('a', 'd')
-        actual_perfect_cadence = self.cof.get_perfect_cadence('d')
+        actual_perfect_cadence = cof.get_perfect_cadence('d')
         self.assertEqual(expected_perfect_cadence, actual_perfect_cadence)
 
     def test_get_num_of_sharps_in_each_major_note(self):
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('C')
+        actual_result = cof.get_num_of_sharps_in_note('C')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 1
-        actual_result = self.cof.get_num_of_sharps_in_note('G')
+        actual_result = cof.get_num_of_sharps_in_note('G')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 2
-        actual_result = self.cof.get_num_of_sharps_in_note('D')
+        actual_result = cof.get_num_of_sharps_in_note('D')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 3
-        actual_result = self.cof.get_num_of_sharps_in_note('A')
+        actual_result = cof.get_num_of_sharps_in_note('A')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 4
-        actual_result = self.cof.get_num_of_sharps_in_note('E')
+        actual_result = cof.get_num_of_sharps_in_note('E')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 5
-        actual_result = self.cof.get_num_of_sharps_in_note('B')
+        actual_result = cof.get_num_of_sharps_in_note('B')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 6
-        actual_result = self.cof.get_num_of_sharps_in_note('_G')
+        actual_result = cof.get_num_of_sharps_in_note('_G')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 7
-        actual_result = self.cof.get_num_of_sharps_in_note('_D')
+        actual_result = cof.get_num_of_sharps_in_note('_D')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('_A')
+        actual_result = cof.get_num_of_sharps_in_note('_A')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('_E')
+        actual_result = cof.get_num_of_sharps_in_note('_E')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('_B')
+        actual_result = cof.get_num_of_sharps_in_note('_B')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('F')
+        actual_result = cof.get_num_of_sharps_in_note('F')
         self.assertEqual(expected_result, actual_result)
 
     def test_get_num_of_sharps_in_each_minor_note(self):
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('a')
+        actual_result = cof.get_num_of_sharps_in_note('a')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 1
-        actual_result = self.cof.get_num_of_sharps_in_note('e')
+        actual_result = cof.get_num_of_sharps_in_note('e')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 2
-        actual_result = self.cof.get_num_of_sharps_in_note('b')
+        actual_result = cof.get_num_of_sharps_in_note('b')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 3
-        actual_result = self.cof.get_num_of_sharps_in_note('^f')
+        actual_result = cof.get_num_of_sharps_in_note('^f')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 4
-        actual_result = self.cof.get_num_of_sharps_in_note('^c')
+        actual_result = cof.get_num_of_sharps_in_note('^c')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 5
-        actual_result = self.cof.get_num_of_sharps_in_note('^g')
+        actual_result = cof.get_num_of_sharps_in_note('^g')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 6
-        actual_result = self.cof.get_num_of_sharps_in_note('^d')
+        actual_result = cof.get_num_of_sharps_in_note('^d')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 7
-        actual_result = self.cof.get_num_of_sharps_in_note('_b')
+        actual_result = cof.get_num_of_sharps_in_note('_b')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('f')
+        actual_result = cof.get_num_of_sharps_in_note('f')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('c')
+        actual_result = cof.get_num_of_sharps_in_note('c')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('g')
+        actual_result = cof.get_num_of_sharps_in_note('g')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_sharps_in_note('d')
+        actual_result = cof.get_num_of_sharps_in_note('d')
         self.assertEqual(expected_result, actual_result)
 
     def test_get_num_of_flats_in_each_major_note(self):
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('C')
+        actual_result = cof.get_num_of_flats_in_note('C')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('G')
+        actual_result = cof.get_num_of_flats_in_note('G')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('D')
+        actual_result = cof.get_num_of_flats_in_note('D')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('A')
+        actual_result = cof.get_num_of_flats_in_note('A')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('E')
+        actual_result = cof.get_num_of_flats_in_note('E')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 7
-        actual_result = self.cof.get_num_of_flats_in_note('B')
+        actual_result = cof.get_num_of_flats_in_note('B')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 6
-        actual_result = self.cof.get_num_of_flats_in_note('_G')
+        actual_result = cof.get_num_of_flats_in_note('_G')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 5
-        actual_result = self.cof.get_num_of_flats_in_note('_D')
+        actual_result = cof.get_num_of_flats_in_note('_D')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 4
-        actual_result = self.cof.get_num_of_flats_in_note('_A')
+        actual_result = cof.get_num_of_flats_in_note('_A')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 3
-        actual_result = self.cof.get_num_of_flats_in_note('_E')
+        actual_result = cof.get_num_of_flats_in_note('_E')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 2
-        actual_result = self.cof.get_num_of_flats_in_note('_B')
+        actual_result = cof.get_num_of_flats_in_note('_B')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 1
-        actual_result = self.cof.get_num_of_flats_in_note('F')
+        actual_result = cof.get_num_of_flats_in_note('F')
         self.assertEqual(expected_result, actual_result)
 
     def test_get_num_of_flats_in_each_minor_note(self):
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('a')
+        actual_result = cof.get_num_of_flats_in_note('a')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('e')
+        actual_result = cof.get_num_of_flats_in_note('e')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('b')
+        actual_result = cof.get_num_of_flats_in_note('b')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('^f')
+        actual_result = cof.get_num_of_flats_in_note('^f')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 0
-        actual_result = self.cof.get_num_of_flats_in_note('^c')
+        actual_result = cof.get_num_of_flats_in_note('^c')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 7
-        actual_result = self.cof.get_num_of_flats_in_note('^g')
+        actual_result = cof.get_num_of_flats_in_note('^g')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 6
-        actual_result = self.cof.get_num_of_flats_in_note('^d')
+        actual_result = cof.get_num_of_flats_in_note('^d')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 5
-        actual_result = self.cof.get_num_of_flats_in_note('_b')
+        actual_result = cof.get_num_of_flats_in_note('_b')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 4
-        actual_result = self.cof.get_num_of_flats_in_note('f')
+        actual_result = cof.get_num_of_flats_in_note('f')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 3
-        actual_result = self.cof.get_num_of_flats_in_note('c')
+        actual_result = cof.get_num_of_flats_in_note('c')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 2
-        actual_result = self.cof.get_num_of_flats_in_note('g')
+        actual_result = cof.get_num_of_flats_in_note('g')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = 1
-        actual_result = self.cof.get_num_of_flats_in_note('d')
+        actual_result = cof.get_num_of_flats_in_note('d')
         self.assertEqual(expected_result, actual_result)
 
     def test_get_sharps_in_note_with_each_major_cof_note(self):
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('C')
+        actual_result = cof.get_sharps_in_note('C')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^F']
-        actual_result = self.cof.get_sharps_in_note('G')
+        actual_result = cof.get_sharps_in_note('G')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^F', '^C']
-        actual_result = self.cof.get_sharps_in_note('D')
+        actual_result = cof.get_sharps_in_note('D')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^F', '^C', '^G']
-        actual_result = self.cof.get_sharps_in_note('A')
+        actual_result = cof.get_sharps_in_note('A')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^F', '^C', '^G', '^D']
-        actual_result = self.cof.get_sharps_in_note('E')
+        actual_result = cof.get_sharps_in_note('E')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^F', '^C', '^G', '^D', '^A']
-        actual_result = self.cof.get_sharps_in_note('B')
+        actual_result = cof.get_sharps_in_note('B')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^F', '^C', '^G', '^D', '^A', '^E']
-        actual_result = self.cof.get_sharps_in_note('_G')
+        actual_result = cof.get_sharps_in_note('_G')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^F', '^C', '^G', '^D', '^A', '^E', '^B']
-        actual_result = self.cof.get_sharps_in_note('_D')
+        actual_result = cof.get_sharps_in_note('_D')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('_A')
+        actual_result = cof.get_sharps_in_note('_A')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('_E')
+        actual_result = cof.get_sharps_in_note('_E')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('_B')
+        actual_result = cof.get_sharps_in_note('_B')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('F')
+        actual_result = cof.get_sharps_in_note('F')
         self.assertEqual(expected_result, actual_result)
 
     def test_get_flats_in_note_with_each_major_cof_note(self):
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('C')
+        actual_result = cof.get_flats_in_note('C')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('G')
+        actual_result = cof.get_flats_in_note('G')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('D')
+        actual_result = cof.get_flats_in_note('D')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('A')
+        actual_result = cof.get_flats_in_note('A')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('E')
+        actual_result = cof.get_flats_in_note('E')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_B', '_E', '_A', '_D', '_G', '_C', '_F']
-        actual_result = self.cof.get_flats_in_note('B')
+        actual_result = cof.get_flats_in_note('B')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_B', '_E', '_A', '_D', '_G', '_C']
-        actual_result = self.cof.get_flats_in_note('_G')
+        actual_result = cof.get_flats_in_note('_G')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_B', '_E', '_A', '_D', '_G']
-        actual_result = self.cof.get_flats_in_note('_D')
+        actual_result = cof.get_flats_in_note('_D')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_B', '_E', '_A', '_D']
-        actual_result = self.cof.get_flats_in_note('_A')
+        actual_result = cof.get_flats_in_note('_A')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_B', '_E', '_A']
-        actual_result = self.cof.get_flats_in_note('_E')
+        actual_result = cof.get_flats_in_note('_E')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_B', '_E']
-        actual_result = self.cof.get_flats_in_note('_B')
+        actual_result = cof.get_flats_in_note('_B')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_B']
-        actual_result = self.cof.get_flats_in_note('F')
+        actual_result = cof.get_flats_in_note('F')
         self.assertEqual(expected_result, actual_result)
 
     def test_get_sharps_in_note_with_each_minor_cof_note(self):
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('a')
+        actual_result = cof.get_sharps_in_note('a')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^f']
-        actual_result = self.cof.get_sharps_in_note('e')
+        actual_result = cof.get_sharps_in_note('e')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^f', '^c']
-        actual_result = self.cof.get_sharps_in_note('b')
+        actual_result = cof.get_sharps_in_note('b')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^f', '^c', '^g']
-        actual_result = self.cof.get_sharps_in_note('^f')
+        actual_result = cof.get_sharps_in_note('^f')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^f', '^c', '^g', '^d']
-        actual_result = self.cof.get_sharps_in_note('^c')
+        actual_result = cof.get_sharps_in_note('^c')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^f', '^c', '^g', '^d', '^a']
-        actual_result = self.cof.get_sharps_in_note('^g')
+        actual_result = cof.get_sharps_in_note('^g')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^f', '^c', '^g', '^d', '^a', '^e']
-        actual_result = self.cof.get_sharps_in_note('^d')
+        actual_result = cof.get_sharps_in_note('^d')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['^f', '^c', '^g', '^d', '^a', '^e', '^b']
-        actual_result = self.cof.get_sharps_in_note('_b')
+        actual_result = cof.get_sharps_in_note('_b')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('f')
+        actual_result = cof.get_sharps_in_note('f')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('c')
+        actual_result = cof.get_sharps_in_note('c')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('g')
+        actual_result = cof.get_sharps_in_note('g')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_sharps_in_note('d')
+        actual_result = cof.get_sharps_in_note('d')
         self.assertEqual(expected_result, actual_result)
 
     def test_get_flats_in_note_with_each_minor_cof_note(self):
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('a')
+        actual_result = cof.get_flats_in_note('a')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('e')
+        actual_result = cof.get_flats_in_note('e')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('b')
+        actual_result = cof.get_flats_in_note('b')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('^f')
+        actual_result = cof.get_flats_in_note('^f')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = []
-        actual_result = self.cof.get_flats_in_note('^c')
+        actual_result = cof.get_flats_in_note('^c')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_b', '_e', '_a', '_d', '_g', '_c', '_f']
-        actual_result = self.cof.get_flats_in_note('^g')
+        actual_result = cof.get_flats_in_note('^g')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_b', '_e', '_a', '_d', '_g', '_c']
-        actual_result = self.cof.get_flats_in_note('^d')
+        actual_result = cof.get_flats_in_note('^d')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_b', '_e', '_a', '_d', '_g']
-        actual_result = self.cof.get_flats_in_note('_b')
+        actual_result = cof.get_flats_in_note('_b')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_b', '_e', '_a', '_d']
-        actual_result = self.cof.get_flats_in_note('f')
+        actual_result = cof.get_flats_in_note('f')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_b', '_e', '_a']
-        actual_result = self.cof.get_flats_in_note('c')
+        actual_result = cof.get_flats_in_note('c')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_b', '_e']
-        actual_result = self.cof.get_flats_in_note('g')
+        actual_result = cof.get_flats_in_note('g')
         self.assertEqual(expected_result, actual_result)
 
         expected_result = ['_b']
-        actual_result = self.cof.get_flats_in_note('d')
+        actual_result = cof.get_flats_in_note('d')
         self.assertEqual(expected_result, actual_result)
