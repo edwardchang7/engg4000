@@ -60,3 +60,5 @@ def gen_triad(root, type):
         triad.append(whole_step(root, True))
 
     return triad
+
+

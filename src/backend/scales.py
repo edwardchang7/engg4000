@@ -103,3 +103,5 @@ def get_scale(root, type):
         scale.append(root)
 
         return scale
+
+

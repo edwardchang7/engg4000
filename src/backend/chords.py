@@ -1,13 +1,9 @@
-'''
-Author : Elliot, Thomas
-Last Edit : Thomas (17.11.2021 10:54AM)
-'''
-
 from src.backend.triads import *
 from src.backend.music_tools import *
 
+
 def gen_chord(root, type, extra_note_list):
-    '''
+    """
     Returns a list of notes to build the specified root chord
 
         Parameters:
@@ -19,7 +15,7 @@ def gen_chord(root, type, extra_note_list):
 
         Returns:
             a list of notes within the chord
-    '''
+    """
     chord = None
 
     # major M, major_7th : M7, major_minor_7th : Mm7
@@ -79,3 +75,5 @@ def gen_chord(root, type, extra_note_list):
         # if extra_note_list = ["1'", '3,', "2''"] and we call gen_chord('C', 'm7', extra_note_list) => output = ['C', 'D#', 'G', A#', "d#'", 'A#,', "g''"]
 
         return chord
+
+

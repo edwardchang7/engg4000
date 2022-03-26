@@ -1,6 +1,7 @@
 import unittest
 from src.backend.triads import gen_triad
 
+
 class TestTriads(unittest.TestCase):
 
     def test_majorTriad_one(self):
@@ -12,7 +13,6 @@ class TestTriads(unittest.TestCase):
     def test_majorTriad_three(self):
         self.assertEqual(gen_triad('D#,,', 'M'), ['D#,,', 'G,,', 'A#,,'])
 
-
     def test_minorTriad_one(self):
         self.assertEqual(gen_triad('C', 'm'), ['C', 'D#', 'G'])
 
@@ -21,7 +21,6 @@ class TestTriads(unittest.TestCase):
 
     def test_minorTriad_three(self):
         self.assertEqual(gen_triad('D#,,', 'm'), ['D#,,', 'F#,,', 'A#,,'])
-
 
     def test_diminishedTriad_one(self):
         self.assertEqual(gen_triad('C', 'D'), ['C', 'D#', 'F#'])
@@ -32,7 +31,6 @@ class TestTriads(unittest.TestCase):
     def test_diminishedTriad_three(self):
         self.assertEqual(gen_triad('D#,,', 'D'), ['D#,,', 'F#,,', 'A,,'])
 
-
     def test_sus2Triad_one(self):
         self.assertEqual(gen_triad('C', 's2'), ['C', 'D', 'G'])
 
@@ -42,7 +40,6 @@ class TestTriads(unittest.TestCase):
     def test_sus2Triad_three(self):
         self.assertEqual(gen_triad('D#,,', 's2'), ['D#,,', 'F,,', 'A#,,'])
 
-
     def test_sus4Triad_one(self):
         self.assertEqual(gen_triad('C', 's4'), ['C', 'F', 'G'])
 
@@ -51,3 +48,5 @@ class TestTriads(unittest.TestCase):
 
     def test_sus4Triad_three(self):
         self.assertEqual(gen_triad('D#,,', 's4'), ['D#,,', 'G#,,', 'A#,,'])
+
+
