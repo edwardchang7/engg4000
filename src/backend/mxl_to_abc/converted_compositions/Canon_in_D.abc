@@ -1,0 +1,62 @@
+X:1
+T:Canon in D
+C:Johann Pachelbel
+%%score { 1 | 2 }
+L:1/8
+Q:1/4=100
+M:4/4
+I:linebreak $
+K:D
+V:1 treble nm="Piano" snm="Pno."
+V:2 bass 
+V:1
+!p! z8 | z8 | z8 |!<(! z8!<)! |$ f4 e4 | d4 c4 | B4 A4 | B4 c4 |$ [Adf]4 [Ace]4 | [FBd]4 [FAc]4 | %10
+ [DGB]4 [DFA]4 |!<(! [DGB]4 [EAc]4!<)! |$ d2 f2 a2 g2 | f2 d2 f3 e | d2 B2 d2 f2 | g2 b2 a3 g |$ %16
+ [df]2 f2 [ea]2 g2 | [df]2 d2 [cf]3 e | [Bd]2 B2 [Ad]2 f2 | [Bg]2 b2 [ca]3 g |$ dcdA A2 c2 | %21
+ d2 f2 a3 b | gfeg fedc | (BA) d2 d3 c |$ dcdA A2 c2 | d2 f2 a3 b | gfeg fedc | (BA) d2 d3 c |$ %28
+ dcdA cAef | ddcB cfab | gfeg fedc | BAGF EGFE |$ defg aeag | fbag agfe | dBBc d(f/e/ d)f | %35
+ g(d/c/ B)(c d3) c |$!f! a(f/g/ a)(f/g/ a/)A/B/c/ d/e/f/g/ | f(d/e/ f)(F/G/) A/B/A/G/ A/F/G/A/ | %38
+ G(B/A/ G)(F/E/) F/E/D/E/ F/G/A/B/ |$ G(B/A/) B(c/d/) A/B/c/d/ e/f/g/a/ | %40
+ a(f/g/ a)(f/g/ a/)A/B/c/ d/e/f/g/ | f(d/e/ f)(F/G/) A/B/A/G/ A/F/G/A/ |$ %42
+ G(B/A/ G)(F/E/) F/E/D/E/ F/G/A/B/ | G(B/A/) B(c/d/) A/B/c/d/ e/f/g/a/ | %44
+ f(d/e/ f)(e/d/) e/c/d/e/ f/e/d/c/ |$ d(B/c/ d)(d/e/) f/g/f/e/ f/d/c/d/ | %46
+ B(d/c/ B)(A/G/) A/G/F/G/ A/B/c/d/ | B(d/c/ d)(c/B/) c/A/B/c/ d/e/f/g/ |$ %48
+ f(d/e/ f)(e/d/) e/c/d/e/ f/e/d/c/ | d(B/c/ d)(d/e/) f/g/f/e/ f/d/c/d/ | %50
+ B(d/c/ B)(A/G/) A/G/F/G/ A/B/c/d/ |$ B(d/c/ d)(c/B/) c/A/B/c/ d/e/f/g/ | adfa abag | f3 f fgfe |$ %54
+ d=cBc d2 A>A | d=cBc d2 ^c2 | a3 a abag | f3 f fgfe |$ d=cBc d2 A>A | d=cBc d3 ^c | fFGF Eefe | %61
+ dFdB AAGA |$ BBcB AAGA | BBAB ccBc | dded ccdc | BBAB ccfe |$ ddeg fFAf | fgfg eAec | %68
+ [df]d/e/ fd [ce]c/d/ ec | [Bd]B/c/ dB [Ac]a/g/ fe |$ [Bd]g/f/ eg [Af]d/e/ fa | %71
+ [gb]b/a/ gb [ce]a/g/ fe | [df]d/c/ dA [Ae]A/B/ cA |$ [Bd]d/e/ [df]d [cf]f/e/ dc | %74
+ [GB]B/A/ Bc [Ad]f/e/ df | [Bg]d/c/ Bc [Ade]2 c2 | [Adf]3 f fgfe |$ d3 d dedc | [GB]4 d2 A2 | %79
+ [GB]4 A3 c | [dfa]3 [fa] [fa][gb][fa][eg] |$ [df]3 [df] [df][eg][df][ce] | [Bd]=cBc d2 A>F | %83
+ d=cBc [A^c]3 c | [FAd]3 A ABAG |$ F3 F FGFE | d=cBc d2 A>A | d=cBc d2 ^c2 | A3 A ABAG |$ %89
+ [cd]2 [Bd]4 [A=c]2 | [AB]2 G2 [Ad]2 A2 | [GB]4 [EA]4 | A2 [Adf]4 e2 |$ [Fcd]2 [dbd']4 [ea=c']2 | %94
+ [dab]2 g2 [fad']2 [dfa]2 | [dgb]3 e [cea]2 g2 | [Afa]4 A3 G |$ [Ff]4 f3 e | [dg]4 [fa]2 [Dd]2 | %99
+ [Bd]3 e [Ee]3 [Ac]- | !fermata![Ac]4 !arpeggio!!fermata![DFAd]4- | [DFAd]8 |] %102
+V:2
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %4
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %8
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %12
+!mf! D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %16
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %20
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %24
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %28
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %32
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %36
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, |$ G,,D,G,B, A,,E,A,C | %40
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, |$ G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %44
+ D,A,DF A,,E,A,C |$ B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C |$ %48
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, |$ G,,D,G,B, A,,E,A,C | %52
+!mf! D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, |$ G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %56
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, |$ G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %60
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, |$ G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %64
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, |$ G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %68
+ D,A,DF A,,E,A,C | B,,F,B,D F,,C,F,A, |$ G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %72
+ D,A,DF A,,E,A,C |$ B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %76
+ D,A,DF A,,E,A,C |$ B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %80
+ D,A,DF A,,E,A,C |$ B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %84
+ D,A,DF A,,E,A,C |$ B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %88
+ D,A,DF A,,E,A,C |$ B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %92
+ D,A,DF A,,E,A,C |$ B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C | %96
+ D,A,DF A,,E,A,C |$ B,,F,B,D F,,C,F,A, | G,,D,G,B, D,,A,,D,F, | G,,D,G,B, A,,E,A,C- | %100
+ C4 [D,,A,,F,]4- | [D,,A,,F,]8 |] %102
