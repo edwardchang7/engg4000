@@ -3,8 +3,21 @@ import certifi
 from pymongo import MongoClient
 from typing import Final
 
+# REMOVE THIS BEFORE MERGING INTO MASTER
+# ===========================================================
+# only uncomment this if you are not using pycharm
+# import os, sys, inspect
+
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# parent2 = os.path.dirname(parentdir)
+# sys.path.insert(0, parent2)
+# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
+# ===========================================================
+# REMOVE THIS BEFORE MERGING INTO MASTER
+
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
-from src.backend.collections.rhythmic_pattern import RhythmicPattern
+from src.backend.Collections.rhythmic_pattern import RhythmicPattern
 
 
 class Cluster:
