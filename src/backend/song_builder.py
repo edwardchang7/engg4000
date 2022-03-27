@@ -2,6 +2,19 @@
 import random as rand
 from datetime import datetime as dt
 
+# REMOVE THIS BEFORE MERGING INTO MASTER
+# ===========================================================
+# only uncomment this if you are not using pycharm
+# import os, sys, inspect
+
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# parent2 = os.path.dirname(parentdir)
+# sys.path.insert(0, parent2)
+# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
+# ===========================================================
+# REMOVE THIS BEFORE MERGING INTO MASTER
+
 from src.backend.cluster import Cluster
 from src.backend.music_tools import half_step ,whole_step ,M3 ,m3 ,P5 ,change_octave
 from src.backend.scales import get_scale
@@ -47,13 +60,13 @@ def build_rhythmic_pattern(key):
 
 
     # if pattern_1 is empty (meaning the given song name does not have matching pattern lengths)
-    whil e(not pattern_1 or not pattern_2):
+    while(not pattern_1 or not pattern_2):
         song_name = _get_random_song_name()
         pattern_1 = _get_rhythmic_patterns(song_name, length_1)
         pattern_2 = _get_rhythmic_patterns(song_name, length_2)
 
     # randomly generate another pattern as long as pattern_1 == pattern_2
-    whil e(pattern_1 is pattern_2):
+    while(pattern_1 is pattern_2):
         pattern_2 = _get_rhythmic_patterns(song_name, length_2)
 
     return pattern_1, pattern_2
@@ -81,8 +94,6 @@ Randomly selects a pattern style
 Return:
     a random selected pattern style that has a length of 8 
 '''
-
-
 def _get_random_pattern_style():
     # set a random seed
     rand.seed(dt.now().timestamp())
@@ -192,8 +203,6 @@ Parameters:
 Return:
     a list of notes that matches the pattern
 '''
-
-
 def convert_tonal_pattern(key, tonal_pattern):
     pattern = tonal_pattern.pattern
     to_return = []
@@ -232,10 +241,24 @@ def convert_tonal_pattern(key, tonal_pattern):
 
     return to_return
 
+'''
+Given a starting note and an ending note, fill in the number of notes
+based on the num_beats, with each note at most +2 from current note or -2
+from the current note.
 
+Parameters:
+    key: The key to generate the scale in
+    start_note: the starting note of the pattern
+    end_note: the ending note of the pattern
+    num_beats: the number of elements to fill
+
+Return:
+    A list of randomly generated notes that sounds nice together
+    within the given key of the scale
+'''
 def bridge_pattern(key, start_note, end_note, num_beats):
     # get the initial scale for this given key
-    scale = _get_random_pattern_style(key)
+    scale = _get_random_scale_type(key)
 
     # a variable to hold the current note
     current_note = start_note
@@ -244,14 +267,70 @@ def bridge_pattern(key, start_note, end_note, num_beats):
     bridged_patterns = []
 
     while (num_beats > 0):
+
+        # get the window within the scale given the current note
+        window = _get_window(current_note, scale)
+
+        # randomly generate an index between 0 and 3 (4 = window size)
+        selected_index = rand.randint(0, 3)
+
+        # the selected note will be in this variable
+        selected_note = window[selected_index]
+
+        current_note = selected_note
+
+        bridged_patterns.append(current_note)
+
         num_beats -= 1
 
     return bridged_patterns
 
+'''
+Given the note and the scale, generates a window of notes
+of length 4, (+2 and -2 index from the given note within the scale)
 
+Parameters:
+    note: The note to go up by 2 and down by 2 in the scale
+    scale: the scale that the given note exist within
+
+Return:
+    a list of 4 notes (+2 from note and -2 from note)
+'''
 def _get_window(note, scale):
+
+    # empty placeholder to be returned
+    window = []
+
+    # gets the index of the note within the scale
     index_of_note = scale.index(note)
 
+    length_of_scale = len(scale) 
+
+    lower_bound_2 = index_of_note - 2
+    lower_bound_1 = index_of_note - 1
+    upper_bound_2 = index_of_note + 2
+    upper_bound_1 = index_of_note + 1
+
+    # make it so that it loops back to the top/bottom of the list
+    if lower_bound_2 < 0:
+        lower_bound_2 = length_of_scale - abs(lower_bound_2)
+
+    if upper_bound_2 >= length_of_scale:
+        upper_bound_2 %= length_of_scale
+
+    if lower_bound_1 < 0:
+        lower_bound_1 = length_of_scale - abs(lower_bound_1)
+
+    if upper_bound_1 >= length_of_scale:
+        upper_bound_1 %= length_of_scale
+
+    # append all the 4 neighbouring notes to the window
+    window.append(scale[lower_bound_1])
+    window.append(scale[lower_bound_2])
+    window.append(scale[upper_bound_1])
+    window.append(scale[upper_bound_2])
+
+    return window
 
 '''
 Gets a scale given the key with a random type
@@ -262,12 +341,15 @@ Parameters
 Return
     The generated scale in the given key
 '''
-
-
-def _get_random_scale_type(key):
+def _get_random_scale_type(key, debug=False):
     # split the root and the scale type
     root = key[0]
     scale_type = key[1]
+
+    # only used for testing
+    if debug:
+        generated_scale = get_scale(root, 'M')
+        return generated_scale
 
     # set the seet for random class
     rand.seed(dt.now().timestamp())
