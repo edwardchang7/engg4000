@@ -1,11 +1,13 @@
-
-import random as rand
 from datetime import datetime as dt
+import random as rand
 
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
-# import os, sys, inspect
+# import os
+# import inspect
+# import sys
+
 
 # currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 # parentdir = os.path.dirname(currentdir)
@@ -16,7 +18,8 @@ from datetime import datetime as dt
 # REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend.cluster import Cluster
-from src.backend.music_tools import half_step ,whole_step ,M3 ,m3 ,P5 ,change_octave
+from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
+                                     whole_step)
 from src.backend.scales import get_scale
 
 '''
