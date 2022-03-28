@@ -93,7 +93,7 @@ class TextMusicTools(unittest.TestCase):
         self.assertEqual(P5("D", False), "G,")
 
     def test_P5_decreasingFreq_three(self):
-        self.assertEqual(P5("e'", False), "a")
+        self.assertEqual(P5("e'", False), "e")
 
     def test_changeOctave_increasingFreq_one(self):
         self.assertEqual(change_octave("C", True), "c")
