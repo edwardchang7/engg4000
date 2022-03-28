@@ -50,13 +50,13 @@ class TestChords(unittest.TestCase):
         self.assertEqual(gen_chord('D#,,', 'FD', []), ['D#,,', 'F#,,', 'A,,', 'C,'])
 
     def test_major7_extraNotes(self):
-        self.assertEqual(gen_chord('C', 'M7', ["0'", "2,,"]), ['C', 'E', 'G', 'B', "c'", 'G,,'])
+        self.assertEqual(gen_chord('C', 'M7', ["0'", "2,,"]), ['C', 'E', 'G', 'B', "c", 'G,,'])
 
     def test_sus2_extraNotes(self):
-        self.assertEqual(gen_chord('F#', 'sus2', ["0,", "1''"]), ['F#', 'G#', "c#'", 'F#,', "g#''"])
+        self.assertEqual(gen_chord('F#', 'sus2', ["0,", "1''"]), ['F#', 'G#', "c#", 'F#,', "g#'"])
 
     def test_halfDiminished_extraNotes(self):
         self.assertEqual(gen_chord('E', 'HD', ["0'", "2,,", "1''", "3,"]),
-                         ['E', 'G', 'A#', "d'", "e'", 'A#,,', "g''", 'D'])
+                         ['E', 'G', 'A#', "d", "e", 'A#,,', "g'", 'D'])
 
 
