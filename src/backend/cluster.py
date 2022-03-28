@@ -17,7 +17,7 @@ from typing import Final
 # REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
-from src.backend.Collections.rhythmic_pattern import RhythmicPattern
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 
 
 class Cluster:
@@ -99,7 +99,7 @@ class Cluster:
                 if (current_rhythmic_pattern_length is not None and
                         current_rhythmic_pattern_length == length):
                     queried_rhythmic_patterns.append(
-                        RhythmicPattern(
+                        Rhythmic_Pattern(
                             rhythmic_pattern.get('pattern'),
                             rhythmic_pattern.get('frequency'),
                             rhythmic_pattern.get('is_v1')
