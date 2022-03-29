@@ -1,9 +1,7 @@
 import unittest
 # ===========================================================
 # only uncomment this if you are not using pycharm
-# import os
-# import sys
-# import inspect
+# import os, sys, inspect
 # currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 # parentdir = os.path.dirname(currentdir)
 # parent2 = os.path.dirname(parentdir)
@@ -13,7 +11,6 @@ import unittest
 
 from src.backend import scales, song_builder
 from src.backend.collections.tonal_pattern import TonalPattern
-
 
 
 class Test_Song_Builder(unittest.TestCase):
@@ -87,11 +84,13 @@ class Test_Song_Builder(unittest.TestCase):
         self.assertEqual(combined_length, 8)
 
     def test_convert_tonal_patterns(self):
-        pattern =[['h'], ['-h'], ['w'], ['-w'], ['m3'], ['-m3'], ['M3'], ['-M3'], ['P5'], ['-P5'], ['o'], ['-o'], ['0']]
-        num_notes  = 14
+        pattern = [['h'], ['-h'], ['w'], ['-w'], ['m3'], ['-m3'],
+                   ['M3'], ['-M3'], ['P5'], ['-P5'], ['o'], ['-o'], ['0']]
+        num_notes = 14
         priority = 0
 
-        answer = ["C#", "C", "D", "C", "D#", "C", "E", "C", "G", "C", "c", "C", "C"]
+        answer = ["C#", "C", "D", "C", "D#", "C",
+                  "E", "C", "G", "C", "c", "C", "C"]
 
         tonal_pattern_obj = TonalPattern(pattern, num_notes, priority)
 

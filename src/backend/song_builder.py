@@ -1,14 +1,15 @@
-from datetime import datetime as dt
 import random as rand
+from datetime import datetime as dt
+
+from src.backend.cluster import Cluster
+from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
+                                     whole_step)
+from src.backend.scales import get_scale
 
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
-# import os
-# import inspect
-# import sys
-
-
+# import os, sys, inspect
 # currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 # parentdir = os.path.dirname(currentdir)
 # parent2 = os.path.dirname(parentdir)
@@ -17,10 +18,6 @@ import random as rand
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
 
-from src.backend.cluster import Cluster
-from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
-                                     whole_step)
-from src.backend.scales import get_scale
 
 '''
 Takes in a genre and returns a song template for the given genre
@@ -31,8 +28,10 @@ Parameters:
 Return:
     the song template based on the given genre
 '''
+
+
 def get_song_template(genre):
-    return ['A' ,'A' ,'B' ,'A']
+    return ['A', 'A', 'B', 'A']
 
 
 '''
@@ -45,6 +44,8 @@ Returns:
     a combination of patterns that matches the selected style
 
 '''
+
+
 def build_rhythmic_pattern(key):
 
     # gets a random song name from the list of songs that exist within the database
@@ -61,7 +62,6 @@ def build_rhythmic_pattern(key):
     pattern_1 = _get_rhythmic_patterns(song_name, length_1)
     pattern_2 = _get_rhythmic_patterns(song_name, length_2)
 
-
     # if pattern_1 is empty (meaning the given song name does not have matching pattern lengths)
     while(not pattern_1 or not pattern_2):
         song_name = _get_random_song_name()
@@ -74,19 +74,19 @@ def build_rhythmic_pattern(key):
 
     return pattern_1, pattern_2
 
+
 '''
 Selects a random song name from the list of songs within the database
 
 Return:
     A list of song names 
 '''
+
+
 def _get_random_song_name():
     song_names = _get_db_song_names()
 
-    # sets a random seed
-    rand.seed(dt.now().timestamp())
-
-    selected_index = rand.randint(0, len(song_names) -1)
+    selected_index = _get_random_number(len(song_names) - 1)
 
     return song_names[selected_index]
 
@@ -97,16 +97,15 @@ Randomly selects a pattern style
 Return:
     a random selected pattern style that has a length of 8 
 '''
-def _get_random_pattern_style():
-    # set a random seed
-    rand.seed(dt.now().timestamp())
 
+
+def _get_random_pattern_style():
     # Each of this are the possible combinations of bars
     pattern_style = [(4, 4), (3, 5), (5, 3)]
 
     # randomly selects a pattern style and return it
     if len(pattern_style) > 1:
-        selected_index = rand.randint(0, len(pattern_style) - 1)
+        selected_index = _get_random_number(len(pattern_style) - 1)
     else:
         selected_index = 0
 
@@ -132,14 +131,14 @@ def _get_rhythmic_patterns(song_name, pattern_length):
     # making connection to the DB
     db = _make_db_connection(db_name, is_admin, song_name)
 
-    list_of_matching_length_songs = db.query_rhythmic_patterns(db, song_name, pattern_length)
-
-    rand.seed(dt.now().timestamp())
+    list_of_matching_length_songs = db.query_rhythmic_patterns(
+        db, song_name, pattern_length)
 
     # if there is a matching pattern length within the given song name, then return it
     if (list_of_matching_length_songs):
         if (len(list_of_matching_length_songs) > 1):
-            selected_index = rand.randint(0, len(list_of_matching_length_songs) - 1)
+            selected_index = rand.randint(
+                0, len(list_of_matching_length_songs) - 1)
         else:
             selected_index = 0
 
@@ -206,6 +205,8 @@ Parameters:
 Return:
     a list of notes that matches the pattern
 '''
+
+
 def convert_tonal_pattern(key, tonal_pattern):
     pattern = tonal_pattern.pattern
     to_return = []
@@ -216,22 +217,28 @@ def convert_tonal_pattern(key, tonal_pattern):
     for lst in pattern:
         for step in lst:
             if 'h' in step:
-                new_note = half_step(current_note, False) if '-' in step else half_step(current_note, True)
+                new_note = half_step(
+                    current_note, False) if '-' in step else half_step(current_note, True)
 
             elif 'w' in step:
-                new_note = whole_step(current_note, False) if '-' in step else whole_step(current_note, True)
+                new_note = whole_step(
+                    current_note, False) if '-' in step else whole_step(current_note, True)
 
             elif 'm3' in step:
-                new_note = m3(current_note, False) if '-' in step else m3(current_note, True)
+                new_note = m3(
+                    current_note, False) if '-' in step else m3(current_note, True)
 
             elif 'M3' in step:
-                new_note = M3(current_note, False) if '-' in step else M3(current_note, True)
+                new_note = M3(
+                    current_note, False) if '-' in step else M3(current_note, True)
 
             elif 'P5' in step:
-                new_note = P5(current_note, False) if '-' in step else P5(current_note, True)
+                new_note = P5(
+                    current_note, False) if '-' in step else P5(current_note, True)
 
             elif 'o' in step:
-                new_note = change_octave(current_note, False) if '-' in step else change_octave(current_note, True)
+                new_note = change_octave(
+                    current_note, False) if '-' in step else change_octave(current_note, True)
 
             elif '0' in step:
                 new_note = current_note
@@ -243,6 +250,7 @@ def convert_tonal_pattern(key, tonal_pattern):
         to_return.append(current_note)
 
     return to_return
+
 
 '''
 Given a starting note and an ending note, fill in the number of notes
@@ -259,6 +267,8 @@ Return:
     A list of randomly generated notes that sounds nice together
     within the given key of the scale
 '''
+
+
 def bridge_pattern(key, start_note, end_note, num_beats):
     # get the initial scale for this given key
     scale = _get_random_scale_type(key)
@@ -275,7 +285,7 @@ def bridge_pattern(key, start_note, end_note, num_beats):
         window = _get_window(current_note, scale)
 
         # randomly generate an index between 0 and 3 (4 = window size)
-        selected_index = rand.randint(0, 3)
+        selected_index = _get_random_number(3)
 
         # the selected note will be in this variable
         selected_note = window[selected_index]
@@ -288,6 +298,7 @@ def bridge_pattern(key, start_note, end_note, num_beats):
 
     return bridged_patterns
 
+
 '''
 Given the note and the scale, generates a window of notes
 of length 4, (+2 and -2 index from the given note within the scale)
@@ -299,6 +310,8 @@ Parameters:
 Return:
     a list of 4 notes (+2 from note and -2 from note)
 '''
+
+
 def _get_window(note, scale):
 
     # empty placeholder to be returned
@@ -307,7 +320,7 @@ def _get_window(note, scale):
     # gets the index of the note within the scale
     index_of_note = scale.index(note)
 
-    length_of_scale = len(scale) 
+    length_of_scale = len(scale)
 
     lower_bound_2 = index_of_note - 2
     lower_bound_1 = index_of_note - 1
@@ -335,6 +348,7 @@ def _get_window(note, scale):
 
     return window
 
+
 '''
 Gets a scale given the key with a random type
 
@@ -344,6 +358,8 @@ Parameters
 Return
     The generated scale in the given key
 '''
+
+
 def _get_random_scale_type(key, debug=False):
     # split the root and the scale type
     root = key[0]
@@ -354,16 +370,13 @@ def _get_random_scale_type(key, debug=False):
         generated_scale = get_scale(root, 'M')
         return generated_scale
 
-    # set the seet for random class
-    rand.seed(dt.now().timestamp())
-
     # the differnt types of scale types
     minor_scale_types = ['m', 'pm']
     major_scale_types = ['M', 'pm']
 
     # randomly generate a number, if its even then use minor / major scales,
-    # else if its odd then use either pentatonic minor / major
-    selected_index = 0 if (rand.randint(0, 100) % 2 == 0) else 1
+    # else if its odd then use either pentatonic minor / major (50 / 50 chances)
+    selected_index = 0 if (_get_random_number(100) % 2 == 0) else 1
 
     # This will hold the scale type
     selected_scale_type = minor_scale_types[selected_index] if 'm' in scale_type else major_scale_types[selected_index]
@@ -374,12 +387,34 @@ def _get_random_scale_type(key, debug=False):
     return generated_scale
 
 
+'''
+Returns a random number between the range of [0,limit]
+
+Parameters:
+    limit: the maximum value that can be randomly generated 
+
+Return:
+    a randomly generated value within the range of [0,limit]
+'''
+
+
+def _get_random_number(limit):
+    # set the seed
+    rand.seed(dt.now().timestamp())
+
+    # return the generated number
+    value = rand.randint(0, limit)
+
+    return value
+
+
 def build_new_pattern(self, first_existing_pattern: list, second_existing_pattern: list,
                       desired_num_of_beats: int) -> list:
     num_of_beats_in_first_pattern = len(first_existing_pattern)
     num_of_beats_in_second_pattern = len(second_existing_pattern)
 
-    num_of_beats_in_new_pattern = desired_num_of_beats - num_of_beats_in_first_pattern - num_of_beats_in_second_pattern
+    num_of_beats_in_new_pattern = desired_num_of_beats - \
+        num_of_beats_in_first_pattern - num_of_beats_in_second_pattern
 
     if num_of_beats_in_new_pattern < 0:
         return None
