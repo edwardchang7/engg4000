@@ -1,22 +1,24 @@
 import random as rand
 from datetime import datetime as dt
 
+# REMOVE THIS BEFORE MERGING INTO MASTER
+# ===========================================================
+# only uncomment this if you are not using pycharm
+import os, sys, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+parent2 = os.path.dirname(parentdir)
+sys.path.insert(0, parent2)
+# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
+# ===========================================================
+# REMOVE THIS BEFORE MERGING INTO MASTER
+
 from src.backend.cluster import Cluster
 from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
                                      whole_step)
 from src.backend.scales import get_scale
-
-# REMOVE THIS BEFORE MERGING INTO MASTER
-# ===========================================================
-# only uncomment this if you are not using pycharm
-# import os, sys, inspect
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# parent2 = os.path.dirname(parentdir)
-# sys.path.insert(0, parent2)
-# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
-# ===========================================================
-# REMOVE THIS BEFORE MERGING INTO MASTER
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.collections.tonal_pattern import TonalPattern
 
 
 '''
@@ -28,8 +30,6 @@ Parameters:
 Return:
     the song template based on the given genre
 '''
-
-
 def get_song_template(genre):
     return ['A', 'A', 'B', 'A']
 
@@ -42,10 +42,7 @@ Parameters:
 
 Returns:
     a combination of patterns that matches the selected style
-
 '''
-
-
 def build_rhythmic_pattern(key):
 
     # gets a random song name from the list of songs that exist within the database
@@ -81,8 +78,6 @@ Selects a random song name from the list of songs within the database
 Return:
     A list of song names 
 '''
-
-
 def _get_random_song_name():
     song_names = _get_db_song_names()
 
@@ -97,8 +92,6 @@ Randomly selects a pattern style
 Return:
     a random selected pattern style that has a length of 8 
 '''
-
-
 def _get_random_pattern_style():
     # Each of this are the possible combinations of bars
     pattern_style = [(4, 4), (3, 5), (5, 3)]
@@ -122,8 +115,6 @@ Parameters:
 Return:
     a list of Rhythmic Pattern objects that matches the given pattern length within the given collection name
 '''
-
-
 def _get_rhythmic_patterns(song_name, pattern_length):
     db_name = "elliot"
     is_admin = False
@@ -155,8 +146,6 @@ Gets a list of song names that exist within the database
 Return:
     a list of all the song names within the database 
 '''
-
-
 def _get_db_song_names():
     db_name = "elliot"
     is_admin = False
@@ -182,8 +171,6 @@ Parameters:
 Return:
     a cluster instance
 '''
-
-
 def _make_db_connection(database_name, is_admin, collection_name=None):
     database = None
 
@@ -205,8 +192,6 @@ Parameters:
 Return:
     a list of notes that matches the pattern
 '''
-
-
 def convert_tonal_pattern(key, tonal_pattern):
     pattern = tonal_pattern.pattern
     to_return = []
@@ -267,8 +252,6 @@ Return:
     A list of randomly generated notes that sounds nice together
     within the given key of the scale
 '''
-
-
 def bridge_pattern(key, start_note, end_note, num_beats):
     # get the initial scale for this given key
     scale = _get_random_scale_type(key)
@@ -310,8 +293,6 @@ Parameters:
 Return:
     a list of 4 notes (+2 from note and -2 from note)
 '''
-
-
 def _get_window(note, scale):
 
     # empty placeholder to be returned
@@ -354,19 +335,20 @@ Gets a scale given the key with a random type
 
 Parameters
     key: The key to generate the scale in
+    test: only set to True for testing
 
 Return
     The generated scale in the given key
 '''
 
 
-def _get_random_scale_type(key, debug=False):
+def _get_random_scale_type(key, test=False):
     # split the root and the scale type
     root = key[0]
     scale_type = key[1]
 
     # only used for testing
-    if debug:
+    if test:
         generated_scale = get_scale(root, 'M')
         return generated_scale
 
@@ -396,8 +378,6 @@ Parameters:
 Return:
     a randomly generated value within the range of [0,limit]
 '''
-
-
 def _get_random_number(limit):
     # set the seed
     rand.seed(dt.now().timestamp())
@@ -408,6 +388,17 @@ def _get_random_number(limit):
     return value
 
 
+def build_verse(rhy_pattern:Rhythmic_Pattern, ton_pattern:TonalPattern):
+    r_pat = rhy_pattern.pattern
+    t_pat = ton_pattern.pattern
+
+    to_return = dict(zip(r_pat, t_pat))
+
+    return to_return
+
+# =============================================================================================
+# Functions from another song_builder file
+# _____________________________________________________________________________________________
 def build_new_pattern(self, first_existing_pattern: list, second_existing_pattern: list,
                       desired_num_of_beats: int) -> list:
     num_of_beats_in_first_pattern = len(first_existing_pattern)
@@ -428,3 +419,6 @@ def build_new_pattern(self, first_existing_pattern: list, second_existing_patter
 
 def combine_patterns(self, first_pattern: list, second_pattern: list) -> list:
     return first_pattern + second_pattern
+# =============================================================================================
+# Functions from another song_builder file
+# _____________________________________________________________________________________________
