@@ -1,16 +1,18 @@
 import unittest
+
 # ===========================================================
 # only uncomment this if you are not using pycharm
-# import os, sys, inspect
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# parent2 = os.path.dirname(parentdir)
-# sys.path.insert(0, parent2)
+import os, sys, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+parent2 = os.path.dirname(parentdir)
+sys.path.insert(0, parent2)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend import scales, song_builder
 from src.backend.collections.tonal_pattern import TonalPattern
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 
 
 class Test_Song_Builder(unittest.TestCase):
@@ -83,6 +85,9 @@ class Test_Song_Builder(unittest.TestCase):
 
         self.assertEqual(combined_length, 8)
 
+
+        return pattern_1, pattern_2
+
     def test_convert_tonal_patterns(self):
         pattern = [['h'], ['-h'], ['w'], ['-w'], ['m3'], ['-m3'],
                    ['M3'], ['-M3'], ['P5'], ['-P5'], ['o'], ['-o'], ['0']]
@@ -98,6 +103,8 @@ class Test_Song_Builder(unittest.TestCase):
 
         self.assertIsNotNone(tonal_pattern_obj)
         self.assertEqual(results, answer)
+
+        return results
 
     def test_get_random_scale_type(self):
         key = 'CM'
@@ -138,6 +145,18 @@ class Test_Song_Builder(unittest.TestCase):
         self.assertIsNotNone(scale)
         self.assertIsNotNone(generated_bridged_pattern)
         self.assertEqual(len(generated_bridged_pattern), beat_length)
+
+        return generated_bridged_pattern
+
+    def test_build_verse(self):
+        rhythmic_pattern_obj_1, rhythmic_pattern_obj_2 = self.test_build_rhythmic_pattern()
+        tonal_pattern = self.test_convert_tonal_patterns()
+
+        print(rhythmic_pattern_obj_1.beats)
+        print(rhythmic_pattern_obj_1.pattern)
+        print(rhythmic_pattern_obj_2.beats)
+        print(rhythmic_pattern_obj_2.pattern)
+        print(tonal_pattern)
 
 
 # DEBUG
