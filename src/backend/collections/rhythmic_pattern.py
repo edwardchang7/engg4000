@@ -11,7 +11,8 @@ class Rhythmic_Pattern:
             self.length = len(self.pattern)
             self.beats = _get_beats_length(str(pattern))
         else:
-            self.pattern = len(ast.literal_eval(self.pattern))
+            self.pattern = ast.literal_eval(self.pattern)
+            self.length = len(self.pattern)
             self.beats = _get_beats_length(pattern)
 
         self.is_v1 = is_v1
