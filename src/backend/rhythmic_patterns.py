@@ -14,7 +14,7 @@ import re
 
 from src.backend.cluster import Cluster
 from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
-from backend.collections.song_collection import Song_Collection
+from src.backend.collections.song_collection import SongCollection
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
 from abc_tools import get_header, get_melodic_and_rythmic, get_voicings
@@ -326,85 +326,89 @@ def extract_pattern():
         else:
             v2_pattern[str(set_of_bars)] = 1
 
+def extract_all_files():
+    # the main dir 
+    str_dir = 'mxl_to_abc/converted_compositions'
 
-# the main dir
-str_dir = 'mxl_to_abc/converted_compositions'
+    count = 0
 
-count = 0
+    # gets each file from the given directory
+    directory = os.fsencode(str_dir)
 
-# gets each file from the given directory
-directory = os.fsencode(str_dir)
+    # for each file within the given directory, extract patterns from this
+    for file in os.listdir(directory):
 
-# for each file within the given directory, extract patterns from this
-for file in os.listdir(directory):
+        # gets the filename of the given file
+        filename = os.fsdecode(file)
 
-    # gets the filename of the given file
-    filename = os.fsdecode(file)
+        # checks if hte given file ends with the right extension
+        if filename.endswith('.abc'):
 
-    # checks if hte given file ends with the right extension
-    if filename.endswith('.abc'):
+            # concat the directory with the file name
+            file_path = str_dir + "/" + filename
 
-        # concat the directory with the file name
-        file_path = str_dir + "/" + filename
+            # extracts the header from the given abc file
+            composition_name = get_header(file_path, 'T')
+            
+            # converts the header into a string if it returns a list
+            actual_header = ""
 
-        # extracts the header from the given abc file
-        composition_name = get_header(file_path, 'T')
+            # replacing the name 
+            composition_name=get_header(file_path, 'T')
 
-        # converts the header into a string if it returns a list
-        actual_header = ""
+            # converting list to a string header
+            if type(composition_name) == list:
+                for header in composition_name:
+                    header = header.replace(" ", "_")
+                    actual_header += str(header)
+            else:
+                actual_header = composition_name.replace(" ", "_")
 
-        # replacing the name
-        composition_name = get_header(file_path, 'T')
+            # creates the song object
+            song = SongCollection(actual_header)
 
-        # converting list to a string header
-        if type(composition_name) == list:
-            for header in composition_name:
-                header = header.replace(" ", "_")
-                actual_header += str(header)
-        else:
-            actual_header = composition_name.replace(" ", "_")
+            # appends the song object to the song_list
+            song_list.append(song)
 
-        # creates the song object
-        song = Song_Collection(actual_header)
 
-        # appends the song object to the song_list
-        song_list.append(song)
+            # The actual extraction process
+            extract_rhythmic_patterns(file_path)
+            extract_pattern()
 
-        # The actual extraction process
-        extract_rhythmic_patterns(file_path)
-        extract_pattern()
+            # for each pattern and frequency, create a RhythmicPattern object and add it to the given song
+            for k,v in v1_pattern.items():
+                pattern = Rhythmic_Pattern(k, v, True)
+                song.add_pattern(pattern)
 
-        # for each pattern and frequency, create a RhythmicPattern object and add it to the given song
-        for k, v in v1_pattern.items():
-            pattern = Rhythmic_Pattern(k, v, True)
-            song.add_pattern(pattern)
+            for k,v in v2_pattern.items():
+                pattern = Rhythmic_Pattern(k, v, False)
+                song.add_pattern(pattern)
 
-        for k, v in v2_pattern.items():
-            pattern = Rhythmic_Pattern(k, v, False)
-            song.add_pattern(pattern)
+            # Reset the global variables for the next song
+            v1_pattern = {}
+            v2_pattern = {}
 
-        # Reset the global variables for the next song
-        v1_pattern = {}
-        v2_pattern = {}
+            v1_keys = []
+            v2_keys = []
 
-        v1_keys = []
-        v2_keys = []
+            v1_combination = []
+            v2_combination = []
 
-        v1_combination = []
-        v2_combination = []
 
-for song in song_list:
-    database = Cluster("elliot", song.song_name, False)
-    v1, v2 = song.get_patterns()
+def upload_rhythmic_patterns_to_DB():
+    for song in song_list:
+        database = Cluster("elliot", song.song_name, False)
+        v1,v2 = song.get_patterns()
 
-    model = RhythmicPatternModel(song.song_name, v1)
-    passed = database.insert_rhythmic_pattern_model(database, model)
-
-    print(f"V1 of song {song.song_name} has been {str(passed).upper()} added")
-
-    if v2:
-        model = RhythmicPatternModel(song.song_name, v2)
+        model = RhythmicPatternModel(song.song_name, v1)
         passed = database.insert_rhythmic_pattern_model(database, model)
 
-        print(
-            f"V2 of song {song.song_name} has been {str(passed).upper()} added")
+        print(f"V1 of song {song.song_name} has been {str(passed).upper()} added")
+
+        if v2:
+            model = RhythmicPatternModel(song.song_name, v2)
+            passed = database.insert_rhythmic_pattern_model(database, model)
+
+            print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
+
+
