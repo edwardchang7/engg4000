@@ -1,10 +1,13 @@
-import random as rand
-from datetime import datetime as dt
-
+import inspect
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
-import os, sys, inspect
+import os
+import random as rand
+import sys
+import time
+from datetime import datetime as dt
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 parent2 = os.path.dirname(parentdir)
@@ -14,12 +17,11 @@ sys.path.insert(0, parent2)
 # REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend.cluster import Cluster
+from src.backend.Collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.Collections.tonal_pattern import TonalPattern
 from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
                                      whole_step)
 from src.backend.scales import get_scale
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
-from src.backend.collections.tonal_pattern import TonalPattern
-
 
 '''
 Takes in a genre and returns a song template for the given genre
@@ -252,15 +254,15 @@ Return:
     A list of randomly generated notes that sounds nice together
     within the given key of the scale
 '''
-def bridge_pattern(key, start_note, end_note, num_beats):
+def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
     # get the initial scale for this given key
     scale = _get_random_scale_type(key)
 
     # a variable to hold the current note
-    current_note = start_note
+    current_note = tonal_pattern_1[-1]
 
     # create an empty list to hold the value to return
-    bridged_patterns = []
+    bridged_patterns = tonal_pattern_1
 
     while (num_beats > 0):
 
@@ -278,6 +280,8 @@ def bridge_pattern(key, start_note, end_note, num_beats):
         bridged_patterns.append(current_note)
 
         num_beats -= 1
+
+    bridged_patterns.extend(tonal_pattern_2)
 
     return bridged_patterns
 
@@ -374,51 +378,111 @@ Returns a random number between the range of [0,limit]
 
 Parameters:
     limit: the maximum value that can be randomly generated 
+    start: the starting value
 
 Return:
     a randomly generated value within the range of [0,limit]
 '''
-def _get_random_number(limit):
+def _get_random_number(limit, start=0):
     # set the seed
     rand.seed(dt.now().timestamp())
 
+    time.sleep(0.003)
+
+
     # return the generated number
-    value = rand.randint(0, limit)
+    value = rand.randint(start, limit)
 
     return value
 
 
-def build_verse(rhy_pattern:Rhythmic_Pattern, ton_pattern:TonalPattern):
-    r_pat = rhy_pattern.pattern
-    t_pat = ton_pattern.pattern
+def build_verse(rhy_pattern):
+    # the dictionary to return
+    verse_to_return = [] # <----- THIS SHOULD HOLD A LIST OF OBJECTS LIKE THIS [NOTE : LENGTH] -- CREATE THE OBJECT
+    # temporary placeholder for holding all the combined patterns with the bridge patterns
+    verse_in_list = []
 
-    to_return = dict(zip(r_pat, t_pat))
+    # number of available patterns left to get
+    num_available_patterns = 4
 
-    return to_return
+    # bridge pattern buffer size
+    bridge_pattern_buffer_size = 12
 
-# =============================================================================================
-# Functions from another song_builder file
-# _____________________________________________________________________________________________
-def build_new_pattern(self, first_existing_pattern: list, second_existing_pattern: list,
-                      desired_num_of_beats: int) -> list:
-    num_of_beats_in_first_pattern = len(first_existing_pattern)
-    num_of_beats_in_second_pattern = len(second_existing_pattern)
+    # the key list for the dictionary to return
+    key_list = rhy_pattern.pattern
 
-    num_of_beats_in_new_pattern = desired_num_of_beats - \
-        num_of_beats_in_first_pattern - num_of_beats_in_second_pattern
+    # the number of beats left after subtracting the bridge pattern buffer
+    num_beats_left = rhy_pattern.beats - bridge_pattern_buffer_size
 
-    if num_of_beats_in_new_pattern < 0:
-        return None
-    elif num_of_beats_in_new_pattern == 0:
-        return combine_patterns(first_existing_pattern, second_existing_pattern)
-    else:
-        pass
-        # find common scale
-        # return new pattern
+    # selected tonal patterns
+    list_of_selected_tonal_patterns = []
+
+    while num_beats_left > 2 and num_available_patterns > 0:
+        # a randomly selected song name
+        song_name = _get_random_song_name()
+
+        # get all TP of the given song name
+        tonal_pattens_of_given_song = None # CHANGE THIS
+
+        # gets a random number to select a random tonal pattern
+        selected_index = _get_random_number(len(tonal_pattens_of_given_song) -1)
+
+        # the randomly selected tonal pattern
+        selected_tonal_pattern = tonal_pattens_of_given_song[selected_index]
+
+        # add it to a list of selected tonal patterns
+        list_of_selected_tonal_patterns.append(selected_tonal_pattern)
+
+        # decrease the count of available patterns and the remaining number of beats required
+        num_beats_left -= 1
+        num_available_patterns -= 1
+
+    # get the new buffer size
+    bridge_pattern_buffer_size += num_beats_left
+
+    # a randomly generated list of bridge lengths
+    bridge_lengths = _get_random_bridge_length(bridge_pattern_buffer_size, len(list_of_selected_tonal_patterns) -1)
+
+    # loops through all the existing tonal patterns
+    for index in range(len(list_of_selected_tonal_patterns) - 1):
+        # takes the first pattern
+        first_pattern = list_of_selected_tonal_patterns[index]
+        # and the next pattern
+        second_pattern = list_of_selected_tonal_patterns[index + 1]
+        # to be bridged
+        bridged_pattern = bridge_pattern(first_pattern, second_pattern, bridge_lengths[index])
+        # add the bridged pattern in to the exising verse
+        verse_in_list.extend(bridged_pattern)
+
+    verse_to_return = dict(zip(key_list, verse_to_return))
+
+    return verse_to_return
+
+'''
+Gets a random bridge length to return
+
+Parameters:
+    total_length: the total length of all the bridge buffers
+
+Return:
+    a list of each size of the bridge length
+'''
+def _get_random_bridge_length(total_length, number_of_bridges):
+    length_to_return = []
+
+    # initially, fill each length to return with 3
+    for _ in range(number_of_bridges):
+        length_to_return.append(3)
+
+    remaining_length = total_length - (3 * number_of_bridges)
+
+    while(remaining_length > 0):
+        random_selected_index = _get_random_number(number_of_bridges-1)
+        length_to_return[random_selected_index] += 1
+        remaining_length -= 1
+    
+    return length_to_return
 
 
-def combine_patterns(self, first_pattern: list, second_pattern: list) -> list:
-    return first_pattern + second_pattern
-# =============================================================================================
-# Functions from another song_builder file
-# _____________________________________________________________________________________________
+for _ in range(20):
+    print(_get_random_bridge_length(12, 3))
