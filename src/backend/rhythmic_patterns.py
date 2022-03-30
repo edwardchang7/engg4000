@@ -10,7 +10,6 @@ rhythmic patterns from an abc file
 """
 
 import re
-from tkinter import W
 import warnings
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
@@ -431,5 +430,3 @@ def upload_rhythmic_patterns_to_DB():
 
             print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
 
-
-extract_all_files()
