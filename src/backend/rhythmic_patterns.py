@@ -9,15 +9,31 @@ rhythmic patterns from an abc file
 5. Cross reference those sections with original music to get actual musical pattern
 """
 
-import os
 import re
+from tkinter import W
+import warnings
+# REMOVE THIS BEFORE MERGING INTO MASTER
+# ===========================================================
+# only uncomment this if you are not using pycharm
+import os, sys, inspect
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+parent2 = os.path.dirname(parentdir)
+sys.path.insert(0, parent2)
+# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
+# ===========================================================
+# REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend.cluster import Cluster
 from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
-from src.backend.collections.song_collection import SongCollection
+from src.backend.collections.song_collection import Song_Collection
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
 from abc_tools import get_header, get_melodic_and_rythmic, get_voicings
+
+# surpress the warnings from format_bar function
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 v1_keys = []
 v2_keys = []
@@ -326,9 +342,13 @@ def extract_pattern():
         else:
             v2_pattern[str(set_of_bars)] = 1
 
+# CALL THIS FUNCTION TO EXTRACT EVERY FILW WITHIN THE DIR BELOW
 def extract_all_files():
+
+    global v1_pattern, v2_pattern, v1_keys, v2_keys, v1_combination, v2_combination
+
     # the main dir 
-    str_dir = 'mxl_to_abc/converted_compositions'
+    str_dir = 'src/backend/mxl_to_abc/converted_compositions'
 
     count = 0
 
@@ -365,7 +385,7 @@ def extract_all_files():
                 actual_header = composition_name.replace(" ", "_")
 
             # creates the song object
-            song = SongCollection(actual_header)
+            song = Song_Collection(actual_header)
 
             # appends the song object to the song_list
             song_list.append(song)
@@ -412,3 +432,4 @@ def upload_rhythmic_patterns_to_DB():
             print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
 
 
+extract_all_files()
