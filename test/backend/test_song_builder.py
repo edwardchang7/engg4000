@@ -152,11 +152,6 @@ class Test_Song_Builder(unittest.TestCase):
         rhythmic_pattern_obj_1, rhythmic_pattern_obj_2 = self.test_build_rhythmic_pattern()
         tonal_pattern = self.test_convert_tonal_patterns()
 
-        print(rhythmic_pattern_obj_1.beats)
-        print(rhythmic_pattern_obj_1.pattern)
-        print(rhythmic_pattern_obj_2.beats)
-        print(rhythmic_pattern_obj_2.pattern)
-        print(tonal_pattern)
 
 
 # DEBUG
