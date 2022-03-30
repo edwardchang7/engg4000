@@ -1,5 +1,72 @@
 from src.backend.triads import *
 from src.backend.music_tools import *
+import random
+
+RANDOM_OCTAVE_RANGE = 2
+
+def gen_chord_rand(root: str, type: str, num_notes: int):
+    """
+    Returns a list of notes to build the specified root chord with given number of random extra notes
+
+        Parameters:
+            root (String)  : the note of the root chord
+            type (String)  : the type of chord to build
+            num_notes      : the number of notes for the resulting chord. This number infers the number of notes to add,
+                                depending on the chord type.
+
+        Returns:
+            a list of notes representing the chord
+    """
+
+    # Infer notes that arent random by type of chord
+    if type == 'M' or type == 'm' or type == 'D' or type == 'sus2' or type == 'sus4':
+
+        chord_len = 3
+
+    else:
+
+        chord_len = 4
+
+    used_sets = []
+    flag = True
+    extra_note_list = []
+    octave_change = 0
+
+    while num_notes > chord_len:
+
+        num_notes -= 1
+
+        # Makes sure the new random note hasnt already been added
+        while flag:
+
+            flag = False
+
+            note_to_add = random.randint(0, chord_len - 1)
+            while octave_change == 0:
+                octave_change = random.randint(-RANDOM_OCTAVE_RANGE, RANDOM_OCTAVE_RANGE)  # Preset octave range
+
+            for set in used_sets:
+                if set[0] == note_to_add and set[1] == octave_change:
+                    flag = True
+
+        # Add to reference set to ensure no repetitions
+        used_sets.append([note_to_add, octave_change])
+
+        for_list = str(note_to_add)
+
+        # Add proper notation for gen_chord
+        if octave_change > 0:
+            while octave_change > 0:
+                octave_change -= 1
+                for_list += "'"
+        else:
+            while octave_change < 0:
+                octave_change += 1
+                for_list += ","
+
+        extra_note_list.append(for_list)
+
+    return gen_chord(root, type, extra_note_list)
 
 
 def gen_chord(root, type, extra_note_list):
@@ -8,7 +75,7 @@ def gen_chord(root, type, extra_note_list):
 
         Parameters:
             root (String)       : the note of the root chord
-            chordType (String)  : the type of chord to build
+            type (String)  : the type of chord to build
             extra_note_list     : list which indicates which extra notes to add to chord
                                     each index is of the form "<note_number><abc_octave_punctuation>" i.e. "1''"
                                     root's note_number = 0
