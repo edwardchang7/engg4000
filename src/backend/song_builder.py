@@ -100,7 +100,7 @@ def _get_random_pattern_style():
     pattern_style = [(4, 4), (3, 5), (5, 3)]
 
     # randomly selects a pattern style and return it
-    selected_index = _get_random_pattern_style(len(pattern_style) - 1) if len(pattern_style) > 1 else 0
+    selected_index = _get_random_number(len(pattern_style) - 1) if len(pattern_style) > 1 else 0
 
     return pattern_style[selected_index]
 
