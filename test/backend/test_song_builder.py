@@ -87,7 +87,6 @@ class Test_Song_Builder(unittest.TestCase):
 
         self.assertEqual(combined_length, 8)
 
-
         return pattern_1, pattern_2
 
     def test_convert_tonal_patterns(self):
@@ -150,9 +149,11 @@ class Test_Song_Builder(unittest.TestCase):
 
         return generated_bridged_pattern
 
-    def test_build_verse(self):
-        rhythmic_pattern_obj_1, rhythmic_pattern_obj_2 = self.test_build_rhythmic_pattern()
-        tonal_pattern = self.test_convert_tonal_patterns()
+    #UNCOMMENT THIS WHEN TONAL PATTERNS IS MERGED
+    #_________________________________________________
+    # def test_build_verse(self):
+    #     rhythmic_pattern_obj_1, rhythmic_pattern_obj_2 = self.test_build_rhythmic_pattern()
+    #     tonal_pattern = self.test_convert_tonal_patterns()
 
 
 
