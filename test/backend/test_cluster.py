@@ -2,7 +2,7 @@ import unittest
 
 from src.backend import cluster
 from src.backend.models import rhythmic_pattern_model
-from src.backend.collections.rhythmic_pattern import RhythmicPattern
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 
 
 class TestCluster(unittest.TestCase):
