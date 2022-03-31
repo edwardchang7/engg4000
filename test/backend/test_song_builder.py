@@ -133,21 +133,23 @@ class Test_Song_Builder(unittest.TestCase):
 
         return generated_window
 
-    def test_bridge_pattern(self):
-        key = 'CM'
-        tonal_pattern_1 = None
-        tonal_pattern_2 = None
-        beat_length = 8
+    #UNCOMMENT THIS WHEN TONAL PATTERNS IS MERGED
+    #_________________________________________________
+    # def test_bridge_pattern(self):
+    #     key = 'CM'
+    #     tonal_pattern_1 = None
+    #     tonal_pattern_2 = None
+    #     beat_length = 8
 
-        scale = self.test_get_random_scale_type()
-        generated_bridged_pattern = song_builder.bridge_pattern(
-            key, tonal_pattern_1, tonal_pattern_2, beat_length)
+    #     scale = self.test_get_random_scale_type()
+    #     generated_bridged_pattern = song_builder.bridge_pattern(
+    #         key, tonal_pattern_1, tonal_pattern_2, beat_length)
 
-        self.assertIsNotNone(scale)
-        self.assertIsNotNone(generated_bridged_pattern)
-        self.assertEqual(len(generated_bridged_pattern), beat_length)
+    #     self.assertIsNotNone(scale)
+    #     self.assertIsNotNone(generated_bridged_pattern)
+    #     self.assertEqual(len(generated_bridged_pattern), beat_length)
 
-        return generated_bridged_pattern
+    #     return generated_bridged_pattern
 
     #UNCOMMENT THIS WHEN TONAL PATTERNS IS MERGED
     #_________________________________________________
