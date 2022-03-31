@@ -152,18 +152,16 @@ def encode_bar(bar):
         contains_beat = any(char.isdigit() for char in note)
 
         # create a new bar and put them in
-        if not contains_beat:
-            all_beats_bar.append(note + "1")
-        else:
-            all_beats_bar.append(note)
+        temp_note = note + "1" if not contains_beat else note
+        all_beats_bar.append(temp_note)
+            
 
     # replace the notes with the beats
     for note in all_beats_bar:
         beat = note[-1]
 
         # if the beat is placed at the start instead
-        if not beat.isdigit():
-            beat = note[0]
+        if not beat.isdigit(): beat = note[0]
 
         new_bar.append(_keep_beats_only(note, beat))
 
@@ -422,11 +420,16 @@ def upload_rhythmic_patterns_to_DB():
         model = RhythmicPatternModel(song.song_name, v1)
         passed = database.insert_rhythmic_pattern_model(database, model)
 
+        # -----------------------------------------------------------------------
+             # DEBUGGING PURPOSES, REMOVE BEFORE MERGING WITH MASTER
+             # -----------------------------------------------------------------------
         print(f"V1 of song {song.song_name} has been {str(passed).upper()} added")
 
         if v2:
             model = RhythmicPatternModel(song.song_name, v2)
             passed = database.insert_rhythmic_pattern_model(database, model)
-
+            
+             # -----------------------------------------------------------------------
+             # DEBUGGING PURPOSES, REMOVE BEFORE MERGING WITH MASTER
+             # -----------------------------------------------------------------------
             print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
-

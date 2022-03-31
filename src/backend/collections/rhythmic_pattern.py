@@ -1,7 +1,6 @@
 import ast
 
 
-
 class Rhythmic_Pattern:
     def __init__(self, pattern, frequency, is_v1):
         # Converts a string in the format of a list to an actual list object
@@ -12,7 +11,7 @@ class Rhythmic_Pattern:
             self.length = len(self.pattern)
             self.beats = _get_length_in_beats(str(pattern))
         else:
-            self.pattern = ast.literal_eval(self.pattern)
+            self.pattern = ast.literal_eval(pattern)
             self.length = len(self.pattern)
             self.beats = _get_length_in_beats(pattern)
 
@@ -52,4 +51,5 @@ def _get_length_in_beats(pattern):
             to_count = True
 
     return length
+
 

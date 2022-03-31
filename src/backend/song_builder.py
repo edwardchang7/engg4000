@@ -1,4 +1,5 @@
 import inspect
+from lib2to3.pygram import pattern_symbols
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
@@ -17,10 +18,10 @@ sys.path.insert(0, parent2)
 # REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend.cluster import Cluster
-from src.backend.Collections.rhythmic_pattern import Rhythmic_Pattern
-from src.backend.Collections.tonal_pattern import TonalPattern
-from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
-                                     whole_step)
+from src.backend.collections.note_pattern import Note_Pattern
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.collections.tonal_pattern import TonalPattern
+from src.backend.music_tools import M3, P5, change_octave, half_step, m3, whole_step
 from src.backend.scales import get_scale
 
 '''
@@ -68,7 +69,7 @@ def build_rhythmic_pattern(key):
         pattern_2 = _get_rhythmic_patterns(song_name, length_2)
 
     # randomly generate another pattern as long as pattern_1 == pattern_2
-    while(pattern_1 is pattern_2):
+    while(pattern_1 is pattern_2): 
         pattern_2 = _get_rhythmic_patterns(song_name, length_2)
 
     return pattern_1, pattern_2
@@ -99,10 +100,7 @@ def _get_random_pattern_style():
     pattern_style = [(4, 4), (3, 5), (5, 3)]
 
     # randomly selects a pattern style and return it
-    if len(pattern_style) > 1:
-        selected_index = _get_random_number(len(pattern_style) - 1)
-    else:
-        selected_index = 0
+    selected_index = _get_random_pattern_style(len(pattern_style) - 1) if len(pattern_style) > 1 else 0
 
     return pattern_style[selected_index]
 
@@ -129,11 +127,10 @@ def _get_rhythmic_patterns(song_name, pattern_length):
 
     # if there is a matching pattern length within the given song name, then return it
     if (list_of_matching_length_songs):
-        if (len(list_of_matching_length_songs) > 1):
-            selected_index = rand.randint(
-                0, len(list_of_matching_length_songs) - 1)
-        else:
-            selected_index = 0
+
+        matching_songs_length = len(list_of_matching_length_songs)
+
+        selected_index = rand.randint(0, matching_songs_length - 1) if matching_songs_length > 1 else 0
 
         return list_of_matching_length_songs[selected_index]
 
@@ -174,12 +171,8 @@ Return:
     a cluster instance
 '''
 def _make_db_connection(database_name, is_admin, collection_name=None):
-    database = None
 
-    if (collection_name):
-        database = Cluster(database_name, collection_name, is_admin)
-    else:
-        database = Cluster(database_name, "", is_admin)
+    database = Cluster(database_name, collection_name, is_admin) if collection_name else Cluster(database_name, "", is_admin)
 
     return database
 
@@ -206,27 +199,21 @@ def convert_tonal_pattern(key, tonal_pattern):
             if 'h' in step:
                 new_note = half_step(
                     current_note, False) if '-' in step else half_step(current_note, True)
-
             elif 'w' in step:
                 new_note = whole_step(
                     current_note, False) if '-' in step else whole_step(current_note, True)
-
             elif 'm3' in step:
                 new_note = m3(
                     current_note, False) if '-' in step else m3(current_note, True)
-
             elif 'M3' in step:
                 new_note = M3(
                     current_note, False) if '-' in step else M3(current_note, True)
-
             elif 'P5' in step:
                 new_note = P5(
                     current_note, False) if '-' in step else P5(current_note, True)
-
             elif 'o' in step:
                 new_note = change_octave(
                     current_note, False) if '-' in step else change_octave(current_note, True)
-
             elif '0' in step:
                 new_note = current_note
 
@@ -258,11 +245,13 @@ def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
     # get the initial scale for this given key
     scale = _get_random_scale_type(key)
 
-    # a variable to hold the current note
-    current_note = tonal_pattern_1[-1]
+    # a variable to hold the notes
+    current_note = tonal_pattern_1.pattern[-1]
+    last_note = tonal_pattern_2.pattern[0]
 
     # create an empty list to hold the value to return
-    bridged_patterns = tonal_pattern_1
+    # gets a copy of the patterns array since a reference is passed in Python, not the value
+    bridged_patterns = tonal_pattern_1.pattern.copy()
 
     while (num_beats > 0):
 
@@ -275,13 +264,15 @@ def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
         # the selected note will be in this variable
         selected_note = window[selected_index]
 
+        # update the current note
         current_note = selected_note
 
         bridged_patterns.append(current_note)
 
         num_beats -= 1
 
-    bridged_patterns.extend(tonal_pattern_2)
+    # out of the loop, append the 2nd part of the tonal_pattern
+    bridged_patterns.extend(tonal_pattern_2.pattern)
 
     return bridged_patterns
 
@@ -313,17 +304,10 @@ def _get_window(note, scale):
     upper_bound_1 = index_of_note + 1
 
     # make it so that it loops back to the top/bottom of the list
-    if lower_bound_2 < 0:
-        lower_bound_2 = length_of_scale - abs(lower_bound_2)
-
-    if upper_bound_2 >= length_of_scale:
-        upper_bound_2 %= length_of_scale
-
-    if lower_bound_1 < 0:
-        lower_bound_1 = length_of_scale - abs(lower_bound_1)
-
-    if upper_bound_1 >= length_of_scale:
-        upper_bound_1 %= length_of_scale
+    if lower_bound_2 < 0: lower_bound_2 = length_of_scale - abs(lower_bound_2)
+    if upper_bound_2 >= length_of_scale: upper_bound_2 %= length_of_scale
+    if lower_bound_1 < 0: lower_bound_1 = length_of_scale - abs(lower_bound_1)
+    if upper_bound_1 >= length_of_scale: upper_bound_1 %= length_of_scale
 
     # append all the 4 neighbouring notes to the window
     window.append(scale[lower_bound_1])
@@ -387,18 +371,20 @@ def _get_random_number(limit, start=0):
     # set the seed
     rand.seed(dt.now().timestamp())
 
+    # a quick nap of about 3ms so that it doesnt always use the same seed if this function is called multiple times consecutively
     time.sleep(0.003)
-
 
     # return the generated number
     value = rand.randint(start, limit)
 
     return value
 
+'''
 
+'''
 def build_verse(rhy_pattern):
-    # the dictionary to return
-    verse_to_return = [] # <----- THIS SHOULD HOLD A LIST OF OBJECTS LIKE THIS [NOTE : LENGTH] -- CREATE THE OBJECT
+    # the list to return
+    verse_to_return = [] 
     # temporary placeholder for holding all the combined patterns with the bridge patterns
     verse_in_list = []
 
@@ -454,9 +440,30 @@ def build_verse(rhy_pattern):
         # add the bridged pattern in to the exising verse
         verse_in_list.extend(bridged_pattern)
 
-    verse_to_return = dict(zip(key_list, verse_to_return))
+    verse_to_return = match_rhythmic_with_tonals(rhy_pattern, verse_in_list)
 
-    return verse_to_return
+'''
+pairs the rhythimc pattern with the tonal patterns
+
+Parameters:
+    rhythmic_pattern: The rhythimc pattern object to get the rhythimc patterns from
+    verse_note_list: a list of notes that have been converted to match the length of the rhythmic pattern
+
+Return:
+    a list of Note_Patterns that has the length of each note / chord along with the note itself
+'''
+def match_rhythmic_with_tonals(rhythmic_pattern, verse_note_list):
+    # the patterns to match
+    pattern = rhythmic_pattern.pattern
+    # an empty placeholder 
+    to_return = []
+
+    # loop through the given rthythmic pattern, create a note pattern object, and append ot to the list to be returned
+    for index in range(len(pattern)):
+        to_return.append(Note_Pattern(pattern[index], verse_note_list[index]))
+
+    return to_return
+
 
 '''
 Gets a random bridge length to return
@@ -482,7 +489,3 @@ def _get_random_bridge_length(total_length, number_of_bridges):
         remaining_length -= 1
     
     return length_to_return
-
-
-for _ in range(20):
-    print(_get_random_bridge_length(12, 3))

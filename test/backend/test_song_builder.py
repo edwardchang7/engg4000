@@ -1,8 +1,10 @@
-import unittest
-
+import inspect
 # ===========================================================
 # only uncomment this if you are not using pycharm
-import os, sys, inspect
+import os
+import sys
+import unittest
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 parent2 = os.path.dirname(parentdir)
@@ -11,8 +13,8 @@ sys.path.insert(0, parent2)
 # REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend import scales, song_builder
-from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.collections.tonal_pattern import TonalPattern
 
 
 class Test_Song_Builder(unittest.TestCase):
@@ -134,13 +136,13 @@ class Test_Song_Builder(unittest.TestCase):
 
     def test_bridge_pattern(self):
         key = 'CM'
-        start_note = 'C'
-        end_note = 'C'
-        beat_length = 5
+        tonal_pattern_1 = None
+        tonal_pattern_2 = None
+        beat_length = 8
 
         scale = self.test_get_random_scale_type()
         generated_bridged_pattern = song_builder.bridge_pattern(
-            key, start_note, end_note, beat_length)
+            key, tonal_pattern_1, tonal_pattern_2, beat_length)
 
         self.assertIsNotNone(scale)
         self.assertIsNotNone(generated_bridged_pattern)
