@@ -92,7 +92,7 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(cluster_instance.is_admin, is_admin_value)
 
         # Assert that our rhythmic pattern model can be stored in the database successfully
-        rp = RhythmicPattern(example_pattern, example_frequency_value, example_is_v1_value)
+        rp = Rhythmic_Pattern(example_pattern, example_frequency_value, example_is_v1_value)
         list_of_rp = [rp, rp, rp, rp,  rp]
         rp_model = rhythmic_pattern_model.RhythmicPatternModel(example_collection_name, list_of_rp)        
         insert_rp_model_result = cluster_instance.insert_rhythmic_pattern_model(cluster_instance, rp_model)
