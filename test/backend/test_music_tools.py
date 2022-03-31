@@ -132,18 +132,18 @@ class TextMusicTools(unittest.TestCase):
         self.assertEqual(
             check_interval({"note": "D", "degree": "0", "octave": 0}, {"note": "D", "degree": "0", "octave": 0}), ["0"])
 
-    def test_check_interval_0(self):
+    def test_check_interval_1(self):
         self.assertEqual(
             check_interval({"note": "D", "degree": "0", "octave": 0}, {"note": "D", "degree": "0", "octave": 0}), ["0"])
 
-    def test_check_interval_0(self):
+    def test_check_interval_2(self):
         self.assertEqual(
             check_interval({"note": "D", "degree": "0", "octave": 0}, {"note": "D", "degree": "0", "octave": 0}), ["0"])
 
-    def test_check_interval_0(self):
+    def test_check_interval_3(self):
         self.assertEqual(
             check_interval({"note": "D", "degree": "0", "octave": 0}, {"note": "D", "degree": "0", "octave": 0}), ["0"])
 
-    def test_check_interval_0(self):
+    def test_check_interval_4(self):
         self.assertEqual(
             check_interval({"note": "D", "degree": "0", "octave": 0}, {"note": "D", "degree": "0", "octave": 0}), ["0"])
