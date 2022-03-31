@@ -245,6 +245,8 @@ def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
     # get the initial scale for this given key
     scale = _get_random_scale_type(key)
 
+    if not tonal_pattern_1 or not tonal_pattern_2 or not num_beats: return None
+
     # a variable to hold the notes
     current_note = tonal_pattern_1.pattern[-1]
     last_note = tonal_pattern_2.pattern[0]
