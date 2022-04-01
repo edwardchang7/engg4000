@@ -8,6 +8,7 @@ from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.models.tonal_pattern_model import TonalPatternModel
 
 import os
+
 import itertools
 
 # CONSTANTS_____________________________________________
@@ -122,8 +123,10 @@ def config_input_string(key: str, input_str: str, mask: bool):
     lower = False
     wait = False
     wait2 = False
+
     wait3 = False
     check = False
+
     chord = [False, False, False]
     octave = -99
     temp_note = ""
@@ -143,16 +146,19 @@ def config_input_string(key: str, input_str: str, mask: bool):
     for note in input_str:
         if wait:
             if note == "!" or note == "}" or note == "\"":
+
                 wait = False
         elif wait2:
             if note == "]":
                 wait2 = False
+
             if check:
                 if note == "!":
                     wait2 = False
                     check = False
             if note == "!":
                 check = True
+
         elif chord[2]:
             if note == "]":
                 chord[0] = False
@@ -211,11 +217,13 @@ def config_input_string(key: str, input_str: str, mask: bool):
                         tonal_val_dict_list.append(for_list)
             if not chord[1]:
                 if note == "!" or note == "{" or note == "\"":
+
                     wait = True
                 elif note == "$":
                     wait2 = True
                 elif note == "[":
                     chord[0] = True
+
                 elif note == "x":
                     wait3 = True
                 elif note == "^" or note == "_":
@@ -231,6 +239,7 @@ def config_input_string(key: str, input_str: str, mask: bool):
                                 wait3 = False
 
                         if note.islower() and not wait3:
+
                             higher = True
                             octave = 1
                             if temp_note == "^":
@@ -239,7 +248,9 @@ def config_input_string(key: str, input_str: str, mask: bool):
                                 temp_note = half_step(note, False)
                             else:
                                 temp_note = note
+
                         elif not wait3:
+
                             lower = True
                             octave = 0
                             if temp_note == "^":
@@ -284,6 +295,7 @@ def add_to_dict_list(higher: bool, lower: bool, note: str, octave: int, degree_w
             if mask:
                 return {"note": temp_note, "degree": str(notes_with_sharps.index(temp_note.upper()) + 1),
                     "octave": octave}, False, lower, octave
+
             else:
                 if degree_with_sharp[notes_in_key.index(temp_note.upper())]:
                     return {"note": temp_note + "#", "degree": str(notes_in_key.index(temp_note.upper()) + 1),

@@ -3,10 +3,22 @@ import certifi
 from pymongo import MongoClient
 from typing import Final
 
-from src.backend.collections.rhythmic_pattern import RhythmicPattern
-from src.backend.collections.tonal_pattern import TonalPattern
+
+# REMOVE THIS BEFORE MERGING INTO MASTER
+# ===========================================================
+# only uncomment this if you are not using pycharm
+# import os, sys, inspect
+
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# parent2 = os.path.dirname(parentdir)
+# sys.path.insert(0, parent2)
+# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
+# ===========================================================
+# REMOVE THIS BEFORE MERGING INTO MASTER
+
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
-from src.backend.models.tonal_pattern_model import TonalPatternModel
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 
 
 class Cluster:
@@ -104,7 +116,7 @@ class Cluster:
                 if (current_rhythmic_pattern_length is not None and
                         current_rhythmic_pattern_length == length):
                     queried_rhythmic_patterns.append(
-                        RhythmicPattern(
+                        Rhythmic_Pattern(
                             rhythmic_pattern.get('pattern'),
                             rhythmic_pattern.get('frequency'),
                             rhythmic_pattern.get('is_v1')

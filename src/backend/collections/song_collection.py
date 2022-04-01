@@ -3,7 +3,7 @@ A collection to hold a list of patterns within the song
 """
 
 
-class SongCollection:
+class Song_Collection:
     def __init__(self, song_name, v1_patterns=None, v2_patterns=None):
         self.song_name = song_name
 
