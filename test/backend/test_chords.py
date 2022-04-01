@@ -1,5 +1,5 @@
 import unittest
-from src.backend.chords import gen_chord
+from src.backend.chords import gen_chord, gen_chord_rand
 
 
 class TestChords(unittest.TestCase):
@@ -58,5 +58,23 @@ class TestChords(unittest.TestCase):
     def test_halfDiminished_extraNotes(self):
         self.assertEqual(gen_chord('E', 'HD', ["0'", "2,,", "1''", "3,"]),
                          ['E', 'G', 'A#', "d", "e", 'A#,,', "g'", 'D'])
+
+    def test_random_length_major_with_1(self):
+        test_chord = gen_chord_rand('C', 'M', 4)
+        print(test_chord)
+        self.assertEqual(len(test_chord), 4)
+
+    def test_random_known_notes_major_with_1(self):
+        test_chord = gen_chord_rand('C', 'M', 4)
+        self.assertTrue(test_chord[0] == 'C' and test_chord[1] == 'E' and test_chord[2] == 'G')
+
+    def test_random_length_minor_with_2(self):
+        test_chord = gen_chord_rand('A', 'm', 5)
+        print(test_chord)
+        self.assertEqual(len(test_chord), 5)
+
+    def test_random_known_notes_minor_with_2(self):
+        test_chord = gen_chord_rand('A,', 'm', 5)
+        self.assertTrue(test_chord[0] == 'A,' and test_chord[1] == 'C' and test_chord[2] == 'E')
 
 
