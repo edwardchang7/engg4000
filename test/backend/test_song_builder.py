@@ -1,3 +1,4 @@
+
 import inspect
 # ===========================================================
 # only uncomment this if you are not using pycharm
@@ -5,17 +6,16 @@ import os
 import sys
 import unittest
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+currentdir = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 parent2 = os.path.dirname(parentdir)
 sys.path.insert(0, parent2)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
-
-from src.backend import scales, song_builder
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 from src.backend.collections.tonal_pattern import TonalPattern
-
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend import scales, song_builder
 
 class Test_Song_Builder(unittest.TestCase):
 
@@ -105,7 +105,7 @@ class Test_Song_Builder(unittest.TestCase):
         self.assertIsNotNone(tonal_pattern_obj)
         self.assertEqual(results, answer)
 
-        return results
+        return tonal_pattern_obj
 
     def test_get_random_scale_type(self):
         key = 'CM'
@@ -133,30 +133,25 @@ class Test_Song_Builder(unittest.TestCase):
 
         return generated_window
 
-    #UNCOMMENT THIS WHEN TONAL PATTERNS IS MERGED
-    #_________________________________________________
-    # def test_bridge_pattern(self):
-    #     key = 'CM'
-    #     tonal_pattern_1 = None
-    #     tonal_pattern_2 = None
-    #     beat_length = 8
+    def test_bridge_pattern(self):
+        key = 'CM'
+        tonal_pattern_1 = self.test_convert_tonal_patterns()
+        tonal_pattern_2 = self.test_convert_tonal_patterns()
+        beat_length = 8
 
-    #     scale = self.test_get_random_scale_type()
-    #     generated_bridged_pattern = song_builder.bridge_pattern(
-    #         key, tonal_pattern_1, tonal_pattern_2, beat_length)
+        scale = self.test_get_random_scale_type()
+        generated_bridged_pattern = song_builder.bridge_pattern(
+            key, tonal_pattern_1, tonal_pattern_2, beat_length)
 
-    #     self.assertIsNotNone(scale)
-    #     self.assertIsNotNone(generated_bridged_pattern)
-    #     self.assertEqual(len(generated_bridged_pattern), beat_length)
+        self.assertIsNotNone(scale)
+        self.assertIsNotNone(generated_bridged_pattern)
+        self.assertEquals(len(generated_bridged_pattern), 34)
 
-    #     return generated_bridged_pattern
+        return generated_bridged_pattern
 
-    #UNCOMMENT THIS WHEN TONAL PATTERNS IS MERGED
-    #_________________________________________________
     # def test_build_verse(self):
     #     rhythmic_pattern_obj_1, rhythmic_pattern_obj_2 = self.test_build_rhythmic_pattern()
     #     tonal_pattern = self.test_convert_tonal_patterns()
-
 
 
 # DEBUG
