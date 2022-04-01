@@ -1,3 +1,7 @@
+from src.backend.collections.tonal_pattern import TonalPattern
+from src.backend.models.tonal_pattern_model import TonalPatternModel
+from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 import certifi
 
 from pymongo import MongoClient
@@ -7,18 +11,18 @@ from typing import Final
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
-# import os, sys, inspect
+import os
+import sys
+import inspect
 
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# parent2 = os.path.dirname(parentdir)
-# sys.path.insert(0, parent2)
+currentdir = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+parent2 = os.path.dirname(parentdir)
+sys.path.insert(0, parent2)
 # END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
-
-from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 
 
 class Cluster:
@@ -76,8 +80,10 @@ class Cluster:
 
         parsed_rhythmic_pattern_objects = []
         for i in range(len(rhythmic_pattern_model.rhythmic_pattern_objects)):
-            parsed_rhythmic_pattern_objects.append(rhythmic_pattern_model.rhythmic_pattern_objects[i].__dict__)
-        document_to_insert = {self.RHYTHMIC_PATTERN: parsed_rhythmic_pattern_objects}
+            parsed_rhythmic_pattern_objects.append(
+                rhythmic_pattern_model.rhythmic_pattern_objects[i].__dict__)
+        document_to_insert = {
+            self.RHYTHMIC_PATTERN: parsed_rhythmic_pattern_objects}
 
         insert_action = self.collection.insert_one(document_to_insert)
         return insert_action.acknowledged
@@ -106,12 +112,14 @@ class Cluster:
         if self.collection_name != song_name:
             return None
 
-        all_rhythmic_pattern_documents = self.collection.find({self.RHYTHMIC_PATTERN: {'$exists': True}})
+        all_rhythmic_pattern_documents = self.collection.find(
+            {self.RHYTHMIC_PATTERN: {'$exists': True}})
         queried_rhythmic_patterns = []
 
         for rhythmic_pattern_document in all_rhythmic_pattern_documents:
             for rhythmic_pattern in rhythmic_pattern_document.get(self.RHYTHMIC_PATTERN):
-                current_rhythmic_pattern_length: int = rhythmic_pattern.get('length')
+                current_rhythmic_pattern_length: int = rhythmic_pattern.get(
+                    'length')
 
                 if (current_rhythmic_pattern_length is not None and
                         current_rhythmic_pattern_length == length):
@@ -130,12 +138,14 @@ class Cluster:
         if not self._is_connected_to_database(self):
             return None
 
-        all_tonal_pattern_documents = self.collection.find({self.TONAL_PATTERN: {'$exists': True}})
+        all_tonal_pattern_documents = self.collection.find(
+            {self.TONAL_PATTERN: {'$exists': True}})
         queried_tonal_patterns = []
 
         for tonal_pattern_document in all_tonal_pattern_documents:
             for tonal_pattern in tonal_pattern_document.get(self.RHYTHMIC_PATTERN):
-                current_tonal_pattern_num_of_beats: int = tonal_pattern.get('num_of_notes')
+                current_tonal_pattern_num_of_beats: int = tonal_pattern.get(
+                    'num_of_notes')
 
                 if (current_tonal_pattern_num_of_beats is not None and
                         current_tonal_pattern_num_of_beats == num_of_notes):
@@ -158,7 +168,8 @@ class Cluster:
         if self.collection_name != song_name:
             return None
 
-        all_tonal_pattern_documents = self.collection.find({self.TONAL_PATTERN: {'$exists': True}})
+        all_tonal_pattern_documents = self.collection.find(
+            {self.TONAL_PATTERN: {'$exists': True}})
         queried_tonal_patterns = []
 
         for tonal_pattern_document in all_tonal_pattern_documents:
