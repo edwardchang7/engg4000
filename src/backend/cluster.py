@@ -1,13 +1,6 @@
-from src.backend.collections.tonal_pattern import TonalPattern
-from src.backend.models.tonal_pattern_model import TonalPatternModel
-from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 import certifi
-
 from pymongo import MongoClient
 from typing import Final
-
-
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
@@ -23,7 +16,10 @@ sys.path.insert(0, parent2)
 # END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
-
+from src.backend.Collections.tonal_pattern import TonalPattern
+from src.backend.models.tonal_pattern_model import TonalPatternModel
+from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
+from src.backend.Collections.rhythmic_pattern import Rhythmic_Pattern
 
 class Cluster:
     database = None

@@ -3,13 +3,6 @@
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
-from src.backend.cluster import Cluster
-from src.backend.collections.note_pattern import Note_Pattern
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
-from src.backend.collections.tonal_pattern import TonalPattern
-from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
-                                     whole_step)
-from src.backend.scales import get_scale
 import inspect
 import os
 import random as rand
@@ -25,6 +18,13 @@ sys.path.insert(0, parent2)
 # END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
+from src.backend.cluster import Cluster
+from src.backend.Collections.note_pattern import Note_Pattern
+from src.backend.Collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.Collections.tonal_pattern import TonalPattern
+from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
+                                     whole_step)
+from src.backend.scales import get_scale
 
 '''
 Takes in a genre and returns a song template for the given genre
@@ -292,9 +292,6 @@ def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
 
         # the selected note will be in this variable
         selected_note = window[selected_index]
-        print(f"This is the scale {scale}")
-        print(
-            f"This is the current note {current_note} The selected_note is {selected_note} and the window of this note is {window}")
 
         # update the current note
         current_note = selected_note
@@ -373,8 +370,6 @@ def _get_random_scale_type(key, test=False):
     root = key[0]
     scale_type = key[1]
 
-    print(f"this is the scale type {scale_type}")
-
     # only used for testing
     if test:
         generated_scale = get_scale(root, 'M')
@@ -425,22 +420,34 @@ def _get_random_number(limit, start=0):
 '''
 
 '''
-
-
 def build_verse(key, rhy_pattern):
     # the list to return
     verse_to_return = []
     # temporary placeholder for holding all the combined patterns with the bridge patterns
     verse_in_list = []
 
+    db_name = "thomas"
+    is_admin = False
+
+    # database connection
+    database = _make_db_connection(db_name, is_admin)
+    
+    # DEBUG
+    song_name = _get_random_song_name()
+
+        # get all TP of the given song name
+    tonal_patterns_of_given_song = database.query_all_tonal_patterns(database, song_name)
+
+    print(tonal_patterns_of_given_song)
+
+    return None
+    # DEBUG - END
+
     # number of available patterns left to get
     num_available_patterns = 4
 
     # bridge pattern buffer size
     bridge_pattern_buffer_size = 12
-
-    # the key list for the dictionary to return
-    key_list = rhy_pattern.pattern
 
     # the number of beats left after subtracting the bridge pattern buffer
     num_beats_left = rhy_pattern.beats - bridge_pattern_buffer_size
@@ -453,14 +460,14 @@ def build_verse(key, rhy_pattern):
         song_name = _get_random_song_name()
 
         # get all TP of the given song name
-        tonal_pattens_of_given_song = None  # CHANGE THIS
+        tonal_patterns_of_given_song = database.query_all_tonal_patterns(database, song_name)
 
         # gets a random number to select a random tonal pattern
         selected_index = _get_random_number(
-            len(tonal_pattens_of_given_song) - 1)
+            len(tonal_patterns_of_given_song) - 1)
 
         # the randomly selected tonal pattern
-        selected_tonal_pattern = tonal_pattens_of_given_song[selected_index]
+        selected_tonal_pattern = tonal_patterns_of_given_song[selected_index]
 
         # add it to a list of selected tonal patterns
         list_of_selected_tonal_patterns.append(selected_tonal_pattern)
@@ -482,13 +489,20 @@ def build_verse(key, rhy_pattern):
         first_pattern = list_of_selected_tonal_patterns[index]
         # and the next pattern
         second_pattern = list_of_selected_tonal_patterns[index + 1]
-        # to be bridged
+        # convert the pattern to notes
+        first_converted_pattern = convert_tonal_pattern(key, first_pattern)
+        second_converted_pattern = convert_tonal_pattern(key, second_pattern)
+
+        # and brige them together
         bridged_pattern = bridge_pattern(key,
-                                         first_pattern, second_pattern, bridge_lengths[index])
+                                         first_converted_pattern, second_converted_pattern, bridge_lengths[index])
         # add the bridged pattern in to the exising verse
         verse_in_list.extend(bridged_pattern)
 
+    # pair each rhythmic pattern with the generated notes
     verse_to_return = match_rhythmic_with_tonals(rhy_pattern, verse_in_list)
+
+    return verse_to_return
 
 
 '''
@@ -542,3 +556,5 @@ def _get_random_bridge_length(total_length, number_of_bridges):
         remaining_length -= 1
 
     return length_to_return
+
+build_verse("C", None)
