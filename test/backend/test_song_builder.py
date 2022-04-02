@@ -149,9 +149,12 @@ class Test_Song_Builder(unittest.TestCase):
 
         return generated_bridged_pattern
 
-    # def test_build_verse(self):
-    #     rhythmic_pattern_obj_1, rhythmic_pattern_obj_2 = self.test_build_rhythmic_pattern()
-    #     tonal_pattern = self.test_convert_tonal_patterns()
+    def test_build_verse(self):
+        rhythmic_pattern_obj_1, rhythmic_pattern_obj_2 = self.test_build_rhythmic_pattern()
+        key = "C"
+        combined_rhy = rhythmic_pattern_obj_1.pattern.copy()
+        combined_rhy.extend(rhythmic_pattern_obj_2.pattern)
+        verse = song_builder.build_verse(key, combined_rhy)
 
 
 # DEBUG
