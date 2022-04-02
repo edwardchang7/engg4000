@@ -3,10 +3,8 @@ import certifi
 from pymongo import MongoClient
 from typing import Final
 
-from src.backend.collections.rhythmic_pattern import RhythmicPattern
-from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
-from src.backend.models.tonal_pattern_model import TonalPatternModel
+from src.backend.collections.rhythmic_pattern import RhythmicPattern
 
 
 class Cluster:
@@ -17,7 +15,6 @@ class Cluster:
     is_admin = None
 
     RHYTHMIC_PATTERN: Final = "rhythmic_pattern"
-    TONAL_PATTERN: Final = "tonal_pattern"
 
     def __new__(cls, new_database_name: str, new_collection_name: str, new_is_admin: bool):
         """
@@ -70,21 +67,6 @@ class Cluster:
         insert_action = self.collection.insert_one(document_to_insert)
         return insert_action.acknowledged
 
-    def insert_tonal_pattern_model(self, tonal_pattern_model: TonalPatternModel) -> bool:
-        if not self._is_connected_to_database(self):
-            return False
-
-        if self.collection_name != tonal_pattern_model.collection_name:
-            return False
-
-        parsed_tonal_pattern_objects = []
-        for tonal_pattern in tonal_pattern_model.tonal_pattern_objects:
-            parsed_tonal_pattern_objects.append(tonal_pattern.__dict__)
-        document_to_insert = {self.TONAL_PATTERN: parsed_tonal_pattern_objects}
-
-        insert_action = self.collection.insert_one(document_to_insert)
-        return insert_action.acknowledged
-
     def query_rhythmic_patterns(self, song_name: str, length: int) -> list:
         # check connection to the database
         if not self._is_connected_to_database(self):
@@ -112,54 +94,6 @@ class Cluster:
                     )
 
         return queried_rhythmic_patterns
-
-    def query_tonal_patterns(self, num_of_notes: int) -> list:
-        # Check connection to the database
-        if not self._is_connected_to_database(self):
-            return None
-
-        all_tonal_pattern_documents = self.collection.find({self.TONAL_PATTERN: {'$exists': True}})
-        queried_tonal_patterns = []
-
-        for tonal_pattern_document in all_tonal_pattern_documents:
-            for tonal_pattern in tonal_pattern_document.get(self.RHYTHMIC_PATTERN):
-                current_tonal_pattern_num_of_beats: int = tonal_pattern.get('num_of_notes')
-
-                if (current_tonal_pattern_num_of_beats is not None and
-                        current_tonal_pattern_num_of_beats == num_of_notes):
-                    queried_tonal_patterns.append(
-                        TonalPattern(
-                            tonal_pattern.get('pattern'),
-                            tonal_pattern.get('num_of_notes'),
-                            tonal_pattern.get('priority')
-                        )
-                    )
-
-        return queried_tonal_patterns
-
-    def query_all_tonal_patterns(self, song_name: str) -> list:
-        # Check connection to the database
-        if not self._is_connected_to_database(self):
-            return None
-
-        # Check that the database connection is set to the provided song name (collection name)
-        if self.collection_name != song_name:
-            return None
-
-        all_tonal_pattern_documents = self.collection.find({self.TONAL_PATTERN: {'$exists': True}})
-        queried_tonal_patterns = []
-
-        for tonal_pattern_document in all_tonal_pattern_documents:
-            for tonal_pattern in tonal_pattern_document.get(self.TONAL_PATTERN):
-                queried_tonal_patterns.append(
-                    TonalPattern(
-                        tonal_pattern.get('pattern'),
-                        tonal_pattern.get('num_of_notes'),
-                        tonal_pattern.get('priority')
-                    )
-                )
-
-        return queried_tonal_patterns
 
     def get_collection_names(self) -> list:
         if self is None or self.database_name is None:

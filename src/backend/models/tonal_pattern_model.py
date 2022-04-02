@@ -1,4 +1,9 @@
 class TonalPatternModel:
-    def __init__(self, collection_name: str, tonal_pattern_objects: list):
-        self.collection_name = collection_name
-        self.tonal_pattern_objects = tonal_pattern_objects
+    Key = None
+    Pattern = None
+    Octave_Change = None
+
+    def __init__(self, key_value, pattern_value, octave_change_value):
+        self.Key = key_value
+        self.Pattern = pattern_value
+        self.Octave_Change = octave_change_value
