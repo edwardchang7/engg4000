@@ -456,6 +456,8 @@ def extract_tonal():
             if composition_name[-1] == ".":
                 composition_name = composition_name[:-1]
 
+            composition_name = composition_name.replace(" ", "_")
+
             pattern_list = extract_tonal_patterns(file_path)
             tonal_list = []
 
