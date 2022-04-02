@@ -111,6 +111,10 @@ def get_melodic_and_rythmic(abc_file_path):
     lines = f.readlines()
 
   for line in lines:
+
+    if len(line) == 4 and line == 'V:3\n':
+      break
+
     if len(line) == 4 and line == 'V:1\n':
       found1 = True
     elif len(line) == 4 and line == 'V:2\n':
