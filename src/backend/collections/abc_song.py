@@ -1,6 +1,7 @@
 import ast
 
 from coolname import generate_slug
+from src.backend.tonal_pattern import gen_chord_rand
 
 
 class ABCSong:
@@ -9,7 +10,7 @@ class ABCSong:
         self.composer: str = composer
         self.title: str = song_name
         self.key: str = key
-        self.time_signature: str = time_signature
+        self.time_signature: list = time_signature.split("/") # Ex: ['4','4']
 
         # Instance variables used to generate the song
         self.song_input: list = song_input
@@ -36,11 +37,12 @@ class ABCSong:
             note: str = note_pattern.get_note()
             length: int = note_pattern.get_length()
 
-            # Check if note in note_pattern is a chord
+            # Check if note in note_pattern is actually a chord
             if "[" in note and "]" in note:
-                note = ast.literal_eval(note) # Convert string to list
+                chord = ast.literal_eval(note) # Convert string (note) to list (chord)
+                chord = gen_chord_rand()
+            else
 
-            
 
 
         self.song = song
