@@ -1,18 +1,23 @@
+import ast
+
+from coolname import generate_slug
+
+
 class ABCSong:
-    def __init__(self, composer: str = "Automated Musicians", song_name: str = None, key: str, time_signature: str, song_input: list):
+    def __init__(self, composer: str = "Automated Musicians", song_name: str = generate_slug(), key: str, time_signature: str, song_input: list):
         # Instance variables used to generate the header
-        self.composer = composer
-        self.title = song_name if song_name is not None else "" #TODO: implement coolname dependency
-        self.key = key
-        self.time_signature = time_signature
+        self.composer: str = composer
+        self.title: str = song_name
+        self.key: str = key
+        self.time_signature: str = time_signature
 
-        # Instance variables used to generate the abc song
-        self.song_input = song_input
+        # Instance variables used to generate the song
+        self.song_input: list = song_input
 
-        # Instance variables used to keep track of results
-        self.header = ""
-        self.song = ""
-        self.abc_song = ""
+        # Instance variables used to store results
+        self.header: str = ""
+        self.song: str = ""
+        self.abc_song: str = ""
 
     def __build_header(self) -> str:
         header = "X:1\n"
@@ -25,24 +30,24 @@ class ABCSong:
         return header
     
     def __build_song(self) -> str:
-        song = ""
-        # Used to iterate song_input, which is: [note_pattern_key, note_pattern_beat, note_pattern_key, note_pattern_beat, ...]
-        # True = note_pattern_key
-        # False = note_pattern_beat
-        iterator = True
+        song: str = ""
 
-        for list_item in song_input:
-            if iterator:
-                #TODO: code for writing note/chord to abc format
-            else:
-                #TODO: code for writing beat number to abc format
-            iterator = not iterator
+        for note_pattern in song_input:
+            note: str = note_pattern.get_note()
+            length: int = note_pattern.get_length()
+
+            # Check if note is actually a note or a chord
+            if "[" in note and "]" in note:
+                note = ast.literal_eval(note)
+
+            
+
 
         self.song = song
         return song
 
     def get_abc(self) -> str:
-        abc_song = __build_header() + __build_song()
+        abc_song: str = self.__build_header() + self.__build_song()
         self.abc = abc_song
         return abc_song
 
