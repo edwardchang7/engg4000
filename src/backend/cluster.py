@@ -113,9 +113,13 @@ class Cluster:
 
         return queried_rhythmic_patterns
 
-    def query_tonal_patterns(self, num_of_notes: int) -> list:
+    def query_tonal_patterns(self, song_name: str, num_of_notes: int) -> list:
         # Check connection to the database
         if not self._is_connected_to_database(self):
+            return None
+
+        # Check that the database connection is set to the provided song name (collection)
+        if self.collection_name != song_name:
             return None
 
         all_tonal_pattern_documents = self.collection.find({self.TONAL_PATTERN: {'$exists': True}})
