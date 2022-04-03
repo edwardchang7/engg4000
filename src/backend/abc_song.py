@@ -36,9 +36,9 @@ class ABCSong:
             note: str = note_pattern.get_note()
             length: int = note_pattern.get_length()
 
-            # Check if note is actually a note or a chord
+            # Check if note in note_pattern is a chord
             if "[" in note and "]" in note:
-                note = ast.literal_eval(note)
+                note = ast.literal_eval(note) # Convert string to list
 
             
 
