@@ -30,30 +30,37 @@ class ABCSong:
         self.header = header
         return header
     
-    def __build_song(self) -> str:
+    def __build_song(self, num_of_measures: int) -> str:
         song: str = ""
 
+        num_of_beats_in_each_measure: float = time_signature[0] * time_signature[1]
         for note_pattern in song_input:
             note: str = note_pattern.get_note()
             length: int = note_pattern.get_length()
             parsed_note: str = None
             parsed_length: str = None
 
-            # Check if note is actually a chord
+            # Chord
             if "[" in length and "]" in length:
-                # Convert string (note_length) to list (chord)
-                parsed_length = ast.literal_eval(note_length)
+                parsed_length = ast.literal_eval(note_length) # Convert string (note_length) to list (chord)
                 
-                # Check if chord is a minor or a major chord
-                if note[-1] == 'm':
+                if note[-1] == 'm': # Minor chord
                     chord = gen_chord_rand(note[:-1], 'm', len(parsed_length[0]))
-                else
+                else # Major chord
                     chord = gen_chord_rand(note, 'M', len(parsed_length[0]))
 
-                song += f"[{"".join(chord)}] "
-            else
-                chord = gen_chord_rand(note, 'M', length)
-                song += f"[{"".join(chord)}] "
+                num_of_beats_in_current_note_or_chord: float = __get_note_type(parsed_length[0][0]) * (time_signature[0] * time_signature[1]) 
+            else # Note
+                chord = gen_chord_rand(note, 'M', 1)
+                num_of_beats_in_current_note_or_chord: float = __get_note_type(length) * (time_signature[0] * time_signature[1]) 
+            
+            # Check if the current measure has enough room for the current note
+            if num_of_beats_in_current_note_or_chord > num_of_beats_in_each_measure:
+                song += "| \n"
+                num_of_beats_in_each_measure = time_signature[0] * time_signature[1]
+                num_of_beats_in_each_measure -= num_of_beats_in_current_note
+
+            song += f"[{"".join(chord)}] " # Add chord to ABC output
 
         self.song = song
         return song
@@ -63,6 +70,24 @@ class ABCSong:
         self.abc = abc_song
         return abc_song
 
+    def __get_note_type(self, note) -> float:
+        match note:
+            case 0: # 16th note
+                return 1/16
+            case 1: # 8th note
+                return 1/8
+            case 2: # quarter note
+                return 1/4
+            case 3: # quarter note + .
+                return 3/8
+            case 4: # half note
+                return 1/2
+            case 6: # half note + .
+                return 3/4
+            case 8: # whole note
+                return 1
+            case _:
+                return None
 
 
 
