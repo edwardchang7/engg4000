@@ -129,9 +129,13 @@ class Cluster:
 
         return queried_rhythmic_patterns
 
-    def query_tonal_patterns(self, num_of_notes: int) -> list:
+    def query_tonal_patterns(self, song_name:str, num_of_notes: int) -> list:
         # Check connection to the database
         if not self._is_connected_to_database(self):
+            return None
+
+        # check that the database connection is set to the provided song name (collection)
+        if self.collection_name != song_name:
             return None
 
         all_tonal_pattern_documents = self.collection.find(
@@ -139,12 +143,12 @@ class Cluster:
         queried_tonal_patterns = []
 
         for tonal_pattern_document in all_tonal_pattern_documents:
-            for tonal_pattern in tonal_pattern_document.get(self.RHYTHMIC_PATTERN):
+            for tonal_pattern in tonal_pattern_document.get(self.TONAL_PATTERN):
                 current_tonal_pattern_num_of_beats: int = tonal_pattern.get(
                     'num_of_notes')
 
                 if (current_tonal_pattern_num_of_beats is not None and
-                        current_tonal_pattern_num_of_beats == num_of_notes):
+                        current_tonal_pattern_num_of_beats <= num_of_notes):
                     queried_tonal_patterns.append(
                         TonalPattern(
                             tonal_pattern.get('pattern'),
