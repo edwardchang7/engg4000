@@ -7,6 +7,7 @@ import inspect
 import os
 import random as rand
 import sys
+import re
 import time
 from datetime import datetime as dt
 from msilib.schema import Error
@@ -603,7 +604,7 @@ def get_tonal_pattern(num_beats_left):
     # get all the tonal patterns of the given song name
     tonal_patterns_of_given_song = database.query_tonal_patterns(database, song_name, num_beats_left-3)
 
-    while not tonal_patterns_of_given_song and num_beats_left > 4:
+    while not tonal_patterns_of_given_song and num_beats_left > 4 and counter < 30:
         counter += 1
         song_name = _get_random_song_name(get_from_tonal_patterns=True)
         # database connection
@@ -648,6 +649,7 @@ def match_rhythmic_with_tonals(rhythmic_pattern:Rhythmic_Pattern, verse_note_lis
     index = 0
 
     is_chord = False
+    break_outer_loop = False
 
     # loop through the given rthythmic pattern, create a note pattern object, and append ot to the list to be returned
     for bar in pattern:
@@ -655,23 +657,25 @@ def match_rhythmic_with_tonals(rhythmic_pattern:Rhythmic_Pattern, verse_note_lis
             if len(notes) == 3 and '(' in notes and ')' in notes:
                 to_return.append(Note_Pattern("z", notes[1]))
             else:
-                for char in notes:
-                    if char == ']' and is_chord:
-                        is_chord = False
+                beam_beats = list(filter(None, re.split("(\W)", notes)))
 
-                    # keep looping through 
-                    if is_chord:
-                        continue
-
-                    if char == '[':
+                for beats in beam_beats:
+                    if beats == "[":
                         is_chord = True
-                        to_return.append(Note_Pattern(verse_note_list[index], notes))
+                        
+                    elif is_chord:
+                        to_return.append(Note_Pattern(verse_note_list[index], "[" + str(beats) + "]"))
                         index += 1
+                        is_chord = False
+                    
+                    elif beats.isdigit():
+                        for individual_beat in beats:
+                            to_return.append(Note_Pattern(verse_note_list[index], individual_beat))
+                            index += 1
+
+                            
                     
 
-                    if char.isdigit():
-                        to_return.append(Note_Pattern(verse_note_list[index], char))
-                        index += 1
 
     return to_return
 
@@ -706,16 +710,16 @@ def _get_random_bridge_length(total_length, number_of_bridges):
 
     return length_to_return
 
-
+# DEBUG
 counter = 0
-limit = 15
+limit = 200
 failed = 0
 success = 0
 notes_to_pick = ['A','B','C','D','E','F','G']
 modifiers = ['M', 'm']
 
-# DEBUG
-while(counter < limit):
+
+while(True):
     counter += 1
     try:
 
@@ -729,10 +733,12 @@ while(counter < limit):
         verse = build_verse(key_to_use, combined_rhythmic_pattern)
         success += 1
         
-        for note in verse:
-            if note.length is None:
-                print("what")
-            print(note)
+        print(f"This is the original pattern{combined_rhythmic_pattern.pattern}")
+
+        # for note in verse:
+        #     if note is None:
+        #         print("what")
+        #     print(note)
 
         print(f"===== Run number {counter} has been successful!")
         print()
@@ -741,7 +747,7 @@ while(counter < limit):
         print(f" ----- error occured on try number {counter}")
         print()
         failed += 1
-        time.sleep(3)
+        break
 
     
 
