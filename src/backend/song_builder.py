@@ -1,4 +1,3 @@
-from msilib.schema import Error
 import random as rand
 import re
 from datetime import datetime as dt
@@ -7,6 +6,7 @@ import time
 # ===========================================================
 # only uncomment this if you are not using pycharm
 import inspect,os,sys
+from backend.LoopError import LoopError
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 parent2 = os.path.dirname(parentdir)
@@ -154,7 +154,7 @@ def _get_rhythmic_patterns(song_name, pattern_length):
             counter += 1
             # if it has been looping for more than 10 times, break
             if counter > 10:
-                break
+                raise LoopError("Error in loop for getting a rhythmic pattern")
 
         return list_of_matching_length_songs[selected_index]
 
@@ -418,7 +418,7 @@ def _get_window(note, scale):
 
         # if this loop has been looping for over 50 times assume theres an error and just break from this loop
         if counter >= 50:
-            raise Error(f"Unable to get the window for note {note}")
+            raise LoopError("Error in getting window loop")
         counter += 1
 
     # gets the index of the note within the scale
@@ -653,6 +653,9 @@ def get_tonal_pattern(num_beats_left):
             return None
         # gets the tonal pattern of the given song name if it was empty previously
         tonal_patterns_of_given_song = database.query_tonal_patterns(database, song_name, num_beats_left-3)
+
+    if counter >= 30:
+        raise LoopError("Error in loop of getting tonal pattern")
 
     # gets a random number to select a random tonal pattern
     selected_index = _get_random_number(len(tonal_patterns_of_given_song) - 1)
