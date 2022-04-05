@@ -603,8 +603,7 @@ def build_verse(key, rhythmic_pattern: Rhythmic_Pattern):
         # add only the pattern from the first converted tonal pattern
         verse_in_list.extend(first_converted_pattern)
         # and brige them together
-        bridged_pattern = bridge_pattern(
-            key, first_converted_pattern, second_converted_pattern, bridge_lengths[index])
+        bridged_pattern = bridge_pattern(key, first_converted_pattern, second_converted_pattern, bridge_lengths[index])
         # add the bridged pattern in to the exising verse
         # bridged_pattern here is the "bridge_notes" + second_converted_pattern
         verse_in_list.extend(bridged_pattern)
@@ -756,43 +755,43 @@ def _get_random_bridge_length(total_length, number_of_bridges):
     return length_to_return
 
 
-# DEBUG
-counter = 0
-limit = 200
-failed = 0
-success = 0
-notes_to_pick = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-modifiers = ['M', 'm']
+# # DEBUG
+# counter = 0
+# limit = 200
+# failed = 0
+# success = 0
+# notes_to_pick = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+# modifiers = ['M', 'm']
 
 
-while(True):
-    counter += 1
-    try:
+# while(True):
+#     counter += 1
+#     try:
 
-        note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
-        modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
-        key_to_use = note_to_use + modifier_to_use
+#         note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
+#         modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
+#         key_to_use = note_to_use + modifier_to_use
 
-        print(f"===== Starting Run number {counter} using {key_to_use}...")
-        combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
-        verse = build_verse(key_to_use, combined_rhythmic_pattern)
-        success += 1
+#         print(f"===== Starting Run number {counter} using {key_to_use}...")
+#         combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
+#         verse = build_verse(key_to_use, combined_rhythmic_pattern)
+#         success += 1
 
-        print(
-            f"This is the original pattern{combined_rhythmic_pattern.pattern}")
+#         print(
+#             f"This is the original pattern{combined_rhythmic_pattern.pattern}")
 
-        # for note in verse:
-        #     if note is None:
-        #         print("what")
-        #     print(note)
+#         # for note in verse:
+#         #     if note is None:
+#         #         print("what")
+#         #     print(note)
 
-        print(f"===== Run number {counter} has been successful!")
-        print()
+#         print(f"===== Run number {counter} has been successful!")
+#         print()
 
-    except:
-        print(f" ----- error occured on try number {counter}")
-        print()
-        failed += 1
-        break
+#     except:
+#         print(f" ----- error occured on try number {counter}")
+#         print()
+#         failed += 1
+#         break
 
-# DEBUG - END
+# # DEBUG - END
