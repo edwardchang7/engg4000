@@ -1,11 +1,10 @@
+import unittest
 
-import inspect
 # ===========================================================
 # only uncomment this if you are not using pycharm
 import os
 import sys
-import unittest
-
+import inspect
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -13,8 +12,8 @@ parent2 = os.path.dirname(parentdir)
 sys.path.insert(0, parent2)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
-from src.backend.Collections.tonal_pattern import TonalPattern
-from src.backend.Collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.collections.tonal_pattern import TonalPattern
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 from src.backend import scales, song_builder
 
 class Test_Song_Builder(unittest.TestCase):
@@ -30,7 +29,7 @@ class Test_Song_Builder(unittest.TestCase):
         return database
 
     def test_get_song_names_from_DB(self):
-        results = song_builder._get_db_song_names()
+        results = song_builder._get_db_song_names(False)
         expected = ['The_Entertainer', 'Dancing_in_the_Moonlight', 'Symphony_No_5_in_C_MinorFirst_Movement_Ludwig_van_BeethovenAdp_from_arrangement_by_Ernst_Pauer_(1826-1905)', 'Symphony_No._5_in_C_MinorFirst_Movement_Ludwig_van_BeethovenAdp._from_arrangement_by_Ernst_Pauer_(1826-1905)', 'Sonate_No._14,_Moonlight1_st_Movement_Opus_27_No._2Ludwig_van_Beethoven_(1770–1827)',
                     'Mary_had_a_herd_of_Lambs', 'Waltz_in_A_Minor_Frederic_ChopinB_150', 'Sonate_No_14,_Moonlight1_st_Movement_Opus_27_No_2Ludwig_van_Beethoven_(1770–1827)', 'Take_Me_To_Church', 'Title', 'Closing_Time', "I_Can't_Help_Falling_in_Love", 'Canon_in_D', 'rhythmic_patterns']
 
@@ -74,20 +73,17 @@ class Test_Song_Builder(unittest.TestCase):
         return pattern_1, pattern_2
 
     def test_build_rhythmic_pattern(self):
+        length_to_check = 8
         key = ""
-        pattern_1, pattern_2 = song_builder.build_rhythmic_pattern(key)
+        rhythmic_pattern_obj = song_builder.build_rhythmic_pattern(key)
 
-        self.assertIsNotNone(pattern_1)
-        self.assertIsNotNone(pattern_2)
+        self.assertIsNotNone(rhythmic_pattern_obj)
 
-        pattern_1_length = len(pattern_1.pattern)
-        pattern_2_length = len(pattern_2.pattern)
+        pattern_length = len(rhythmic_pattern_obj.pattern)
 
-        combined_length = pattern_1_length + pattern_2_length
+        self.assertEqual(pattern_length, length_to_check)
 
-        self.assertEqual(combined_length, 8)
-
-        return pattern_1, pattern_2
+        return rhythmic_pattern_obj
 
     def test_convert_tonal_patterns(self):
         pattern = [['h'], ['-h'], ['w'], ['-w'], ['m3'], ['-m3'],
@@ -95,7 +91,7 @@ class Test_Song_Builder(unittest.TestCase):
         num_notes = 14
         priority = 0
 
-        answer = ["C#", "C", "D", "C", "D#", "C",
+        answer = ["C", "C#", "C", "D", "C", "D#", "C",
                   "E", "C", "G", "C", "c", "C", "C"]
 
         tonal_pattern_obj = TonalPattern(pattern, num_notes, priority)
@@ -105,7 +101,7 @@ class Test_Song_Builder(unittest.TestCase):
         self.assertIsNotNone(tonal_pattern_obj)
         self.assertEqual(results, answer)
 
-        return tonal_pattern_obj
+        return results
 
     def test_get_random_scale_type(self):
         key = 'CM'
@@ -137,24 +133,21 @@ class Test_Song_Builder(unittest.TestCase):
         key = 'CM'
         tonal_pattern_1 = self.test_convert_tonal_patterns()
         tonal_pattern_2 = self.test_convert_tonal_patterns()
-        beat_length = 8
+        beat_length = 3
+        generated_length = len(tonal_pattern_1) + beat_length
 
-        scale = self.test_get_random_scale_type()
-        generated_bridged_pattern = song_builder.bridge_pattern(
-            key, tonal_pattern_1, tonal_pattern_2, beat_length)
+        generated_bridged_pattern = song_builder.bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, beat_length)
 
-        self.assertIsNotNone(scale)
         self.assertIsNotNone(generated_bridged_pattern)
-        self.assertEquals(len(generated_bridged_pattern), 34)
+        self.assertEqual(len(generated_bridged_pattern), generated_length)
 
         return generated_bridged_pattern
 
     def test_build_verse(self):
-        rhythmic_pattern_obj_1, rhythmic_pattern_obj_2 = self.test_build_rhythmic_pattern()
-        key = "C"
-        combined_rhy = rhythmic_pattern_obj_1.pattern.copy()
-        combined_rhy.extend(rhythmic_pattern_obj_2.pattern)
-        verse = song_builder.build_verse(key, combined_rhy)
+        rhythmic_pattern_obj  = self.test_build_rhythmic_pattern()
+        key = "CM"
+        verse = song_builder.build_verse(key, rhythmic_pattern_obj)
+        self.assertIsNotNone(verse)
 
 
 # DEBUG
