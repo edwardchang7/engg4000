@@ -6,7 +6,7 @@ import time
 # ===========================================================
 # only uncomment this if you are not using pycharm
 import inspect,os,sys
-from backend.LoopError import LoopError
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 parent2 = os.path.dirname(parentdir)
@@ -20,6 +20,7 @@ from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
 from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.music_tools import (M3, P5, change_octave, half_step, m3, whole_step)
 from src.backend.scales import get_scale
+from src.backend.LoopError import LoopError
 
 '''
 Takes in a genre and returns a song template for the given genre
