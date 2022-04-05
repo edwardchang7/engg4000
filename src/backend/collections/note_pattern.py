@@ -8,11 +8,5 @@ class Note_Pattern:
         self.note = note
         self.length = length
 
-    def get_note(self):
-        return self.note
-
-    def get_length(self):
-        return self.length
-
     def __str__(self):
         return f"{self.note} : {self.length}"

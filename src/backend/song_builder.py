@@ -4,13 +4,12 @@
 # ===========================================================
 # only uncomment this if you are not using pycharm
 import inspect
-from msilib.schema import Error
 import os
 import random as rand
 import sys
 import time
 from datetime import datetime as dt
-from xml.dom import NotFoundErr
+from msilib.schema import Error
 
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
@@ -21,9 +20,9 @@ sys.path.insert(0, parent2)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
 from src.backend.cluster import Cluster
-from src.backend.Collections.note_pattern import Note_Pattern
-from src.backend.Collections.rhythmic_pattern import Rhythmic_Pattern
-from src.backend.Collections.tonal_pattern import TonalPattern
+from src.backend.collections.note_pattern import Note_Pattern
+from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
                                      whole_step)
 from src.backend.scales import get_scale
@@ -40,6 +39,9 @@ Return:
 def get_song_template(genre):
     return ['A', 'A', 'B', 'A']
 
+
+fail_window = 0
+fail_length = 0
 
 '''
 Gets a key and returns a combination of rhythmic patterns
@@ -155,7 +157,7 @@ def _get_rhythmic_patterns(song_name, pattern_length):
             pattern_to_return = list_of_matching_length_songs[selected_index]
 
             counter += 1
-            # if it has been looping for more than 5 times, break and throw an error
+            # if it has been looping for more than 10 times, break
             if counter > 10:
                 break
 
@@ -299,16 +301,12 @@ def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
     if not tonal_pattern_1 or not tonal_pattern_2 or not num_beats:
         return None
 
-    # these are already in the form of a list, already convereted into notes
-    tp_1_pattern = tonal_pattern_1
-    tp_2_pattern = tonal_pattern_2
-
     # a variable to hold the notes
-    current_note = tp_1_pattern[-1]
+    current_note = tonal_pattern_1[-1]
 
     # QUESTION
     # LAST NOTE IS STILL NOT USED
-    last_note = tp_2_pattern[0]
+    last_note = tonal_pattern_2[0]
 
     while (num_beats > 0):
 
@@ -329,12 +327,16 @@ def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
         num_beats -= 1
 
     # out of the loop, append the 2nd part of the tonal_pattern
-    bridged_patterns.extend(tp_2_pattern)
+    bridged_patterns.extend(tonal_pattern_2)
 
     return bridged_patterns
 
 
 def _strip_note_modifiers(note):
+
+    if not note:
+        return None
+
     to_return = ""
 
     for c in note:
@@ -355,7 +357,7 @@ Return:
     a list of 4 notes (+2 from note and -2 from note)
 '''
 def _get_window(note, scale):
-
+    global fail_length, fail_window
     #DEBUG
     print(f"Getting window...")
     # DEBUG END
@@ -366,7 +368,7 @@ def _get_window(note, scale):
     note = _strip_note_modifiers(note)
 
     # only used if the given note has reached the highest octave
-    previous_note = note
+    previous_note = None
     keep_going_up = True
 
     # DEBUG
@@ -379,18 +381,21 @@ def _get_window(note, scale):
     # while the upper note is still not in the scale
     while temp not in scale:
 
-        if temp not in scale and keep_going_up:
-            temp = _strip_note_modifiers(half_step(temp, True))
-            # if it has reached the highest octave, start looking downwards
-            if previous_note == temp:
-                keep_going_up = False
-            previous_note = temp
-        else:
-            temp = _strip_note_modifiers(half_step(temp, False))
 
-        if counter >= 20:
+        temp = half_step(temp, True) if keep_going_up else half_step(temp, False)
+        
+        temp = _strip_note_modifiers(temp)
+
+        if not temp or temp == previous_note or temp == note:
+            keep_going_up = False
+            temp = note.upper() if note.islower() else note.lower()
+
+        previous_note = temp if temp else note
+
+        if counter >= 50:
             # DEBUG
             print("Failed to get window :(")
+            fail_window += 1
             raise Error("Just raise an error so I can see what broke")
         counter += 1
 
@@ -514,30 +519,36 @@ def build_verse(key, rhythmic_pattern:Rhythmic_Pattern):
 
     # handle the case where there is only one pattern + 1->3 extra notes
     if num_beats_left < 3:
-        pass
+        bridge_pattern_buffer_size += num_beats_left
+    else:
+        while num_beats_left > 4 and num_available_patterns > 0:
         
+            # get a tonal pattern and add it to the list_of_selected_tonal_patterns
+            #DEBUG
+            print(f"Getting tonal patterns...")
+            # DEBUG END
+            selected_tonal_pattern = get_tonal_pattern(num_beats_left)
+            list_of_selected_tonal_patterns.append(selected_tonal_pattern)
 
+            # decrease the count of available patterns and the remaining number of beats required
+            num_beats_left -= selected_tonal_pattern.num_of_notes
+            num_available_patterns -= 1
 
-    while num_beats_left > 4 and num_available_patterns > 0:
-    
-        # get a tonal pattern and add it to the list_of_selected_tonal_patterns
-        #DEBUG
-        print(f"Getting tonal patterns...")
-        # DEBUG END
-        selected_tonal_pattern = get_tonal_pattern(num_beats_left)
-        list_of_selected_tonal_patterns.append(selected_tonal_pattern)
+            # each tonal pattern added to the list should have 3 beats (if possible) allocated to bridge it to the others
+            if num_beats_left <= 6 and len(list_of_selected_tonal_patterns) > 1:
+                break
+            else:
+                bridge_pattern_buffer_size+=3
 
-        # decrease the count of available patterns and the remaining number of beats required
-        num_beats_left -= selected_tonal_pattern.num_of_notes
-        num_available_patterns -= 1
+        bridge_pattern_buffer_size += num_beats_left
 
-        # each tonal pattern added to the list should have 3 beats (if possible) allocated to bridge it to the others
-        if num_beats_left <= 6:
-            break
-        else:
-            bridge_pattern_buffer_size+=3
-
-    bridge_pattern_buffer_size += num_beats_left 
+    if len(list_of_selected_tonal_patterns) == 1:
+        print(f"Making single bridge...")
+        converted_tonal_pattern = convert_tonal_pattern(key, list_of_selected_tonal_patterns[0])
+        single_bridge = bridge_pattern(key, converted_tonal_pattern, [key[0]], bridge_pattern_buffer_size)
+        converted_tonal_pattern.extend(single_bridge)
+        verse_to_return = converted_tonal_pattern
+        return verse_to_return 
 
     # randomly allocate bridge lengths
     #DEBUG
@@ -545,14 +556,6 @@ def build_verse(key, rhythmic_pattern:Rhythmic_Pattern):
         # DEBUG END
     bridge_lengths = _get_random_bridge_length(
         bridge_pattern_buffer_size, len(list_of_selected_tonal_patterns) - 1)
-
-    # CHECK THIS AGAIN
-    if len(list_of_selected_tonal_patterns) == 1:
-        #DEBUG
-        print(f"This tonal pattern is lowkey short...")
-        # DEBUG END
-        verse_to_return = match_rhythmic_with_tonals(rhythmic_pattern, convert_tonal_pattern(key, list_of_selected_tonal_patterns[0]))
-        return verse_to_return
 
     # loops through all the existing tonal patterns
     for index in range(len(list_of_selected_tonal_patterns)-1):
@@ -569,8 +572,7 @@ def build_verse(key, rhythmic_pattern:Rhythmic_Pattern):
         #DEBUG
         print(f"Bridging patterns...")
         # DEBUG END
-        bridged_pattern = bridge_pattern(key,
-                                         first_converted_pattern, second_converted_pattern, bridge_lengths[index])
+        bridged_pattern = bridge_pattern(key,first_converted_pattern, second_converted_pattern, bridge_lengths[index])
         # add the bridged pattern in to the exising verse
         verse_in_list.extend(bridged_pattern)
 
@@ -587,7 +589,7 @@ def get_tonal_pattern(num_beats_left):
 
     db_name = "thomas"
     is_admin = False
-     # get a random song name from "thomas" db
+    # get a random song name from "thomas" db
     song_name = _get_random_song_name(get_from_tonal_patterns=True)
     # database connection
     database = _make_db_connection(db_name, is_admin, song_name)
@@ -607,10 +609,6 @@ def get_tonal_pattern(num_beats_left):
         # database connection
         database = _make_db_connection(db_name, is_admin, song_name)
         # if the database connection failed, return None
-
-        # -- TURNS OUT THERE ARE NO LENGTH OF 4 AND BELOW WTF?
-        if counter >= 10:
-            print(f"the remaining beats are {num_beats_left} and you should add this to the bridge length")
         if not database:
             return None
         tonal_patterns_of_given_song = database.query_tonal_patterns(database, song_name, num_beats_left-3)
@@ -635,12 +633,17 @@ Return:
 
 def match_rhythmic_with_tonals(rhythmic_pattern:Rhythmic_Pattern, verse_note_list):
     # the patterns to match
-    pattern = rhythmic_pattern.pattern
+    pattern = rhythmic_pattern.pattern 
     # an empty placeholder
     to_return = []
 
+    # DEBUG
     if len(verse_note_list) < len(pattern):
-        print(f"The length of verse_note_list {len(verse_note_list)} is shorter than the pattern length of {len(pattern)}")
+        global fail_length
+        print(f"The length of verse_note_list {len(verse_note_list)} is shorter than the pattern length of {rhythmic_pattern.beats}")
+        fail_length += 1
+        raise IndexError("out of bounds")
+    # DEBUG END
 
     index = 0
 
@@ -653,7 +656,6 @@ def match_rhythmic_with_tonals(rhythmic_pattern:Rhythmic_Pattern, verse_note_lis
                 to_return.append(Note_Pattern("z", notes[1]))
             else:
                 for char in notes:
-
                     if char == ']' and is_chord:
                         is_chord = False
 
@@ -684,6 +686,8 @@ Return:
     a list of each size of the bridge length
 '''
 def _get_random_bridge_length(total_length, number_of_bridges):
+    global fail_length, fail_window
+
     length_to_return = []
     min_length=3
     if total_length < 3:
@@ -722,8 +726,14 @@ while(counter < limit):
         
         print(f"===== Starting Run number {counter} using {key_to_use}...")
         combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
-        verse = build_verse("CM", combined_rhythmic_pattern)
+        verse = build_verse(key_to_use, combined_rhythmic_pattern)
         success += 1
+        
+        for note in verse:
+            if note.length is None:
+                print("what")
+            print(note)
+
         print(f"===== Run number {counter} has been successful!")
         print()
 
@@ -735,5 +745,5 @@ while(counter < limit):
 
     
 
-print(f"{success} / {counter} :: The success rate is {(success / counter) * 100}%")
+print(f"{success} / {counter}  || Window Fail Count : {fail_window} and Length Fail Count: {fail_length}:: The success rate is {(success / counter) * 100}%")
 # DEBUG - END
