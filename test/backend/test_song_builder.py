@@ -162,7 +162,7 @@ class Test_Song_Builder(unittest.TestCase):
         note_list.append(note2)
         note_list.append(note3)
 
-        interval = "w"
+        interval = ["w"]
         key = "CM"
         up_frequency = True
 
@@ -177,7 +177,7 @@ class Test_Song_Builder(unittest.TestCase):
         key = "CM"
         verse = song_builder.build_verse(key, rhythmic_pattern_obj)
 
-        interval = "w"
+        interval = ["w"]
         key = "CM"
         up_frequency = True
 
