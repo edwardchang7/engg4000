@@ -1,10 +1,9 @@
-from ast import pattern
 import random as rand
 import re
 from datetime import datetime as dt
 import time
 import traceback
-from typing import Final, final
+from typing import Final
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
@@ -245,7 +244,7 @@ def convert_tonal_pattern(key, tonal_pattern):
     to_return = []
 
     # sets the current note
-    current_note = key[0]
+    current_note = key[0] if len(key) == 2 else key[0] + key[1]
 
     # append the current note to be returned
     to_return.append(current_note)
@@ -481,8 +480,8 @@ Return
 '''
 def _get_random_scale_type(key, test=False):
     # split the root and the scale type
-    root = key[0]
-    scale_type = key[1]
+    root = key[0] if len(key) == 2 else key[0] + key[1]
+    scale_type = key[1] if len(key) == 2 else key[2]
 
     # only used for testing
     if test:
@@ -598,7 +597,10 @@ def build_verse(key, rhythmic_pattern: RhythmicPattern):
         converted_tonal_pattern = convert_tonal_pattern(key, list_of_selected_tonal_patterns[0])
         # create a single bridge, where its [tonal_pattern] + "bridge" + [tonic_note]
         # the "bridge" length is the bridge_buffer_size
-        single_bridge = bridge_pattern(key, converted_tonal_pattern, [key[0]], bridge_pattern_buffer_size)
+
+        root = key[0] if len(key) == 2 else key[0] + key[1]
+
+        single_bridge = bridge_pattern(key, converted_tonal_pattern, [root], bridge_pattern_buffer_size)
         # append the single bridge to the set of converted tonal patterns
         converted_tonal_pattern.extend(single_bridge)
         # return the converted tonal_pattern
@@ -775,42 +777,40 @@ def _get_random_bridge_length(total_length, number_of_bridges):
     return length_to_return
 
 
-# DEBUG: final = False
+DEBUG: Final = True
 
 # # # DEBUG
-# counter = 0
-# notes_to_pick = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-# modifiers = ['M', 'm']
+counter = 0
+notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
+modifiers = ['M', 'm']
 
 
-# while(DEBUG):
-#     counter += 1 
-#     try:
+while(DEBUG):
+    counter += 1 
+    try:
 
-#         note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
-#         modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
-#         key_to_use = note_to_use + modifier_to_use
+        note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
+        modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
+        key_to_use = note_to_use + modifier_to_use
 
-#         # print(f"===== Starting Run number {counter} using {key_to_use}...")
-#         combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
-#         verse = build_verse(key_to_use, combined_rhythmic_pattern)
+        print(f"===== Starting Run number {counter} using KEY: {key_to_use}...")
+        combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
+        verse = build_verse(key_to_use, combined_rhythmic_pattern)
 
-#         for note in verse:
-#             if note is None:
-#                 print("what")
-#             print(note)
+        for note in verse:
+            print(note)
 
-#         # print(f"===== Run number {counter} has been successful!")
-#         # print()
+        # print(f"===== Run number {counter} has been successful!")
+        # print()
 
-#     except LoopError:
-#         print(f" ----- error occured on try number {counter}")
-#         traceback.print_exc()
-#         print()
-#         break
+    except LoopError:
+        print(f" ----- error occured on try number {counter}")
+        traceback.print_exc()
+        print()
+        break
 
-#     except:
-#         print(f"It ran this many times already {counter}")
-#         traceback.print_exc()
-#         break
+    except:
+        print(f"It ran this many times already {counter}")
+        traceback.print_exc()
+        break
 # # DEBUG - END
