@@ -39,7 +39,6 @@ class ABCSong:
         for note_pattern in self.song_input:
             note: str = note_pattern.note
             length: int = note_pattern.length
-            parsed_note: str = None
             parsed_length: str = None
 
             # Chord
