@@ -32,14 +32,14 @@ class ABCSong:
         self.header = header
         return header
 
-    def __build_song(self) -> str:
+    def __build_song(self, song_input: list) -> str:
         song: str = ""
 
         num_of_beats_in_each_measure: float = self.time_signature[0] * self.time_signature[1]
         num_of_measures_in_a_line: int = 4
         is_eighth_note: bool = False
         eighth_note_counter: int = 0
-        for note_pattern in self.song_input:
+        for note_pattern in song_input:
             note: str = note_pattern.note
             length: int = note_pattern.length
             parsed_length: str = None
@@ -95,7 +95,7 @@ class ABCSong:
 
             num_of_beats_in_each_measure -= num_of_beats_in_current_note_or_chord
 
-        song += "||"
+        song += "||\n"
 
         self.song = song
         return song
@@ -125,6 +125,17 @@ class ABCSong:
         return False
 
     def get_abc(self) -> str:
-        abc_song: str = self.__build_header() + self.__build_song()
+        abc_song: str = self.__build_header()
+
+        verse_num: int = 1
+        for section in self.song_input:
+            abc_song += f"V:{verse_num}\n"
+            abc_song += self.__build_song(section)
+
+            if verse_num == 1:
+                verse_num = 2
+            else:
+                verse_num = 1
+
         self.abc_song = abc_song
         return abc_song
