@@ -30,8 +30,7 @@ class Test_Song_Builder(unittest.TestCase):
 
     def test_get_song_names_from_DB(self):
         results = song_builder._get_db_song_names(False)
-        expected = ['The_Entertainer', 'Dancing_in_the_Moonlight', 'Symphony_No_5_in_C_MinorFirst_Movement_Ludwig_van_BeethovenAdp_from_arrangement_by_Ernst_Pauer_(1826-1905)', 'Symphony_No._5_in_C_MinorFirst_Movement_Ludwig_van_BeethovenAdp._from_arrangement_by_Ernst_Pauer_(1826-1905)', 'Sonate_No._14,_Moonlight1_st_Movement_Opus_27_No._2Ludwig_van_Beethoven_(1770–1827)',
-                    'Mary_had_a_herd_of_Lambs', 'Waltz_in_A_Minor_Frederic_ChopinB_150', 'Sonate_No_14,_Moonlight1_st_Movement_Opus_27_No_2Ludwig_van_Beethoven_(1770–1827)', 'Take_Me_To_Church', 'Title', 'Closing_Time', "I_Can't_Help_Falling_in_Love", 'Canon_in_D', 'rhythmic_patterns']
+        expected = ['The_Entertainer', 'Dancing_in_the_Moonlight', 'Symphony_No._5_in_C_MinorFirst_Movement_Ludwig_van_BeethovenAdp._from_arrangement_by_Ernst_Pauer_(1826-1905)', 'Sonate_No._14,_Moonlight1_st_Movement_Opus_27_No._2Ludwig_van_Beethoven_(1770–1827)', 'Mary_had_a_herd_of_Lambs', 'Waltz_in_A_Minor_Frederic_ChopinB_150', 'Take_Me_To_Church', 'Title', 'Closing_Time', "I_Can't_Help_Falling_in_Love", 'Canon_in_D', 'rhythmic_patterns']
 
         self.assertListEqual(results, expected)
 

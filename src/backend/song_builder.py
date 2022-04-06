@@ -1,7 +1,10 @@
+from ast import pattern
 import random as rand
 import re
 from datetime import datetime as dt
 import time
+import traceback
+from typing import Final, final
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
@@ -94,6 +97,11 @@ Return:
 def _get_random_song_name(get_from_tonal_patterns=False):
     # gets all the songs from the database
     song_names = _get_db_song_names(get_from_tonal_patterns)
+
+    if not get_from_tonal_patterns:
+        song_names.remove("Take_Me_To_Church")
+        song_names.remove("The_Entertainer")
+
     # generate a random index
     selected_index = _get_random_number(len(song_names) - 1)
     # return the song name at the random index
@@ -111,7 +119,7 @@ def _get_random_pattern_style():
     pattern_style = [(4, 4), (3, 5), (5, 3)]
 
     # randomly selects a pattern style and return it
-    selected_index = _get_random_number(len(pattern_style) - 1) if len(pattern_style) > 1 else 0
+    selected_index = _get_random_number(len(pattern_style) - 1) 
 
     return pattern_style[selected_index]
 
@@ -133,6 +141,7 @@ def _get_rhythmic_patterns(song_name, pattern_length):
 
     # used to ensure that its not stuck in the loop
     counter = 0
+    reset_song = False
 
     # making connection to the DB
     db = _make_db_connection(db_name, is_admin, song_name)
@@ -141,20 +150,30 @@ def _get_rhythmic_patterns(song_name, pattern_length):
     list_of_matching_length_songs = db.query_rhythmic_patterns(db, song_name, pattern_length)
 
     # if there is a matching pattern length within the given song name, then return it
-    if (list_of_matching_length_songs):
+    if  len(list_of_matching_length_songs) > 1 :
         # the length of all the matching song lengths
         matching_songs_length = len(list_of_matching_length_songs)
         # randomly generate an index
         selected_index = _get_random_number(matching_songs_length - 1) if matching_songs_length > 1 else 0
         # take a randomly selected pattern
         pattern_to_return = list_of_matching_length_songs[selected_index]
-        # while the selected pattern is V1, and there are other options, regenerate get a new pattern from the same song
+        # while the selected pattern is not V1, and there are other options, regenerate get a new pattern from the same song
         while not pattern_to_return.is_v1 and matching_songs_length > 1:
             selected_index = _get_random_number(matching_songs_length - 1)
             pattern_to_return = list_of_matching_length_songs[selected_index]
             counter += 1
             # if it has been looping for more than 10 times, break
-            if counter > 10:
+            if counter >= 20 and not reset_song:
+                counter = 0
+                new_song_name = _get_random_song_name()
+                list_of_matching_length_songs = db.query_rhythmic_patterns(db, new_song_name, pattern_length)
+                if not list_of_matching_length_songs:
+                    list_of_matching_length_songs = db.query_rhythmic_patterns(db, new_song_name, pattern_length)
+                    print(f"It tried again to get this song {song_name} and new song {new_song_name} and counter {counter}")
+                reset_song = True
+
+            # if we picked another song and it still has no v1
+            elif reset_song and counter >= 10:
                 raise LoopError("Error in loop for getting a rhythmic pattern")
 
         return list_of_matching_length_songs[selected_index]
@@ -173,7 +192,7 @@ Parameters:
 Return:
     a list of all the song names within the database 
 '''
-def _get_db_song_names(get_from_tonal_patterns: False):
+def _get_db_song_names(get_from_tonal_patterns=False):
     is_admin = False
     # use elliot as the db name if we're only getting rhythmic patterns, else get from Thomas
     db_name = "elliot" if not get_from_tonal_patterns else "thomas"
@@ -279,6 +298,7 @@ def _strip_modifiers_from_scale(scale):
     # placeholder to keep the current note
     note_to_add = None
     # for each note in the scale
+
     for note in scale:
         # only use the note if the note is a character or it is a "#" else set it to None of its a modifier
         note_to_add = note if note.isalpha() or "#" in note else None
@@ -322,8 +342,7 @@ def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
     # LAST NOTE IS STILL NOT USED
     last_note = tonal_pattern_2[0]
 
-    while (num_beats > 0):
-
+    for _ in range(num_beats):
         # get the window within the scale given the current note
         window = _get_window(current_note, scale)
 
@@ -338,8 +357,6 @@ def bridge_pattern(key, tonal_pattern_1, tonal_pattern_2, num_beats):
 
         # add the note to the bridge
         bridged_patterns.append(current_note)
-
-        num_beats -= 1
 
     # out of the loop, append the 2nd part of the tonal_pattern
     bridged_patterns.extend(tonal_pattern_2)
@@ -590,6 +607,7 @@ def build_verse(key, rhythmic_pattern: Rhythmic_Pattern):
 
     # randomly allocate bridge lengths
     bridge_lengths = _get_random_bridge_length(bridge_pattern_buffer_size, len(list_of_selected_tonal_patterns) - 1)
+
     # loops through all the existing tonal patterns
     for index in range(len(list_of_selected_tonal_patterns)-1):
         # get the first tonal pattern object
@@ -655,11 +673,11 @@ def get_tonal_pattern(num_beats_left):
         # gets the tonal pattern of the given song name if it was empty previously
         tonal_patterns_of_given_song = database.query_tonal_patterns(database, song_name, num_beats_left-3)
 
-    if counter >= 30:
-        raise LoopError("Error in loop of getting tonal pattern")
+        if counter >= 30 and not tonal_patterns_of_given_song:
+            raise LoopError("Error in loop of getting tonal pattern")
 
     # gets a random number to select a random tonal pattern
-    selected_index = _get_random_number(len(tonal_patterns_of_given_song) - 1)
+    selected_index = _get_random_number(len(tonal_patterns_of_given_song) - 1) if len(tonal_patterns_of_given_song) > 1 else 0
 
     # the randomly selected tonal pattern
     return tonal_patterns_of_given_song[selected_index]
@@ -690,7 +708,6 @@ def match_rhythmic_with_tonals(rhythmic_pattern: Rhythmic_Pattern, verse_note_li
     # loop through the given rthythmic pattern, create a note pattern object, and append ot to the list to be returned
     for bar in pattern:
         for notes in bar:
-
             # if the notes is a rest note, create a note pattern with "z" as the note and the beats
             if len(notes) == 3 and '(' in notes and ')' in notes:
                 to_return.append(Note_Pattern("z", notes[1]))
@@ -698,7 +715,6 @@ def match_rhythmic_with_tonals(rhythmic_pattern: Rhythmic_Pattern, verse_note_li
             else:
                 # break up the notes into groups of beats (might be 1, might be more)
                 beam_beats = list(filter(None, re.split("(\W)", notes)))
-
                 # for each beat in the "group" of beats
                 for beats in beam_beats:
                     # if the given character at that time is "[" we know its the start of a chord
@@ -759,43 +775,42 @@ def _get_random_bridge_length(total_length, number_of_bridges):
     return length_to_return
 
 
-# # DEBUG
+# DEBUG: final = False
+
+# # # DEBUG
 # counter = 0
-# limit = 200
-# failed = 0
-# success = 0
 # notes_to_pick = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 # modifiers = ['M', 'm']
 
 
-# while(True):
-#     counter += 1
+# while(DEBUG):
+#     counter += 1 
 #     try:
 
 #         note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
 #         modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
 #         key_to_use = note_to_use + modifier_to_use
 
-#         print(f"===== Starting Run number {counter} using {key_to_use}...")
+#         # print(f"===== Starting Run number {counter} using {key_to_use}...")
 #         combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
 #         verse = build_verse(key_to_use, combined_rhythmic_pattern)
-#         success += 1
 
-#         print(
-#             f"This is the original pattern{combined_rhythmic_pattern.pattern}")
+#         for note in verse:
+#             if note is None:
+#                 print("what")
+#             print(note)
 
-#         # for note in verse:
-#         #     if note is None:
-#         #         print("what")
-#         #     print(note)
+#         # print(f"===== Run number {counter} has been successful!")
+#         # print()
 
-#         print(f"===== Run number {counter} has been successful!")
-#         print()
-
-#     except:
+#     except LoopError:
 #         print(f" ----- error occured on try number {counter}")
+#         traceback.print_exc()
 #         print()
-#         failed += 1
 #         break
 
+#     except:
+#         print(f"It ran this many times already {counter}")
+#         traceback.print_exc()
+#         break
 # # DEBUG - END
