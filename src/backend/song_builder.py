@@ -785,6 +785,7 @@ def modulate_verse(reference_verse: list, interval: list, up_frequency: bool, ke
             interval_length += 1
 
     for note_pattern in reference_verse:
+        print(modulated)
         if not key_done:
             key = half_step(key[:-1], up_frequency)
         new_note = half_step(note_pattern.note, up_frequency)
