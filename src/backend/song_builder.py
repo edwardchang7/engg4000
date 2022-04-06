@@ -60,18 +60,18 @@ def build_rhythmic_pattern(key):
     length_2 = selected_style[1]
 
     # get the list of rhythmic pattern objects for the given song that matches the given length
-    pattern_1 = _get_rhythmic_patterns(song_name, length_1)
-    pattern_2 = _get_rhythmic_patterns(song_name, length_2)
+    pattern_1 = _get_rhythmic_pattern(song_name, length_1)
+    pattern_2 = _get_rhythmic_pattern(song_name, length_2)
 
     # if pattern_1 is empty (meaning the given song name does not have matching pattern lengths)
     while(not pattern_1 or not pattern_2):
         song_name = _get_random_song_name()
-        pattern_1 = _get_rhythmic_patterns(song_name, length_1)
-        pattern_2 = _get_rhythmic_patterns(song_name, length_2)
+        pattern_1 = _get_rhythmic_pattern(song_name, length_1)
+        pattern_2 = _get_rhythmic_pattern(song_name, length_2)
 
     # randomly generate another pattern as long as pattern_1 == pattern_2
     while(pattern_1 is pattern_2):
-        pattern_2 = _get_rhythmic_patterns(song_name, length_2)
+        pattern_2 = _get_rhythmic_pattern(song_name, length_2)
 
     # gets a copy of the selected pattern from pattern_1
     combined_pattern = pattern_1.pattern.copy()
