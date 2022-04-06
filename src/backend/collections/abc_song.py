@@ -44,6 +44,7 @@ class ABCSong:
             # Chord
             if "[" in length and "]" in length:
                 parsed_length = ast.literal_eval(length)  # Convert string (note_length) to list (chord)
+                parsed_length[0] = str(parsed_length[0])
 
                 if note[-1] == 'm':  # Minor chord
                     chord = gen_chord_rand(note[:-1], 'm', len(parsed_length[0]))
