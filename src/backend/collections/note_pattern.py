@@ -3,7 +3,7 @@ class NotePattern:
     # save memory space by defining the attributed beforehand
     __slots__ = ('note', 'length')
     
-    def __init__(self, note:str, length:int):
+    def __init__(self, note, length):
         self.note = note
         self.length = length
 

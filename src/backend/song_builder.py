@@ -33,6 +33,10 @@ Parameters:
 Return:
     the song template based on the given genre
 '''
+
+rand.seed(3)
+counter = 0
+
 def get_song_template(genre):
     return ['A', 'A', 'B', 'A']
 
@@ -48,6 +52,8 @@ Returns:
 '''
 def build_rhythmic_pattern(key):
 
+   
+
     # gets a random song name from the list of songs that exist within the database
     song_name = _get_random_song_name()
 
@@ -62,11 +68,20 @@ def build_rhythmic_pattern(key):
     pattern_1 = _get_rhythmic_pattern(song_name, length_1)
     pattern_2 = _get_rhythmic_pattern(song_name, length_2)
 
+    # to not get stuck in an infinite loop
+    counter = 0
+
     # if pattern_1 is empty (meaning the given song name does not have matching pattern lengths)
     while(not pattern_1 or not pattern_2):
+
         song_name = _get_random_song_name()
         pattern_1 = _get_rhythmic_pattern(song_name, length_1)
         pattern_2 = _get_rhythmic_pattern(song_name, length_2)
+
+        counter += 1
+
+        if counter > 20:
+            raise LoopError("Stuck in getting rhythmic patterns")
 
     # randomly generate another pattern as long as pattern_1 == pattern_2
     while(pattern_1 is pattern_2):
@@ -517,7 +532,8 @@ Return:
 '''
 def _get_random_number(limit, start=0):
     # set the seed
-    rand.seed(dt.now().timestamp())
+    # dt.now().timestamp()
+    # DEBUGG MAKE SURE THIS IS THE LINE ABOVE AND NOT JUST 1
 
     # a quick nap of about 3ms so that it doesnt always use the same seed if this function is called multiple times consecutively
     time.sleep(0.003)
@@ -604,7 +620,8 @@ def build_verse(key, rhythmic_pattern: RhythmicPattern):
         # append the single bridge to the set of converted tonal patterns
         converted_tonal_pattern.extend(single_bridge)
         # return the converted tonal_pattern
-        verse_to_return = converted_tonal_pattern
+
+        verse_to_return = match_rhythmic_with_tonals(rhythmic_pattern, converted_tonal_pattern)
         return verse_to_return
 
     # randomly allocate bridge lengths
@@ -698,6 +715,7 @@ Return:
 def match_rhythmic_with_tonals(rhythmic_pattern: RhythmicPattern, verse_note_list):
     # the patterns to match
     pattern = rhythmic_pattern.pattern
+
     # an empty placeholder
     to_return = []
 
@@ -780,7 +798,7 @@ def _get_random_bridge_length(total_length, number_of_bridges):
 DEBUG: Final = True
 
 # # # DEBUG
-counter = 0
+
 notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
 modifiers = ['M', 'm']
 
@@ -797,8 +815,9 @@ while(DEBUG):
         combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
         verse = build_verse(key_to_use, combined_rhythmic_pattern)
 
-        for note in verse:
-            print(note)
+        if counter == 8:
+            for note in verse:
+                    print(note)
 
         # print(f"===== Run number {counter} has been successful!")
         # print()
