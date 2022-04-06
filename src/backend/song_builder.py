@@ -132,9 +132,9 @@ Parameters:
     pattern_length : the length for the patterns to match with
 
 Return:
-    a list of Rhythmic Pattern objects that matches the given pattern length within the given collection name
+    a Rhythmic Pattern objects that matches the given pattern length within the given collection name
 '''
-def _get_rhythmic_patterns(song_name, pattern_length):
+def _get_rhythmic_pattern(song_name, pattern_length) :
     # DB Settings
     db_name = "elliot"
     is_admin = False
