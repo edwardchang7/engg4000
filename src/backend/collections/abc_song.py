@@ -1,6 +1,7 @@
 import ast
 
 from coolname import generate_slug
+
 from src.backend.chords import gen_chord_rand
 
 
@@ -11,7 +12,7 @@ class ABCSong:
         self.composer: str = composer
         self.title: str = song_name
         self.key: str = key
-        self.time_signature: list = list(map(int, time_signature.split("/")))  # Ex: ['4','4']
+        self.time_signature: list = list(map(int, time_signature.split("/")))  # Ex: [4, 4]
 
         # Instance variables used to generate the song
         self.song_input: list = song_input
@@ -22,11 +23,11 @@ class ABCSong:
         self.abc_song: str = ""
 
     def __build_header(self) -> str:
-        header = "X:1\n"
-        header += f"C:{self.composer}\n"
-        header += f"K:{self.key}\n"
-        header += f"T:{self.title}\n"
-        header += f"M:{self.time_signature}\n"
+        header = "X: 1\n"
+        header += f"C: {self.composer}\n"
+        header += f"K: {self.key}\n"
+        header += f"T: {self.title}\n"
+        header += f"M: {self.time_signature}\n"
 
         self.header = header
         return header
@@ -79,7 +80,7 @@ class ABCSong:
         self.song = song
         return song
 
-    def __get_note_type(self, note) -> float:
+    def __get_note_type(self, note: int) -> float:
         if note == 0:  # 16th note
             return 1 / 16
         elif note == 1:  # 8th note
