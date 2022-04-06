@@ -390,7 +390,8 @@ def tonic_to_tonic_filter(key: str, input_str: str, mask: bool):
                             start_note = end_note
                             pattern_interval.append(interval)
 
-                for_DB.append({"Pattern": pattern_interval, "num_notes": len(pattern_interval), "Priority": 0})
+                if len(pattern_interval) != 1:
+                    for_DB.append({"Pattern": pattern_interval, "num_notes": len(pattern_interval), "Priority": 0})
 
     return for_DB
 
