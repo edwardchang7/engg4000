@@ -1,3 +1,4 @@
+from turtle import up
 import unittest
 
 # ===========================================================
@@ -5,6 +6,7 @@ import unittest
 import os
 import sys
 import inspect
+from backend.music_tools import whole_step
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -14,6 +16,7 @@ sys.path.insert(0, parent2)
 # REMOVE THIS BEFORE MERGING INTO MASTER
 from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.collections.rhythmic_pattern import RhythmicPattern
+from src.backend.collections.note_pattern import NotePattern
 from src.backend import scales, song_builder
 
 class Test_Song_Builder(unittest.TestCase):
@@ -147,6 +150,83 @@ class Test_Song_Builder(unittest.TestCase):
         key = "CM"
         verse = song_builder.build_verse(key, rhythmic_pattern_obj)
         self.assertIsNotNone(verse)
+
+    def test_modulate_verse(self):
+        note1 = NotePattern("C", 1)
+        note2 = NotePattern("E", 1)
+        note3 = NotePattern("G", 1)
+
+
+        note_list = []
+        note_list.append(note1)
+        note_list.append(note2)
+        note_list.append(note3)
+
+        interval = "w"
+        key = "CM"
+        up_frequency = True
+
+        modulated = song_builder.modulate_verse(note_list, interval, up_frequency, key)
+        
+        self.assertEqual(modulated[0].note, "D")
+        self.assertEqual(modulated[1].note, "F#")
+        self.assertEqual(modulated[2].note, "A")
+
+    def test_modulate_real_verse(self):
+        rhythmic_pattern_obj  = self.test_build_rhythmic_pattern()
+        key = "CM"
+        verse = song_builder.build_verse(key, rhythmic_pattern_obj)
+
+        interval = "w"
+        key = "CM"
+        up_frequency = True
+
+        modulated = song_builder.modulate_verse(verse, interval, up_frequency, key)
+        
+        self.assertIsNotNone(modulated)
+        check = whole_step(song_builder._strip_note_modifiers(verse[0].note), up_frequency)
+        self.assertEqual(song_builder._strip_note_modifiers(modulated[0].note), check)
+        check = whole_step(song_builder._strip_note_modifiers(verse[1].note), up_frequency)
+        self.assertEqual(song_builder._strip_note_modifiers(modulated[1].note), check)
+
+    def test_random_cadence(self):
+        note1 = NotePattern("C", 1)
+        note2 = NotePattern("E", 1)
+        note3 = NotePattern("G", 1)
+
+        key = "CM"
+
+        note_list = []
+        note_list.append(note1)
+        note_list.append(note2)
+        note_list.append(note3)
+
+        bridge = song_builder.add_random_cadence(note_list, key)
+
+        self.assertIsNotNone(bridge)
+        self.assertEqual(len(bridge), len(note_list))
+        self.assertEqual(bridge[0].length, note_list[0].length)
+
+    def test_random_cadence_real_verse(self):
+        rhythmic_pattern_obj  = self.test_build_rhythmic_pattern()
+        key = "CM"
+        verse = song_builder.build_verse(key, rhythmic_pattern_obj)
+
+        bridge = song_builder.add_random_cadence(verse, key)
+
+        self.assertIsNotNone(bridge)
+        self.assertEqual(len(verse), len(bridge))
+        self.assertEqual(verse[0].length, bridge[0].length)
+
+    def test_build_bridge(self):
+        rhythmic_pattern_obj  = self.test_build_rhythmic_pattern()
+        key = "CM"
+        verse = song_builder.build_verse(key, rhythmic_pattern_obj)
+
+        bridge = song_builder.build_song_bridge(verse, key)
+
+        self.assertIsNotNone(bridge)
+        self.assertEqual(len(bridge), len(verse))
 
 
 # DEBUG
