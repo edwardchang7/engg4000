@@ -11,7 +11,7 @@ class ABCSong:
         self.composer: str = composer
         self.title: str = song_name
         self.key: str = key
-        self.time_signature: list = time_signature.split("/")  # Ex: ['4','4']
+        self.time_signature: list = list(map(int, time_signature.split("/")))  # Ex: ['4','4']
 
         # Instance variables used to generate the song
         self.song_input: list = song_input
@@ -31,13 +31,13 @@ class ABCSong:
         self.header = header
         return header
 
-    def __build_song(self, song_input: list) -> str:
+    def __build_song(self) -> str:
         song: str = ""
 
         num_of_beats_in_each_measure: float = self.time_signature[0] * self.time_signature[1]
-        for note_pattern in song_input:
-            note: str = note_pattern.get_note()
-            length: int = note_pattern.get_length()
+        for note_pattern in self.song_input:
+            note: str = note_pattern.note
+            length: int = note_pattern.length
             parsed_note: str = None
             parsed_length: str = None
 
@@ -50,12 +50,10 @@ class ABCSong:
                 else:  # Major chord
                     chord = gen_chord_rand(note, 'M', len(parsed_length[0]))
 
-                num_of_beats_in_current_note_or_chord: float = self.__get_note_type(parsed_length[0][0]) * (
-                            self.time_signature[0] * self.time_signature[1])
+                num_of_beats_in_current_note_or_chord: float = self.__get_note_type(parsed_length[0][0]) * (self.time_signature[0] * self.time_signature[1])
             else:  # Note
                 chord = gen_chord_rand(note, 'M', 1)
-                num_of_beats_in_current_note_or_chord: float = self.__get_note_type(length) * (
-                            self.time_signature[0] * self.time_signature[1])
+                num_of_beats_in_current_note_or_chord: float = self.__get_note_type(length) * (self.time_signature[0] * self.time_signature[1])
 
             # Check if the current measure has enough room for the current note
             if num_of_beats_in_current_note_or_chord > num_of_beats_in_each_measure:
@@ -86,7 +84,7 @@ class ABCSong:
         else:
             return None
 
-    def get_abc(self, song_input: list) -> str:
-        abc_song: str = self.__build_header() + self.__build_song(song_input)
+    def get_abc(self) -> str:
+        abc_song: str = self.__build_header() + self.__build_song()
         self.abc_song = abc_song
         return abc_song

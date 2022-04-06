@@ -1,4 +1,3 @@
-from ast import pattern
 import random as rand
 import re
 from datetime import datetime as dt
