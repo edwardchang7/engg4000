@@ -36,6 +36,7 @@ class ABCSong:
         song: str = ""
 
         num_of_beats_in_each_measure: float = self.time_signature[0] * self.time_signature[1]
+        num_of_measures_in_a_line: int = 4
         for note_pattern in self.song_input:
             note: str = note_pattern.note
             length: int = note_pattern.length
@@ -52,7 +53,7 @@ class ABCSong:
                     chord = gen_chord_rand(note, 'M', len(parsed_length[0]))
 
                 num_of_beats_in_current_note_or_chord: float = \
-                    self.__get_note_type(parsed_length[0][0]) * (self.time_signature[0] * self.time_signature[1])
+                    self.__get_note_type(int(parsed_length[0][0])) * (self.time_signature[0] * self.time_signature[1])
             else:  # Note
                 chord = note
                 num_of_beats_in_current_note_or_chord: float = \
@@ -60,7 +61,14 @@ class ABCSong:
 
             # Check if the current measure has enough room for the current note
             if num_of_beats_in_current_note_or_chord > num_of_beats_in_each_measure:
-                song += "| \n"
+                num_of_measures_in_a_line -= 1
+
+                if num_of_measures_in_a_line <= 0:
+                    song += "| \n"
+                    num_of_measures_in_a_line = 4
+                else:
+                    song += "| "
+
                 num_of_beats_in_each_measure = self.time_signature[0] * self.time_signature[1]
 
             if "[" in length and "]" in length:
