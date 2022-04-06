@@ -182,7 +182,7 @@ class Test_Song_Builder(unittest.TestCase):
         up_frequency = True
 
         modulated = song_builder.modulate_verse(verse, interval, up_frequency, key)
-        
+        print(modulated)
         self.assertIsNotNone(modulated)
         check = whole_step(song_builder._strip_note_modifiers(verse[0].note), up_frequency)
         self.assertEqual(song_builder._strip_note_modifiers(modulated[0].note), check)
