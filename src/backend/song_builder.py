@@ -1,4 +1,3 @@
-from ast import pattern
 import random as rand
 import re
 from datetime import datetime as dt
@@ -631,6 +630,175 @@ def build_verse(key, rhythmic_pattern: RhythmicPattern):
     verse_to_return = match_rhythmic_with_tonals(rhythmic_pattern, verse_in_list)
 
     return verse_to_return
+
+'''
+Creates the bridge for the song given the verse and certain presets
+
+Parameters:
+    reference_verse: the verse to use as reference for bridge building
+    key: key of the song
+
+Return:
+    The modulated verse, and the modulated key
+'''
+def build_song_bridge(reference_verse: list, key: str):
+
+    modulate = True
+    bridge = []
+
+    if modulate:
+        bridge, key = modulate_verse(reference_verse, ["m3"], True, key)
+    else:
+        bridge = reference_verse
+    bridge = add_random_cadence(bridge, key)
+
+    return bridge
+
+'''
+Randomly modifies certain sections of verse/bridge to add cadences
+
+Parameters:
+    reference: the verse/bridge to modify
+    key: key of the song
+
+Return:
+    The verse/bridge with changes to certain notes
+'''
+def add_random_cadence(reference: list, key: str):
+
+    modified = []
+    deceptive = False
+    perf_plag = False
+    octave = ""
+
+    reference_scale = get_scale(key[:-1], key[-1])
+    reference_scale = [note.upper() for note in reference_scale]
+
+    for note_pattern in reference:
+
+        new_note = note_pattern.note
+        new_length = note_pattern.length
+        try:
+            degree = reference_scale.index(_strip_note_modifiers(new_note).upper())
+        except ValueError:
+            degree = -1
+
+        rand = _get_random_number(1)
+
+        if deceptive:
+            stripped = _strip_note_modifiers(new_note)
+            octave = new_note[len(stripped):]
+            new_note = reference_scale[5]
+
+            if len(octave) != 0:
+                if octave.find("'") != -1:
+                    new_note = new_note.lower() + octave
+                elif octave.find(",") != -1:
+                    new_note = new_note + octave
+
+            deceptive = False
+
+        if rand == 1:
+
+            if degree == 4:
+
+                deceptive = True
+
+            if degree == 0:
+
+                perf_plag = True
+
+
+        if perf_plag:
+            good_for_cadence = False
+            index = -1
+            rand = _get_random_number(1)
+
+            new_note_degree = 4
+
+            if rand == 1:
+
+                new_note_degree = 3
+
+            for i in range(len(modified), 0, -1):
+                old_note_pattern = modified[i - 1]
+                if old_note_pattern.note != "z":
+                    good_for_cadence = True
+                    index = i - 1
+                    break
+
+            if good_for_cadence:
+                old_note_pattern = modified.pop(index)
+                stripped = _strip_note_modifiers(old_note_pattern.note)
+                octave = old_note_pattern.note[len(stripped):]
+
+                replacement_note = reference_scale[new_note_degree]
+
+                if len(octave) != 0:
+                    if octave.find("'") != -1:
+                        replacement_note = replacement_note.lower() + octave
+                    elif octave.find(",") != -1:
+                        replacement_note = replacement_note + octave
+
+                replacement = NotePattern(replacement_note, old_note_pattern.length)
+                modified.insert(index, replacement)
+
+            perf_plag = False
+
+
+        new_pattern = NotePattern(new_note, new_length)
+        modified.append(new_pattern)
+
+    return modified
+
+'''
+Modulates a given verse depending on the input interval
+
+Parameters:
+    reference_verse: the verse to modulate
+    interval: list of steps indicating the total interval
+    up_frequency: indicates whether interval is up or down
+    key: key of the song
+
+Return:
+    The modulated verse, and the modulated key
+'''
+def modulate_verse(reference_verse: list, interval: list, up_frequency: bool, key: str):
+
+    interval_length = 0
+    key_done = False
+    key_type = key[-1]
+    modulated = []
+
+    for step in interval:
+        if step == "o":
+            interval_length += 12
+        elif step == "P5":
+            interval_length += 7
+        elif step == "M3":
+            interval_length += 4
+        elif step == "m3":
+            interval_length += 3
+        elif step == "w":
+            interval_length += 2
+        elif step == "h":
+            interval_length += 1
+
+    for note_pattern in reference_verse:
+        if not key_done:
+            key = half_step(key[:-1], up_frequency)
+        new_note = half_step(note_pattern.note, up_frequency)
+        for i in range(interval_length - 1):
+            if not key_done:
+                key = half_step(key, up_frequency)
+            new_note = half_step(new_note, up_frequency)
+
+        if not key_done:
+            key_done = True
+        new_note_pattern = NotePattern(new_note, note_pattern.length)
+        modulated.append(new_note_pattern)
+
+    return modulated, key + key_type
 
 '''
 Gets a random tonal pattern
