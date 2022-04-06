@@ -6,7 +6,7 @@ import unittest
 import os
 import sys
 import inspect
-from backend.music_tools import whole_step
+from src.backend.music_tools import whole_step
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
