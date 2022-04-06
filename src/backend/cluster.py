@@ -113,7 +113,7 @@ class Cluster:
 
         return queried_rhythmic_patterns
 
-    def query_tonal_patterns(self, song_name: str, num_of_notes: int) -> list
+    def query_tonal_patterns(self, song_name: str, num_of_notes: int) -> list:
         # Check connection to the database
         if not self._is_connected_to_database(self):
             return None
