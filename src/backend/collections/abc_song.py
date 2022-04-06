@@ -23,9 +23,9 @@ class ABCSong:
 
     def __build_header(self) -> str:
         header = "X:1\n"
-        header += f"C:{self.composer}"
-        header += f"K:{self.key}"
-        header += f"T:{self.title}"
+        header += f"C:{self.composer}\n"
+        header += f"K:{self.key}\n"
+        header += f"T:{self.title}\n"
         header += f"M:{self.time_signature}\n"
 
         self.header = header
@@ -50,18 +50,31 @@ class ABCSong:
                 else:  # Major chord
                     chord = gen_chord_rand(note, 'M', len(parsed_length[0]))
 
-                num_of_beats_in_current_note_or_chord: float = self.__get_note_type(parsed_length[0][0]) * (self.time_signature[0] * self.time_signature[1])
+                num_of_beats_in_current_note_or_chord: float = \
+                    self.__get_note_type(parsed_length[0][0]) * (self.time_signature[0] * self.time_signature[1])
             else:  # Note
-                chord = gen_chord_rand(note, 'M', 1)
-                num_of_beats_in_current_note_or_chord: float = self.__get_note_type(length) * (self.time_signature[0] * self.time_signature[1])
+                chord = note
+                num_of_beats_in_current_note_or_chord: float = \
+                    self.__get_note_type(int(length)) * (self.time_signature[0] * self.time_signature[1])
 
             # Check if the current measure has enough room for the current note
             if num_of_beats_in_current_note_or_chord > num_of_beats_in_each_measure:
                 song += "| \n"
                 num_of_beats_in_each_measure = self.time_signature[0] * self.time_signature[1]
-                num_of_beats_in_each_measure -= num_of_beats_in_current_note_or_chord
 
-            song += f"[{''.join(chord)}] "  # Add chord to ABC output
+            if "[" in length and "]" in length:
+                abc_chord = ""
+
+                for note_item in chord:
+                    abc_chord += note_item
+
+                song += f"[{abc_chord}] "  # Add chord to ABC output
+            else:
+                song += f"{chord} "  # Add note to ABC output
+
+            num_of_beats_in_each_measure -= num_of_beats_in_current_note_or_chord
+
+        song += "||"
 
         self.song = song
         return song
