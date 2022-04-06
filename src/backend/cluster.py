@@ -3,10 +3,10 @@ import certifi
 from pymongo import MongoClient
 from typing import Final
 
-from src.backend.collections.tonal_pattern import TonalPattern
-from src.backend.models.tonal_pattern_model import TonalPatternModel
-from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 from src.backend.collections.rhythmic_pattern import RhythmicPattern
+from src.backend.collections.tonal_pattern import TonalPattern
+from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
+from src.backend.models.tonal_pattern_model import TonalPatternModel
 
 
 class Cluster:
@@ -113,12 +113,12 @@ class Cluster:
 
         return queried_rhythmic_patterns
 
-    def query_tonal_patterns(self, song_name:str, num_of_notes: int) -> list:
+    def query_tonal_patterns(self, song_name: str, num_of_notes: int) -> list
         # Check connection to the database
         if not self._is_connected_to_database(self):
             return None
 
-        # check that the database connection is set to the provided song name (collection)
+        # Check that the database connection is set to the provided song name (collection)
         if self.collection_name != song_name:
             return None
 
