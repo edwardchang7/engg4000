@@ -220,8 +220,10 @@ class Test_Song_Builder(unittest.TestCase):
         rhythmic_pattern_obj  = self.test_build_rhythmic_pattern()
         key = "CM"
         verse = song_builder.build_verse(key, rhythmic_pattern_obj)
+    
+        modulate = True
 
-        bridge = song_builder.build_song_bridge(verse, key)
+        bridge = song_builder.build_song_bridge(verse, key, modulate)
 
         self.assertIsNotNone(bridge)
         self.assertEqual(len(bridge), len(verse))
