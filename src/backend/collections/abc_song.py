@@ -37,6 +37,8 @@ class ABCSong:
 
         num_of_beats_in_each_measure: float = self.time_signature[0] * self.time_signature[1]
         num_of_measures_in_a_line: int = 4
+        is_eighth_note: bool = False
+        eighth_note_counter: int = 0
         for note_pattern in self.song_input:
             note: str = note_pattern.note
             length: int = note_pattern.length
@@ -58,6 +60,12 @@ class ABCSong:
                 chord = note
                 num_of_beats_in_current_note_or_chord: float = \
                     self.__get_note_type(int(length)) * (self.time_signature[0] * self.time_signature[1])
+                is_eighth_note = self.__is_eighth_note(int(length))
+
+                if is_eighth_note:
+                    eighth_note_counter += 1
+                else:
+                    eighth_note_counter = 0
 
             # Check if the current measure has enough room for the current note
             if num_of_beats_in_current_note_or_chord > num_of_beats_in_each_measure:
@@ -79,7 +87,11 @@ class ABCSong:
 
                 song += f"[{abc_chord}]{parsed_length[0][0]} "  # Add chord to ABC output
             else:
-                song += f"{chord}{length} "  # Add note to ABC output
+                if is_eighth_note and eighth_note_counter < 5:
+                    song += f"{chord}{length}"  # Add beam note to ABC output
+                else:
+                    song += f" {chord}{length} "  # Add note to ABC output
+                    eighth_note_counter = 0
 
             num_of_beats_in_each_measure -= num_of_beats_in_current_note_or_chord
 
@@ -103,8 +115,14 @@ class ABCSong:
             return 3 / 4
         elif note == 8:  # whole note
             return 1
-        else:
-            return None
+
+        return None
+
+    def __is_eighth_note(self, note: int) -> bool:
+        if note == 1:  # 8th note
+            return True
+        
+        return False
 
     def get_abc(self) -> str:
         abc_song: str = self.__build_header() + self.__build_song()
