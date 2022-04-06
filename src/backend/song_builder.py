@@ -37,8 +37,8 @@ Return:
 rand.seed(3)
 counter = 0
 
-def get_song_template(genre):
-    return ['A', 'A', 'B', 'A']
+def get_song_template(genre=None):
+    return ['A', 'A', 'C', 'A']
 
 
 '''
@@ -964,41 +964,41 @@ def _get_random_bridge_length(total_length, number_of_bridges):
     return length_to_return
 
 
-DEBUG: Final = True
+# DEBUG: Final = True
 
-# # # DEBUG
+# # # # DEBUG
 
-notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
-modifiers = ['M', 'm']
+# notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
+# modifiers = ['M', 'm']
 
 
-while(DEBUG):
-    counter += 1 
-    try:
+# while(DEBUG):
+#     counter += 1 
+#     try:
 
-        note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
-        modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
-        key_to_use = note_to_use + modifier_to_use
+#         note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
+#         modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
+#         key_to_use = note_to_use + modifier_to_use
 
-        print(f"===== Starting Run number {counter} using KEY: {key_to_use}...")
-        combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
-        verse = build_verse(key_to_use, combined_rhythmic_pattern)
+#         print(f"===== Starting Run number {counter} using KEY: {key_to_use}...")
+#         combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
+#         verse = build_verse(key_to_use, combined_rhythmic_pattern)
 
-        if counter == 8:
-            for note in verse:
-                    print(note)
+#         if counter == 8:
+#             for note in verse:
+#                     print(note)
 
-        # print(f"===== Run number {counter} has been successful!")
-        # print()
+#         # print(f"===== Run number {counter} has been successful!")
+#         # print()
 
-    except LoopError:
-        print(f" ----- error occured on try number {counter}")
-        traceback.print_exc()
-        print()
-        break
+#     except LoopError:
+#         print(f" ----- error occured on try number {counter}")
+#         traceback.print_exc()
+#         print()
+#         break
 
-    except:
-        print(f"It ran this many times already {counter}")
-        traceback.print_exc()
-        break
-# # DEBUG - END
+#     except:
+#         print(f"It ran this many times already {counter}")
+#         traceback.print_exc()
+#         break
+# # # DEBUG - END
