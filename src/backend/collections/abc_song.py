@@ -27,7 +27,7 @@ class ABCSong:
         header += f"C: {self.composer}\n"
         header += f"K: {self.key}\n"
         header += f"T: {self.title}\n"
-        header += f"M: {self.time_signature}\n"
+        header += f"M: {self.time_signature[0]}/{self.time_signature[1]}\n"
 
         self.header = header
         return header
