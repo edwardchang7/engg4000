@@ -168,9 +168,9 @@ class Test_Song_Builder(unittest.TestCase):
 
         modulated = song_builder.modulate_verse(note_list, interval, up_frequency, key)
         
-        self.assertEqual(modulated[0].note, "D")
-        self.assertEqual(modulated[1].note, "F#")
-        self.assertEqual(modulated[2].note, "A")
+        self.assertEqual(modulated[0][0].note, "D")
+        self.assertEqual(modulated[0][1].note, "F#")
+        self.assertEqual(modulated[0][2].note, "A")
 
     def test_modulate_real_verse(self):
         rhythmic_pattern_obj  = self.test_build_rhythmic_pattern()
@@ -182,12 +182,11 @@ class Test_Song_Builder(unittest.TestCase):
         up_frequency = True
 
         modulated = song_builder.modulate_verse(verse, interval, up_frequency, key)
-        print(modulated[0][0])
         self.assertIsNotNone(modulated)
         check = whole_step(song_builder._strip_note_modifiers(verse[0].note), up_frequency)
-        self.assertEqual(song_builder._strip_note_modifiers(modulated[0].note), check)
+        self.assertEqual(song_builder._strip_note_modifiers(modulated[0][0].note), check)
         check = whole_step(song_builder._strip_note_modifiers(verse[1].note), up_frequency)
-        self.assertEqual(song_builder._strip_note_modifiers(modulated[1].note), check)
+        self.assertEqual(song_builder._strip_note_modifiers(modulated[0][1].note), check)
 
     def test_random_cadence(self):
         note1 = NotePattern("C", 1)
