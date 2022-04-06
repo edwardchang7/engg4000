@@ -54,9 +54,9 @@ class Test_Song_Builder(unittest.TestCase):
 
         first_song_name = all_song_names[0]
 
-        random_selected_rhythmic_pattern_1 = song_builder._get_rhythmic_patterns(
+        random_selected_rhythmic_pattern_1 = song_builder._get_rhythmic_pattern(
             first_song_name, pattern_length_1)
-        random_selected_rhythmic_pattern_2 = song_builder._get_rhythmic_patterns(
+        random_selected_rhythmic_pattern_2 = song_builder._get_rhythmic_pattern(
             first_song_name, pattern_length_2)
 
         pattern_1 = random_selected_rhythmic_pattern_1.pattern
