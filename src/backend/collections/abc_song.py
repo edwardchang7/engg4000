@@ -69,9 +69,9 @@ class ABCSong:
                 for note_item in chord:
                     abc_chord += note_item
 
-                song += f"[{abc_chord}] "  # Add chord to ABC output
+                song += f"[{abc_chord}]{parsed_length[0][0]} "  # Add chord to ABC output
             else:
-                song += f"{chord} "  # Add note to ABC output
+                song += f"{chord}{length} "  # Add note to ABC output
 
             num_of_beats_in_each_measure -= num_of_beats_in_current_note_or_chord
 
