@@ -18,8 +18,8 @@ sys.path.insert(0, parent2)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
 from src.backend.cluster import Cluster
-from src.backend.collections.note_pattern import Note_Pattern
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.collections.note_pattern import NotePattern
+from src.backend.collections.rhythmic_pattern import RhythmicPattern
 from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.music_tools import (M3, P5, change_octave, half_step, m3, whole_step)
 from src.backend.scales import get_scale
@@ -78,7 +78,7 @@ def build_rhythmic_pattern(key):
     # and append the pattern from pattern_2 together
     combined_pattern.extend(pattern_2.pattern)
     # to create a rhythmic_pattern_object
-    combined_rhythmic_pattern_object = Rhythmic_Pattern(
+    combined_rhythmic_pattern_object = RhythmicPattern(
         combined_pattern, 0, False)
     # and return the rhythmic_pattern_object
     return combined_rhythmic_pattern_object
@@ -537,9 +537,9 @@ Parameters:
     rhythmic_pattern: the rhythmic_pattern to match the notes with
 
 Return
-    a list of Note_Pattern objects that holds the note and the beats
+    a list of NotePattern objects that holds the note and the beats
 '''
-def build_verse(key, rhythmic_pattern: Rhythmic_Pattern):
+def build_verse(key, rhythmic_pattern: RhythmicPattern):
     # the list to return
     verse_to_return = []
     # temporary placeholder for holding all the combined patterns with the bridge patterns
@@ -693,7 +693,7 @@ Parameters:
 Return:
     a list of Note_Patterns that has the length of each note / chord along with the note itself
 '''
-def match_rhythmic_with_tonals(rhythmic_pattern: Rhythmic_Pattern, verse_note_list):
+def match_rhythmic_with_tonals(rhythmic_pattern: RhythmicPattern, verse_note_list):
     # the patterns to match
     pattern = rhythmic_pattern.pattern
     # an empty placeholder
@@ -710,7 +710,7 @@ def match_rhythmic_with_tonals(rhythmic_pattern: Rhythmic_Pattern, verse_note_li
         for notes in bar:
             # if the notes is a rest note, create a note pattern with "z" as the note and the beats
             if len(notes) == 3 and '(' in notes and ')' in notes:
-                to_return.append(Note_Pattern("z", notes[1]))
+                to_return.append(NotePattern("z", notes[1]))
             # else if its not a rest note, then do this
             else:
                 # break up the notes into groups of beats (might be 1, might be more)
@@ -726,7 +726,7 @@ def match_rhythmic_with_tonals(rhythmic_pattern: Rhythmic_Pattern, verse_note_li
                     elif is_chord:
                         # if its a chord, create a Note_pattern and add it to the list, and put the "[" and "]" back
                         # to signify that its a chord
-                        to_return.append(Note_Pattern(verse_note_list[index], "[" + str(beats) + "]"))
+                        to_return.append(NotePattern(verse_note_list[index], "[" + str(beats) + "]"))
                         # increase the index to get the next note in the verse_note_list
                         index += 1
                         # since we already used the content of the chord, reset the flag
@@ -735,7 +735,7 @@ def match_rhythmic_with_tonals(rhythmic_pattern: Rhythmic_Pattern, verse_note_li
                     elif beats.isdigit():
                         # go through each of these beats, and append a note to it through the verse_note_list
                         for individual_beat in beats:
-                            to_return.append(Note_Pattern(verse_note_list[index], individual_beat))
+                            to_return.append(NotePattern(verse_note_list[index], individual_beat))
                             index += 1
 
     return to_return

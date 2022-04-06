@@ -1,7 +1,7 @@
 import unittest
 
 from src.backend.cluster import Cluster
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.collections.rhythmic_pattern import RhythmicPattern
 from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 from src.backend.models.tonal_pattern_model import TonalPatternModel
@@ -89,7 +89,7 @@ class TestCluster(unittest.TestCase):
         self.assertFalse(cluster_instance.is_admin)
 
         # Create a rhythmic pattern model that is used to insert rhythmic patterns into the database
-        test_rhythmic_pattern = Rhythmic_Pattern(
+        test_rhythmic_pattern = RhythmicPattern(
             test_rhythmic_pattern_pattern, test_rhythmic_pattern_frequency, test_rhythmic_pattern_is_v1
         )
         test_list_of_rhythmic_patterns = [test_rhythmic_pattern, test_rhythmic_pattern, test_rhythmic_pattern]

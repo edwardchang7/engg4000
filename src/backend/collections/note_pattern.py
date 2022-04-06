@@ -1,8 +1,4 @@
-'''
-A class to hold a note and the length
-'''
-
-class Note_Pattern:
+class NotePattern:
 
     # save memory space by defining the attributed beforehand
     __slots__ = ('note', 'length')

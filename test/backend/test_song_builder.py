@@ -13,7 +13,7 @@ sys.path.insert(0, parent2)
 # ===========================================================
 # REMOVE THIS BEFORE MERGING INTO MASTER
 from src.backend.collections.tonal_pattern import TonalPattern
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
+from src.backend.collections.rhythmic_pattern import RhythmicPattern
 from src.backend import scales, song_builder
 
 class Test_Song_Builder(unittest.TestCase):

@@ -25,8 +25,8 @@ sys.path.insert(0, parent2)
 # REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend.cluster import Cluster
-from src.backend.collections.rhythmic_pattern import Rhythmic_Pattern
-from src.backend.collections.song_collection import Song_Collection
+from src.backend.collections.rhythmic_pattern import RhythmicPattern
+from src.backend.collections.songcollection import SongCollection
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
 from abc_tools import get_header, get_melodic_and_rythmic, get_voicings
@@ -382,7 +382,7 @@ def extract_all_files():
                 actual_header = composition_name.replace(" ", "_")
 
             # creates the song object
-            song = Song_Collection(actual_header)
+            song = SongCollection(actual_header)
 
             # appends the song object to the song_list
             song_list.append(song)
@@ -394,11 +394,11 @@ def extract_all_files():
 
             # for each pattern and frequency, create a RhythmicPattern object and add it to the given song
             for k,v in v1_pattern.items():
-                pattern = Rhythmic_Pattern(k, v, True)
+                pattern = RhythmicPattern(k, v, True)
                 song.add_pattern(pattern)
 
             for k,v in v2_pattern.items():
-                pattern = Rhythmic_Pattern(k, v, False)
+                pattern = RhythmicPattern(k, v, False)
                 song.add_pattern(pattern)
 
             # Reset the global variables for the next song

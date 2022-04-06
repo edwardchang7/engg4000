@@ -1,7 +1,7 @@
 import ast
 
 
-class Rhythmic_Pattern:
+class RhythmicPattern:
     def __init__(self, pattern, frequency, is_v1):
         # Converts a string in the format of a list to an actual list object
         self.pattern = pattern
