@@ -130,7 +130,7 @@ class Cluster:
                 current_tonal_pattern_num_of_beats: int = tonal_pattern.get('num_of_notes')
 
                 if (current_tonal_pattern_num_of_beats is not None and
-                        current_tonal_pattern_num_of_beats == num_of_notes):
+                        current_tonal_pattern_num_of_beats <= num_of_notes):
                     queried_tonal_patterns.append(
                         TonalPattern(
                             tonal_pattern.get('pattern'),
