@@ -641,15 +641,15 @@ Parameters:
 Return:
     The modulated verse, and the modulated key
 '''
-def build_song_bridge(reference_verse: list, key: str):
+def build_song_bridge(reference_verse: list, key: str, modulate: bool):
 
-    modulate = True
     bridge = []
 
     if modulate:
         bridge, key = modulate_verse(reference_verse, ["m3"], True, key)
     else:
         bridge = reference_verse
+
     bridge = add_random_cadence(bridge, key)
 
     return bridge
