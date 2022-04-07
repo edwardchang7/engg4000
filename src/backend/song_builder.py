@@ -52,8 +52,6 @@ Returns:
 '''
 def build_rhythmic_pattern(key):
 
-   
-
     # gets a random song name from the list of songs that exist within the database
     song_name = _get_random_song_name()
 
@@ -73,7 +71,6 @@ def build_rhythmic_pattern(key):
 
     # if pattern_1 is empty (meaning the given song name does not have matching pattern lengths)
     while(not pattern_1 or not pattern_2):
-
         song_name = _get_random_song_name()
         pattern_1 = _get_rhythmic_pattern(song_name, length_1)
         pattern_2 = _get_rhythmic_pattern(song_name, length_2)
@@ -884,7 +881,6 @@ Return:
 def match_rhythmic_with_tonals(rhythmic_pattern: RhythmicPattern, verse_note_list):
     # the patterns to match
     pattern = rhythmic_pattern.pattern
-
     # an empty placeholder
     to_return = []
 

@@ -228,7 +228,6 @@ class Test_Song_Builder(unittest.TestCase):
         self.assertIsNotNone(bridge)
         self.assertEqual(len(bridge), len(verse))
 
-
 # DEBUG
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # THIS IS JUST TO RUN ALL THE TEST WITHIN THIS FILE ONLY
