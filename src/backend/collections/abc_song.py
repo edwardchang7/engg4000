@@ -40,6 +40,7 @@ class ABCSong:
         is_eighth_note: bool = False
         eighth_note_counter: int = 0
         for note_pattern in song_input:
+            is_chord: bool = False
             note: str = note_pattern.note
             length: int = note_pattern.length
             parsed_length: str = None
@@ -67,6 +68,10 @@ class ABCSong:
                 else:
                     eighth_note_counter = 0
 
+                if note[-1] == '#':
+                    chord = note[:-1]
+                    is_chord = True
+
             # Check if the current measure has enough room for the current note
             if num_of_beats_in_current_note_or_chord > num_of_beats_in_each_measure:
                 num_of_measures_in_a_line -= 1
@@ -83,15 +88,23 @@ class ABCSong:
                 abc_chord = ""
 
                 for note_item in chord:
-                    abc_chord += note_item
+                    if note_item[-1] == '#':
+                        abc_chord += f"{note_item[:-1]}^"
+                    else:
+                        abc_chord += f"{note_item}"
 
                 song += f"[{abc_chord}]{parsed_length[0][0]} "  # Add chord to ABC output
             else:
                 if is_eighth_note and eighth_note_counter < 5:
-                    song += f"{chord}{length}"  # Add beam note to ABC output
+                    if is_chord:
+                        song += f"{chord}{length}^"  # Add beam note to ABC output
+                    else:
+                        song += f"{chord}{length}"
                 else:
-                    song += f" {chord}{length} "  # Add note to ABC output
-                    eighth_note_counter = 0
+                    if is_chord:
+                        song += f" {chord}{length}^ "  # Add note to ABC output
+                    else:
+                        song += f" {chord}{length} "
 
             num_of_beats_in_each_measure -= num_of_beats_in_current_note_or_chord
 
