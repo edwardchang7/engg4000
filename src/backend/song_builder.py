@@ -963,42 +963,76 @@ def _get_random_bridge_length(total_length, number_of_bridges):
 
     return length_to_return
 
+'''
+Builds a complimenting V2 pattern that can be combined with V1
 
-# DEBUG: Final = True
+Parameters:
+    verse: a list of Note_Patterns
+
+Return:
+    v2_verse: a list of PatternNotes
+'''
+def build_v2(tonic, input_verse):
+    v2_notes = []
+    beat_counter = 0
+
+    # keep a running counter of beats, every 4 beats append the next note to a new list
+    for note in input_verse:
+        # if checking first note of a bar then append it to the v2 note list
+        if beat_counter == 0:
+            v2_notes.append(note.note)
+
+        beat_counter += int(note.length) if "[" not in note.length else int(note.length[1])
+        # WILL THIS ACCOUNT FOR 16th notes signified by 0
+        if beat_counter == 8:
+            beat_counter = 0
+    
+    v2_note_patterns=[]
+
+    tonic = tonic[0] if len(tonic) == 2 else tonic[0] + tonic[1]
+    for note in v2_notes:
+        note_to_append = note if note != "z" else tonic
+        v2_note_patterns.append(NotePattern(note_to_append, 8))
+
+    return v2_note_patterns
+
+
+DEBUG: Final = False
 
 # # # # DEBUG
 
-# notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
-# modifiers = ['M', 'm']
+notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
+modifiers = ['M', 'm']
 
 
-# while(DEBUG):
-#     counter += 1 
-#     try:
+while(DEBUG):
+    counter += 1 
+    try:
 
-#         note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
-#         modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
-#         key_to_use = note_to_use + modifier_to_use
+        note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
+        modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
+        key_to_use = note_to_use + modifier_to_use
 
-#         print(f"===== Starting Run number {counter} using KEY: {key_to_use}...")
-#         combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
-#         verse = build_verse(key_to_use, combined_rhythmic_pattern)
+        print(f"===== Starting Run number {counter} using KEY: {key_to_use}...")
+        combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
+        verse = build_verse(key_to_use, combined_rhythmic_pattern)
 
-#         if counter == 8:
-#             for note in verse:
-#                     print(note)
+        if counter == 8:
+            for note in verse:
+                    print(note)
 
-#         # print(f"===== Run number {counter} has been successful!")
-#         # print()
+        # print(f"===== Run number {counter} has been successful!")
+        # print()
 
-#     except LoopError:
-#         print(f" ----- error occured on try number {counter}")
-#         traceback.print_exc()
-#         print()
-#         break
+    except LoopError:
+        print(f" ----- error occured on try number {counter}")
+        traceback.print_exc()
+        print()
+        break
 
-#     except:
-#         print(f"It ran this many times already {counter}")
-#         traceback.print_exc()
-#         break
+    except:
+        print(f"It ran this many times already {counter}")
+        traceback.print_exc()
+        break
 # # # DEBUG - END
+
