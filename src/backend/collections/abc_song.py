@@ -68,8 +68,9 @@ class ABCSong:
                 else:
                     eighth_note_counter = 0
 
-                if note[-1] == '#':
-                    chord = note[:-1]
+                if '#' in note[-1]:
+                    sharp_index = note.find('#')
+                    chord = note[:sharp_index] + note[sharp_index+1:]
                     is_chord = True
 
             # Check if the current measure has enough room for the current note
@@ -88,8 +89,9 @@ class ABCSong:
                 abc_chord = ""
 
                 for note_item in chord:
-                    if note_item[-1] == '#':
-                        abc_chord += f"{note_item[:-1]}^"
+                    if '#' in note_item:
+                        chord_sharp_index = note_item.find('#')
+                        abc_chord += f"{note_item[:chord_sharp_index] + note_item[chord_sharp_index+1:]}^"
                     else:
                         abc_chord += f"{note_item}"
 
