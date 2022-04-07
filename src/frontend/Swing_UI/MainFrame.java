@@ -16,8 +16,8 @@ public class MainFrame extends JFrame {
 	private JPanel contentPane, header, buttonPanel;
 	private JButton upload, generate;
 	private JFileChooser fileChooser;
-	private JFrame self;
 	private JLabel statusLabel;
+	private JFrame self;
 
 	/**
 	 * Launch the application.
@@ -57,13 +57,12 @@ public class MainFrame extends JFrame {
 		contentPane.add(header);
 
 		/*
-		 * Label
+		 * Status Label
 		 */
-		statusLabel = new StatusLabel();
-		statusLabel.setBounds(10, 70, 320, 20);
-		statusLabel.setText("Please pick an option");
+		statusLabel = new StatusLabel("Please pick an option.");
+		statusLabel.setBounds(10, 46, 320, 58);
 		contentPane.add(statusLabel);
-
+		
 		/*
 		 * Button Panels and buttons
 		 */
@@ -81,18 +80,19 @@ public class MainFrame extends JFrame {
 				/*
 				 * 1. Run the file that will generate a song.
 				 */
-
+				statusLabel.setText("Generating Song...");
 				new Thread(() -> {
-
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e2) {
+						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
-
 					var songBuilderPath = System.getProperty("user.dir") + "/src/backend/demo.py";
+
 					ProcessBuilder process = new ProcessBuilder("python", songBuilderPath).inheritIO();
 					Process p = null;
+
 					try {
 						p = process.start();
 					} catch (IOException e1) {
@@ -105,16 +105,21 @@ public class MainFrame extends JFrame {
 					} catch (InterruptedException e1) {
 						new MessageDialog("Error", "Process of building a song was interupted", null);
 					}
-					statusLabel.setText("Done! Opening ABC Player...");
+					
+					statusLabel.setText("Done! Opening ABC file...");
+					
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(1500);
 					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
-					statusLabel.setText("Done and Done!");
+					
+					statusLabel.setText("Please pick an option.");
+					
 				}).start();
-
+				
+				
 			}
 
 		});
@@ -184,17 +189,15 @@ public class MainFrame extends JFrame {
 					try {
 						p = process.start();
 					} catch (IOException e1) {
-						new MessageDialog("Error",
-								"Unable to perform extraction / uploading of information", null);
+						new MessageDialog("Error", "Unable to perform extraction / uploading of information", null);
 					}
 					// a delay until the conversion, extraction and upload is completed
 					try {
 						p.waitFor();
-						new MessageDialog("Success",
-								"Succesfully extracted and converted the selected files", null);
+						new MessageDialog("Success", "Succesfully extracted and converted the selected files", null);
 					} catch (InterruptedException e1) {
-						new MessageDialog("Error",
-								"Process of extracting and uploading information was interrupted", null);
+						new MessageDialog("Error", "Process of extracting and uploading information was interrupted",
+								null);
 					}
 				} else if (choice == JFileChooser.CANCEL_OPTION) {
 					new MessageDialog("Error", "No files were selected", null);
