@@ -45,7 +45,7 @@ class ABCSong:
             parsed_length: str = None
 
             # Chord
-            if "[" in length and "]" in length:
+            if isinstance(length, str) and "[" in length and "]" in length:
                 parsed_length = ast.literal_eval(length)  # Convert string (note_length) to list (chord)
                 parsed_length[0] = str(parsed_length[0])
 
@@ -79,7 +79,7 @@ class ABCSong:
 
                 num_of_beats_in_each_measure = self.time_signature[0] * self.time_signature[1]
 
-            if "[" in length and "]" in length:
+            if isinstance(length, str) and "[" in length and "]" in length:
                 abc_chord = ""
 
                 for note_item in chord:
