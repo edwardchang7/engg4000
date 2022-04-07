@@ -1,0 +1,33 @@
+X:1
+T:Title
+C:Composer
+Z:Guns N´ Roses
+L:1/8
+M:4/4
+I:linebreak $
+K:G
+V:1 treble nm="Piano" snm="Pno."
+V:1
+ DdAG gAfA | DdAG gAfA | EdAG gAfA | EdAG gAfA |$ GdAG gAfA | GdAG gAfA | DdAG gAfA | DdAG gAfA ||$ %8
+ DdAG gAfA | DdAG gAfA | EdAG gAfA | EdAG gAfA |$ GdAG gAfA | GdAG gAfA | eAdA eAfA | %15
+ gAfA eA d2 ||$ a a2 a3 gf | g2 a2 f2 dg- | gfd g2 g2 z | z gfe z2 dg- |$ gfdg- gfdg- | %21
+ gfdg- ggag- | g f3 z4 | z8 |$ a a2 a3 gf | g2 a2 f2 dg- | gfd g2 g2 z | z gfe z2 dg- |$ %28
+ gfdg- gfdg- | gfdg- ggag- | g f3 z4 | z8 | a a2 a3 gf | g a2 f3 a2 | gfdg- gf d2 |$ ggag- gfgf | %36
+ gfgf g2 z d | ggg-g ggag- | g f3 z4 | z8 | a6 ba | aggf g-ggg- |$ g f3 z2 z2 | z8 | a3 g2 f2 g- | %45
+ gf d2 e2 fd- | d4 z4 ||"^Guitar" z4 z2 z A | G3 F3 z A | G3 F3 z A | G3 E3 z A |$ G3 E3 z A | %52
+ G6 z A | G4 GFDG- | G4 dG F2- | F4 z4 || a a2 a3 gf | g2 a2 f2 dg- | gfd g2 g2 z |$ z gg g2 fdg- | %60
+ gfdg- gfdg- | gfdg- ggag- | g f3 z4 | z8 | a6 ba | aggf g2 gg- | g f3 z2 z2 |$ z8 | %68
+ a2 z g z f z g- | gf d2 e2 fd- | d z z2 z4 | z8 | a2 z b z d' z e'- | e'd'd'b d'bab- |$ bd'ba z4 | %75
+ b2 f a2 b z2 | b2 z a z g z g- | gf d2 e2 =f=f | e d4 z z2 | z8 ||"^Guitar" b6 ag | %81
+ f2 g/f/e z2 z g |$ f2 g/f/e/ ^d2 e2 z/ | fedB A2 GF | GE- E2 z z (3z FG | (3ABc B3 A3 | %86
+ d2 c2 B B2 z | (3z Bc B2 A a2 g- |$ g (3z FG F2 E E2 | (3z FG F2 E E2 E- | E z _E3 F3 | %91
+ (3z FG F2 E C2 B,- | B,C E4 z2 | (3z FG F3 E3 |$ E2 _E3 F3 | (3z EF (3AGF (3GBA (3GAc | %96
+ (3BAB (3dcB (3cef (3ede | (3fed (3efe (3def (3ede- | e2 e4 e/f/e/d/ |$ e2 e4 e/f/e/d/ | f2 f6 | %101
+ f2 g2 f2 (3fed | e4 z eee | eeee eeee | edBA GABA | GA G2 G2 G/A/G/E/ |$ G2 E/D/E z2 G/A/G/E/ | %107
+ G2 E/D/E z2 G/A/G/E/ | G2 A2 B2 d2 | e2 f2 g2 (3fed | e/g/e/d/ e/g/e/d/ e/g/e/d/ e/g/e/d/ |$ %111
+ e/g/e/d/ e/g/e/d/ e/g/e/d/ e/g/e/d/ | a6 b2- | b8 || EDB,A, z4 | EDB, A,2 G, z2 | EDB,A, z4 | %117
+ z2 B2 B2 AG |$ BAG B4 z | z4 z2 B2 | BBBA G E3 | z8 | BBd B4 z | z2 z e2 d3 | edB A2 G z2 | z8 | %126
+ B2 B2 B2 B2 |$ b2 b2 b2 b2 | bbb a2 g2 g | bd'bd' bbag | bagb z4 | z2 e'3 d'3 | e'd'b a2 g z2 |$ %133
+ z4 z2 a2 | bbd'b- bd'bd' | bd'bd' bbag | bbba ge z2 | z8 | bagb- b4- |$ b4- b2 d'b | %140
+ bbd' a2 g z2 | (3e'2 d'2 b2 (3^a2 =a2 g2 | e2 z2 z b2 a | ge z4 b2 | bd'bd' bbag |$ %145
+ bd'bd' e'e'd'b | ag e6- | e4 d4 | !fermata!e8 |] %149

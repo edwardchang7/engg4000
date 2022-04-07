@@ -5,7 +5,7 @@ import re
 """
 
 """
-This function will retreive the header value(s) of the given header key 
+This function will retrieve the header value(s) of the given header key 
 HEADERS EVERY SONG HAS
 X = Tune number
 T = Title of the tune
@@ -19,7 +19,7 @@ L = note length as a proportion of a bar (ex 1/8, 1/4)
 R = Rhythm (jig, reel, waltz, polka etc)
 Q = Speed of playback in bpm
 V = Voicing 
-P = Parts - specifying which parts chould be played
+P = Parts - specifying which parts should be played
 
 """
 def get_header(abc_file_path:str, header:str) -> str:
@@ -85,7 +85,7 @@ def get_music(abc_file_path:str):
 
 '''
 This function will return a list of strings
-Each element in the list will be an independant lines/voicing/melody of the passed in abc file
+Each element in the list will be an independent lines/voicing/melody of the passed in abc file
 '''
 def get_voicings(abc_file_path:str):
   
@@ -99,4 +99,34 @@ def get_voicings(abc_file_path:str):
     lines=re.split('V:[0-9]+',music)
     lines=lines[1:]
     return lines
+
+
+def get_melodic_and_rythmic(abc_file_path):
+  lines = []
+  found1, found2 = False, False
+  v1 = []
+  v2 = []
+
+  with open(abc_file_path) as f:
+    lines = f.readlines()
+
+  for line in lines:
+
+    if len(line) == 4 and line == 'V:3\n':
+      break
+
+    if len(line) == 4 and line == 'V:1\n':
+      found1 = True
+    elif len(line) == 4 and line == 'V:2\n':
+      found1 = False
+      found2 = True
+    
+    if(found1 and not found2):
+      v1.append(line)
+
+    if(found2 and not found1):
+      v2.append(line)
+
+  return v1,v2
+
 
