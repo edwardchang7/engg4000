@@ -68,7 +68,7 @@ class ABCSong:
                 else:
                     eighth_note_counter = 0
 
-                if '#' in note[-1]:
+                if '#' in note:
                     sharp_index = note.find('#')
                     chord = note[:sharp_index] + note[sharp_index+1:]
                     is_chord = True
