@@ -7,7 +7,6 @@ from src.backend.collections.tonal_pattern import TonalPattern
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 from src.backend.models.tonal_pattern_model import TonalPatternModel
 
-
 class Cluster:
     database = None
     collection = None

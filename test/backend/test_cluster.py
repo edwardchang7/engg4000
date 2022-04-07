@@ -16,7 +16,6 @@ class TestCluster(unittest.TestCase):
     SECOND_TEST_COLLECTION: Final[str] = "TEST COLLECTION 2"
     RHYTHMIC_PATTERN_TEST_COLLECTION: Final[str] = "RHYTHMIC PATTERN TEST COLLECTION"
     TONAL_PATTERN_TEST_COLLECTION: Final[str] = "TONAL PATTERN TEST COLLECTION"
-
     def test_cluster_new_method(self):
         """
         Creates a new cluster instance and assert that its connection to the database was successful.

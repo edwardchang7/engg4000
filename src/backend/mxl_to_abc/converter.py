@@ -1,6 +1,5 @@
 import os
 
-
 # Function to convert a single .mxl file into .abc
 # The output file will be generated in the "converted_compositions" directory
 def convert(input_file, output_path=os.getcwd()):

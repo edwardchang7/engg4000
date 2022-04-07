@@ -129,8 +129,4 @@ def get_melodic_and_rythmic(abc_file_path):
 
   return v1,v2
 
-    
-# # DEBUG
-# v1,v2 = get_v1('src/backend/mxl_to_abc/converted_compositions/Dancing_in_the_Moonlight.abc')
-
 
