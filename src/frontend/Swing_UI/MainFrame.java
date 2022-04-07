@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -16,6 +17,7 @@ public class MainFrame extends JFrame {
 	private JButton upload, generate;
 	private JFileChooser fileChooser;
 	private JFrame self;
+	private JLabel statusLabel;
 
 	/**
 	 * Launch the application.
@@ -55,10 +57,18 @@ public class MainFrame extends JFrame {
 		contentPane.add(header);
 
 		/*
+		 * Label
+		 */
+		statusLabel = new StatusLabel();
+		statusLabel.setBounds(10, 70, 320, 20);
+		statusLabel.setText("Please pick an option");
+		contentPane.add(statusLabel);
+
+		/*
 		 * Button Panels and buttons
 		 */
 		buttonPanel = new JPanel();
-		buttonPanel.setBounds(10, 115, 320, 49);
+		buttonPanel.setBounds(10, 115, 320, 50);
 		contentPane.add(buttonPanel);
 
 		generate = new CustomButton("Generate");
@@ -66,27 +76,45 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
+				statusLabel.setText("Generating Song...");
 				/*
 				 * 1. Run the file that will generate a song.
 				 */
 
-				var songBuilderPath = System.getProperty("user.dir") + "/src/backend/demo.py";
+				new Thread(() -> {
 
-				ProcessBuilder process = new ProcessBuilder("python", songBuilderPath).inheritIO();
-				Process p = null;
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e2) {
+						e2.printStackTrace();
+					}
 
-				try {
-					p = process.start();
-				} catch (IOException e1) {
-					new MessageDialog("Error", "Unable to execute Song_Builder Python script", null);
-				}
-				// a delay until the song generation is completed
-				try {
-					p.waitFor();
-					// open EZABC with the generated abc file? -- STILL THINKING
-				} catch (InterruptedException e1) {
-					new MessageDialog("Error", "Process of building a song was interupted", null);
-				}
+					var songBuilderPath = System.getProperty("user.dir") + "/src/backend/demo.py";
+					ProcessBuilder process = new ProcessBuilder("python", songBuilderPath).inheritIO();
+					Process p = null;
+					try {
+						p = process.start();
+					} catch (IOException e1) {
+						new MessageDialog("Error", "Unable to execute Song_Builder Python script", null);
+					}
+					// a delay until the song generation is completed
+					try {
+						p.waitFor();
+						// open EZABC with the generated abc file? -- STILL THINKING
+					} catch (InterruptedException e1) {
+						new MessageDialog("Error", "Process of building a song was interupted", null);
+					}
+					statusLabel.setText("Done! Opening ABC Player...");
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+
+					statusLabel.setText("Done and Done!");
+				}).start();
+
 			}
 
 		});

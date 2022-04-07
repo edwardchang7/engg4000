@@ -9,12 +9,11 @@ from src.backend.song_builder import build_song_bridge, build_rhythmic_pattern, 
 from src.backend.collections.abc_song import ABCSong
 
 notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
-modifiers = ['M', 'm']
+modifiers = ['M']
 
 selected_note_index = random.randint(0,len(notes_to_pick) - 1)
-selected_modifer_index = random.randint(0,len(modifiers) - 1)
 
-key = notes_to_pick[selected_note_index] + modifiers[selected_modifer_index]
+key = notes_to_pick[selected_note_index] + modifiers[0]
 
 rhythm = build_rhythmic_pattern(key)
 verse = build_verse(key, rhythm)
