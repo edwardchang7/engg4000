@@ -3,7 +3,7 @@ import re
 from datetime import datetime as dt
 import time
 import traceback
-from typing import Final, final
+from typing import Final
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
@@ -33,6 +33,10 @@ Parameters:
 Return:
     the song template based on the given genre
 '''
+
+rand.seed(3)
+counter = 0
+
 def get_song_template(genre):
     return ['A', 'A', 'B', 'A']
 
@@ -62,11 +66,19 @@ def build_rhythmic_pattern(key):
     pattern_1 = _get_rhythmic_pattern(song_name, length_1)
     pattern_2 = _get_rhythmic_pattern(song_name, length_2)
 
+    # to not get stuck in an infinite loop
+    counter = 0
+
     # if pattern_1 is empty (meaning the given song name does not have matching pattern lengths)
     while(not pattern_1 or not pattern_2):
         song_name = _get_random_song_name()
         pattern_1 = _get_rhythmic_pattern(song_name, length_1)
         pattern_2 = _get_rhythmic_pattern(song_name, length_2)
+
+        counter += 1
+
+        if counter > 20:
+            raise LoopError("Stuck in getting rhythmic patterns")
 
     # randomly generate another pattern as long as pattern_1 == pattern_2
     while(pattern_1 is pattern_2):
@@ -131,9 +143,9 @@ Parameters:
     pattern_length : the length for the patterns to match with
 
 Return:
-    a list of Rhythmic Pattern objects that matches the given pattern length within the given collection name
+    a Rhythmic Pattern objects that matches the given pattern length within the given collection name
 '''
-def _get_rhythmic_pattern(song_name, pattern_length):
+def _get_rhythmic_pattern(song_name, pattern_length) :
     # DB Settings
     db_name = "elliot"
     is_admin = False
@@ -244,7 +256,7 @@ def convert_tonal_pattern(key, tonal_pattern):
     to_return = []
 
     # sets the current note
-    current_note = key[0]
+    current_note = key[0] if len(key) == 2 else key[0] + key[1]
 
     # append the current note to be returned
     to_return.append(current_note)
@@ -480,8 +492,8 @@ Return
 '''
 def _get_random_scale_type(key, test=False):
     # split the root and the scale type
-    root = key[0]
-    scale_type = key[1]
+    root = key[0] if len(key) == 2 else key[0] + key[1]
+    scale_type = key[1] if len(key) == 2 else key[2]
 
     # only used for testing
     if test:
@@ -517,7 +529,8 @@ Return:
 '''
 def _get_random_number(limit, start=0):
     # set the seed
-    rand.seed(dt.now().timestamp())
+    # dt.now().timestamp()
+    # DEBUGG MAKE SURE THIS IS THE LINE ABOVE AND NOT JUST 1
 
     # a quick nap of about 3ms so that it doesnt always use the same seed if this function is called multiple times consecutively
     time.sleep(0.003)
@@ -597,11 +610,15 @@ def build_verse(key, rhythmic_pattern: RhythmicPattern):
         converted_tonal_pattern = convert_tonal_pattern(key, list_of_selected_tonal_patterns[0])
         # create a single bridge, where its [tonal_pattern] + "bridge" + [tonic_note]
         # the "bridge" length is the bridge_buffer_size
-        single_bridge = bridge_pattern(key, converted_tonal_pattern, [key[0]], bridge_pattern_buffer_size)
+
+        root = key[0] if len(key) == 2 else key[0] + key[1]
+
+        single_bridge = bridge_pattern(key, converted_tonal_pattern, [root], bridge_pattern_buffer_size)
         # append the single bridge to the set of converted tonal patterns
         converted_tonal_pattern.extend(single_bridge)
         # return the converted tonal_pattern
-        verse_to_return = converted_tonal_pattern
+
+        verse_to_return = match_rhythmic_with_tonals(rhythmic_pattern, converted_tonal_pattern)
         return verse_to_return
 
     # randomly allocate bridge lengths
@@ -630,6 +647,175 @@ def build_verse(key, rhythmic_pattern: RhythmicPattern):
     verse_to_return = match_rhythmic_with_tonals(rhythmic_pattern, verse_in_list)
 
     return verse_to_return
+
+'''
+Creates the bridge for the song given the verse and certain presets
+
+Parameters:
+    reference_verse: the verse to use as reference for bridge building
+    key: key of the song
+
+Return:
+    The modulated verse, and the modulated key
+'''
+def build_song_bridge(reference_verse: list, key: str, modulate: bool):
+
+    bridge = []
+
+    if modulate:
+        bridge, key = modulate_verse(reference_verse, ["m3"], True, key)
+    else:
+        bridge = reference_verse
+
+    bridge = add_random_cadence(bridge, key)
+
+    return bridge
+
+'''
+Randomly modifies certain sections of verse/bridge to add cadences
+
+Parameters:
+    reference: the verse/bridge to modify
+    key: key of the song
+
+Return:
+    The verse/bridge with changes to certain notes
+'''
+def add_random_cadence(reference: list, key: str):
+
+    modified = []
+    deceptive = False
+    perf_plag = False
+    octave = ""
+
+    reference_scale = get_scale(key[:-1], key[-1])
+    reference_scale = [note.upper() for note in reference_scale]
+
+    for note_pattern in reference:
+
+        new_note = note_pattern.note
+        new_length = note_pattern.length
+        try:
+            degree = reference_scale.index(_strip_note_modifiers(new_note).upper())
+        except ValueError:
+            degree = -1
+
+        rand = _get_random_number(1)
+
+        if deceptive:
+            stripped = _strip_note_modifiers(new_note)
+            octave = new_note[len(stripped):]
+            new_note = reference_scale[5]
+
+            if len(octave) != 0:
+                if octave.find("'") != -1:
+                    new_note = new_note.lower() + octave
+                elif octave.find(",") != -1:
+                    new_note = new_note + octave
+
+            deceptive = False
+
+        if rand == 1:
+
+            if degree == 4:
+
+                deceptive = True
+
+            if degree == 0:
+
+                perf_plag = True
+
+
+        if perf_plag:
+            good_for_cadence = False
+            index = -1
+            rand = _get_random_number(1)
+
+            new_note_degree = 4
+
+            if rand == 1:
+
+                new_note_degree = 3
+
+            for i in range(len(modified), 0, -1):
+                old_note_pattern = modified[i - 1]
+                if old_note_pattern.note != "z":
+                    good_for_cadence = True
+                    index = i - 1
+                    break
+
+            if good_for_cadence:
+                old_note_pattern = modified.pop(index)
+                stripped = _strip_note_modifiers(old_note_pattern.note)
+                octave = old_note_pattern.note[len(stripped):]
+
+                replacement_note = reference_scale[new_note_degree]
+
+                if len(octave) != 0:
+                    if octave.find("'") != -1:
+                        replacement_note = replacement_note.lower() + octave
+                    elif octave.find(",") != -1:
+                        replacement_note = replacement_note + octave
+
+                replacement = NotePattern(replacement_note, old_note_pattern.length)
+                modified.insert(index, replacement)
+
+            perf_plag = False
+
+
+        new_pattern = NotePattern(new_note, new_length)
+        modified.append(new_pattern)
+
+    return modified
+
+'''
+Modulates a given verse depending on the input interval
+
+Parameters:
+    reference_verse: the verse to modulate
+    interval: list of steps indicating the total interval
+    up_frequency: indicates whether interval is up or down
+    key: key of the song
+
+Return:
+    The modulated verse, and the modulated key
+'''
+def modulate_verse(reference_verse: list, interval: list, up_frequency: bool, key: str):
+
+    interval_length = 0
+    key_done = False
+    key_type = key[-1]
+    modulated = []
+
+    for step in interval:
+        if step == "o":
+            interval_length += 12
+        elif step == "P5":
+            interval_length += 7
+        elif step == "M3":
+            interval_length += 4
+        elif step == "m3":
+            interval_length += 3
+        elif step == "w":
+            interval_length += 2
+        elif step == "h":
+            interval_length += 1
+
+    for note_pattern in reference_verse:
+        if not key_done:
+            key = half_step(key[:-1], up_frequency)
+        new_note = half_step(note_pattern.note, up_frequency)
+        for i in range(interval_length - 1):
+            if not key_done:
+                key = half_step(key, up_frequency)
+            new_note = half_step(new_note, up_frequency)
+
+        if not key_done:
+            key_done = True
+        new_note_pattern = NotePattern(new_note, note_pattern.length)
+        modulated.append(new_note_pattern)
+
+    return modulated, key + key_type
 
 '''
 Gets a random tonal pattern
@@ -773,43 +959,76 @@ def _get_random_bridge_length(total_length, number_of_bridges):
 
     return length_to_return
 
+'''
+Builds a complimenting V2 pattern that can be combined with V1
 
-# DEBUG: final = False
+Parameters:
+    verse: a list of Note_Patterns
 
-# # # DEBUG
-# counter = 0
-# notes_to_pick = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-# modifiers = ['M', 'm']
+Return:
+    v2_verse: a list of PatternNotes
+'''
+def build_v2(tonic, input_verse):
+    v2_notes = []
+    beat_counter = 0
+
+    # keep a running counter of beats, every 4 beats append the next note to a new list
+    for note in input_verse:
+        # if checking first note of a bar then append it to the v2 note list
+        if beat_counter == 0:
+            v2_notes.append(note.note)
+
+        beat_counter += int(note.length) if "[" not in note.length else int(note.length[1])
+        # WILL THIS ACCOUNT FOR 16th notes signified by 0
+        if beat_counter == 8:
+            beat_counter = 0
+    
+    v2_note_patterns=[]
+
+    tonic = tonic[0] if len(tonic) == 2 else tonic[0] + tonic[1]
+    for note in v2_notes:
+        note_to_append = note if note != "z" else tonic
+        v2_note_patterns.append(NotePattern(note_to_append, 8))
+
+    return v2_note_patterns
 
 
-# while(DEBUG):
-#     counter += 1 
-#     try:
+DEBUG: Final = False
 
-#         note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
-#         modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
-#         key_to_use = note_to_use + modifier_to_use
+# # # # DEBUG
 
-#         # print(f"===== Starting Run number {counter} using {key_to_use}...")
-#         combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
-#         verse = build_verse(key_to_use, combined_rhythmic_pattern)
+notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
+modifiers = ['M', 'm']
 
-#         for note in verse:
-#             if note is None:
-#                 print("what")
-#             print(note)
 
-#         # print(f"===== Run number {counter} has been successful!")
-#         # print()
+while(DEBUG):
+    counter += 1 
+    try:
 
-#     except LoopError:
-#         print(f" ----- error occured on try number {counter}")
-#         traceback.print_exc()
-#         print()
-#         break
+        note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
+        modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
+        key_to_use = note_to_use + modifier_to_use
 
-#     except:
-#         print(f"It ran this many times already {counter}")
-#         traceback.print_exc()
-#         break
-# # DEBUG - END
+        print(f"===== Starting Run number {counter} using KEY: {key_to_use}...")
+        combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
+        verse = build_verse(key_to_use, combined_rhythmic_pattern)
+
+        if counter == 8:
+            for note in verse:
+                    print(note)
+
+        # print(f"===== Run number {counter} has been successful!")
+        # print()
+
+    except LoopError:
+        print(f" ----- error occured on try number {counter}")
+        traceback.print_exc()
+        print()
+        break
+
+    except:
+        print(f"It ran this many times already {counter}")
+        traceback.print_exc()
+        break
+# # # DEBUG - END
+
