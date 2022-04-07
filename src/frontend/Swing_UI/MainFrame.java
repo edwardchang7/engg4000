@@ -4,9 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,7 +14,6 @@ public class MainFrame extends JFrame {
 
 	private JPanel contentPane, header, buttonPanel;
 	private JButton upload, generate;
-	private JComboBox<Genre> genreCBBox;
 	private JFileChooser fileChooser;
 	private JFrame self;
 
@@ -30,6 +27,7 @@ public class MainFrame extends JFrame {
 					MainFrame frame = new MainFrame();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
+
 				} catch (Exception e) {
 					new MessageDialog("Error", "Unable to open the UI", null);
 				}
@@ -57,14 +55,6 @@ public class MainFrame extends JFrame {
 		contentPane.add(header);
 
 		/*
-		 * Combobox
-		 */
-		genreCBBox = new JComboBox<Genre>();
-		genreCBBox.setModel(new DefaultComboBoxModel<Genre>(Genre.values()));
-		genreCBBox.setBounds(10, 46, 320, 22);
-		contentPane.add(genreCBBox);
-
-		/*
 		 * Button Panels and buttons
 		 */
 		buttonPanel = new JPanel();
@@ -80,7 +70,7 @@ public class MainFrame extends JFrame {
 				 * 1. Run the file that will generate a song.
 				 */
 
-				var songBuilderPath = "";
+				var songBuilderPath = System.getProperty("user.dir") + "/src/backend/demo.py";
 
 				ProcessBuilder process = new ProcessBuilder("python", songBuilderPath).inheritIO();
 				Process p = null;
