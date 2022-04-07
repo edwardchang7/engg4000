@@ -3,7 +3,6 @@ import re
 from datetime import datetime as dt
 import time
 import traceback
-from typing import Final
 # REMOVE THIS BEFORE MERGING INTO MASTER
 # ===========================================================
 # only uncomment this if you are not using pycharm
@@ -33,9 +32,6 @@ Parameters:
 Return:
     the song template based on the given genre
 '''
-
-rand.seed(3)
-counter = 0
 
 def get_song_template(genre):
     return ['A', 'A', 'B', 'A']
@@ -993,7 +989,7 @@ def build_v2(tonic, input_verse):
     return v2_note_patterns
 
 
-DEBUG: Final = False
+DEBUG = False
 
 # # # # DEBUG
 

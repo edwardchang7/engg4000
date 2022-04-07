@@ -1,7 +1,6 @@
 import certifi
 
 from pymongo import MongoClient
-from typing import Final
 
 from src.backend.collections.rhythmic_pattern import RhythmicPattern
 from src.backend.collections.tonal_pattern import TonalPattern
@@ -16,8 +15,8 @@ class Cluster:
     collection_name = None
     is_admin = None
 
-    RHYTHMIC_PATTERN: Final = "rhythmic_pattern"
-    TONAL_PATTERN: Final = "tonal_pattern"
+    RHYTHMIC_PATTERN = "rhythmic_pattern"
+    TONAL_PATTERN = "tonal_pattern"
 
     def __new__(cls, new_database_name: str, new_collection_name: str, new_is_admin: bool):
         """
