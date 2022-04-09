@@ -11,19 +11,6 @@ rhythmic patterns from an abc file
 
 import re
 import warnings
-# REMOVE THIS BEFORE MERGING INTO MASTER
-# ===========================================================
-# only uncomment this if you are not using pycharm
-import os, sys, inspect
-
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-parent2 = os.path.dirname(parentdir)
-sys.path.insert(0, parent2)
-# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
-# ===========================================================
-# REMOVE THIS BEFORE MERGING INTO MASTER
-
 from src.backend.cluster import Cluster
 from src.backend.collections.rhythmic_pattern import RhythmicPattern
 from src.backend.collections.songcollection import SongCollection
@@ -127,8 +114,6 @@ def encode_voicings(v1, v2):
 1 = 8th note
 0 = 16th note
 '''
-
-
 def encode_bar(bar):
 
     # replace '/' with 0 to show its a 16th note
@@ -181,8 +166,6 @@ def encode_bar(bar):
 '''
 Replaces each note with the given beat (keeps square bracket to signify that its a chord)
 '''
-
-
 def _keep_beats_only(note, beat):
 
     exception_list = {'x'}
@@ -205,8 +188,6 @@ def _keep_beats_only(note, beat):
 '''
 checks if the given bar matches the meter
 '''
-
-
 def _check_valid_beats(bar):
 
     beat_count = 0
@@ -413,23 +394,18 @@ def extract_all_files():
 
 
 def upload_rhythmic_patterns_to_DB():
+
+    db_name = "elliot"
+    is_admin = False
+
     for song in song_list:
-        database = Cluster("elliot", song.song_name, False)
+        database = Cluster(db_name, song.song_name, is_admin)
         v1,v2 = song.get_patterns()
 
         model = RhythmicPatternModel(song.song_name, v1)
-        passed = database.insert_rhythmic_pattern_model(database, model)
-
-        # -----------------------------------------------------------------------
-             # DEBUGGING PURPOSES, REMOVE BEFORE MERGING WITH MASTER
-             # -----------------------------------------------------------------------
-        print(f"V1 of song {song.song_name} has been {str(passed).upper()} added")
+        database.insert_rhythmic_pattern_model(database, model)
 
         if v2:
             model = RhythmicPatternModel(song.song_name, v2)
-            passed = database.insert_rhythmic_pattern_model(database, model)
+            database.insert_rhythmic_pattern_model(database, model)
             
-             # -----------------------------------------------------------------------
-             # DEBUGGING PURPOSES, REMOVE BEFORE MERGING WITH MASTER
-             # -----------------------------------------------------------------------
-            print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")

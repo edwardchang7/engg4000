@@ -1,4 +1,5 @@
 import ast
+from itertools import accumulate, chain, count
 
 
 class RhythmicPattern:
@@ -17,38 +18,26 @@ class RhythmicPattern:
 
         self.is_v1 = is_v1
 
+    '''
+    toString function
+    '''
     def __str__(self):
         return f"Pattern: {self.pattern} \nFrequency: {self.frequency} \nLength: {self.length} \nBeats: {self.beats}\nIs V1: {self.is_v1}\n"
 
 
 def _get_length_in_beats(pattern):
     length = 0
-    to_count = True
-    is_chord = False
-    last_char = ''
 
-    # counts the length of each bar within the combined pattern
-    for char in pattern:
-        if char == '(':
-            to_count = False
+    x = ast.literal_eval(pattern)
 
-        if char == "'":
-            last_char = char
+    for y in x:
+        length += sum(len(z) for z in y if "[" not in z and "(" not in z)
 
-        if last_char == "'" and char == '[':
-            is_chord = True
-            length += 1
-
-        if last_char == "'" and char == ']':
-            is_chord = False
-            last_char = ""
-
-        # if its a digit, then check if to_count is true (to_count will be false if its a rest's beat)
-        if char.isdigit() and to_count and not is_chord:
-            length += 1
-
-        elif char.isdigit() and not to_count:
-            to_count = True
+        # if there is a chord, count the number of chords that exist
+        if any("[" in b for b in y):
+            for b in y:
+                length += b.count("[")    
+        
 
     return length
 

@@ -4,7 +4,7 @@ A collection to hold a list of patterns within the song
 
 
 class SongCollection:
-    def __init__(self, song_name, v1_patterns=None, v2_patterns=None):
+    def __init__(self, song_name:str, v1_patterns:list=None, v2_patterns:list=None):
         self.song_name = song_name
 
         # if a pattern list is passed in then use that pattern list, else create an empty list
@@ -21,7 +21,7 @@ class SongCollection:
     '''
     Adds the given pattern to either v1 or v2
     '''
-    def add_pattern(self, pattern) -> None:
+    def add_pattern(self, pattern:list) -> None:
         if pattern.frequency > 1:
             if pattern.is_v1:
                 self.v1_patterns.append(pattern)
@@ -34,6 +34,9 @@ class SongCollection:
     def get_patterns(self):
         return self.v1_patterns, self.v2_patterns
 
+    '''
+    toString function
+    '''
     def __str__(self):
         to_return = self.song_name + "\n"
 
