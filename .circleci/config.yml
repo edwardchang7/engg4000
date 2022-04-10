@@ -11,14 +11,8 @@ jobs:
       - run:
           name: Update APT to install dependencies
           command: sudo apt update
-      - run:
-          name: Install simpleaudio dependencies
-          command: sudo apt-get install -y python3-dev libasound2-dev
       - python/install-packages:
           pkg-manager: pip
-      - run:
-          name: Run Frontend Unit Tests
-          command: python -m unittest discover -s test/frontend -p "test_*.py"
       - run:
           name: Run Backend Unit Tests
           command: python -m unittest discover -s test/backend -p "test_*.py"
