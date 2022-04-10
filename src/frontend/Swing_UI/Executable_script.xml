@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Users\heyyo\OneDrive\Documents\GitHub\engg4000\ENGG4000_App.jar</jar>
+  <outfile>C:\Users\heyyo\OneDrive\Documents\GitHub\engg4000\Automated_Musicians.exe</outfile>
+  <errTitle>&quot;Java Version Error&quot;</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>true</restartOnCrash>
+  <manifest></manifest>
+  <icon>C:\Users\heyyo\OneDrive\Desktop\Temp Spam\Logo.ico</icon>
+  <singleInstance>
+    <mutexName>Automated_Musician</mutexName>
+    <windowTitle>Automated_Musician</windowTitle>
+  </singleInstance>
+  <classPath>
+    <mainClass>org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader</mainClass>
+    <cp>.</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>13.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+  <splash>
+    <file>C:\Users\heyyo\OneDrive\Documents\GitHub\engg4000\src\frontend\Swing_UI\Splash.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>7</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
+</launch4jConfig>
