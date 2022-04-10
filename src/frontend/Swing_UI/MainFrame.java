@@ -29,7 +29,6 @@ public class MainFrame extends JFrame {
 					MainFrame frame = new MainFrame();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
-
 				} catch (Exception e) {
 					new MessageDialog("Error", "Unable to open the UI", null);
 				}
