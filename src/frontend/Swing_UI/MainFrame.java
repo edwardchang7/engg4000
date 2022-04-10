@@ -1,26 +1,20 @@
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainFrame extends JFrame {
 
 	private JPanel contentPane, header, buttonPanel;
-	private JButton upload, generate;
-	private JFileChooser fileChooser;
+	private JButton generate, cleanup;
 	private JLabel statusLabel;
-	private JFrame self;
 
-	private volatile boolean isRunning;
+	public static volatile boolean generatingSong, cleaningUp;
 
 	/**
 	 * Launch the application.
@@ -50,22 +44,19 @@ public class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		setUndecorated(true);
 		getRootPane().setBorder(WindowBorder.getInstance());
-		self = this;
-		isRunning = false;
-
-		System.out.println(System.getProperty("user.dir") + "/src/frontend/Swing_UI");
+		generatingSong = false;
+		cleaningUp = false;
 
 		/*
 		 * Header
 		 */
-		header = new Header(this, "ENGG4000_Automated Musicians",
-				new ImageIcon(System.getProperty("user.dir") + "/src/frontend/Swing_UI/Logo.png"), true);
+		header = new Header(this, "ENGG4000_Automated Musicians", null, true);
 		contentPane.add(header);
 
 		/*
 		 * Status Label
 		 */
-		statusLabel = new StatusLabel("Click to generate a song.");
+		statusLabel = new StatusLabel("Please pick an option.");
 		statusLabel.setBounds(10, 46, 320, 58);
 		contentPane.add(statusLabel);
 
@@ -82,8 +73,14 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (isRunning) {
-					new MessageDialog("Error", "A song is current being generated, please be patient", null);
+				if (generatingSong) {
+					new MessageDialog("Error", "A song is current being generated, please try again in a moment.",
+							null);
+					return;
+				} else if (cleaningUp) {
+					new MessageDialog("Error",
+							"I am busy cleaning up ABC files and can't be of service to you now. Please try again in a moment.",
+							null);
 					return;
 				}
 
@@ -92,7 +89,7 @@ public class MainFrame extends JFrame {
 				 */
 				statusLabel.setText("Generating Song...");
 				new Thread(() -> {
-					isRunning = true;
+					generatingSong = true;
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e2) {
@@ -121,12 +118,73 @@ public class MainFrame extends JFrame {
 					try {
 						Thread.sleep(1500);
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 
 					statusLabel.setText("Please pick an option.");
-					isRunning = false;
+					generatingSong = false;
+
+				}).start();
+
+			}
+
+		});
+
+		cleanup = new CustomButton("Clean Up");
+		cleanup.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if (generatingSong) {
+					new MessageDialog("Error", "A song is current being generated, please be patient", null);
+					return;
+				} else if (cleaningUp) {
+					new MessageDialog("Error",
+							"I am busy cleaning up ABC files and can't be of service to you now. Please try again in a moment.",
+							null);
+					return;
+				}
+
+				/*
+				 * 1. Run the file that will generate a song.
+				 */
+				statusLabel.setText("Removing generated ABC files...");
+				new Thread(() -> {
+					cleaningUp = true;
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e2) {
+						e2.printStackTrace();
+					}
+					var songBuilderPath = System.getProperty("user.dir") + "/clean_up_script.py";
+
+					ProcessBuilder process = new ProcessBuilder("python", songBuilderPath).inheritIO();
+					Process p = null;
+
+					try {
+						p = process.start();
+					} catch (IOException e1) {
+						new MessageDialog("Error", "Unable to execute clean_up_script Python script", null);
+					}
+					// a delay until the song generation is completed
+					try {
+						p.waitFor();
+						// open EZABC with the generated abc file? -- STILL THINKING
+					} catch (InterruptedException e1) {
+						new MessageDialog("Error", "Process of cleaning up ABC files was interupted", null);
+					}
+
+					statusLabel.setText("Done! All ABC files have been deleted");
+
+					try {
+						Thread.sleep(1200);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+
+					statusLabel.setText("Please pick an option.");
+					cleaningUp = false;
 
 				}).start();
 
@@ -137,88 +195,96 @@ public class MainFrame extends JFrame {
 		/**
 		 * NOTE: NOT USED
 		 */
-		upload = new CustomButton("Upload");
-		upload.addActionListener(new ActionListener() {
+		// upload = new CustomButton("Upload");
+		// upload.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fileChooser = new JFileChooser();
-				fileChooser.setMultiSelectionEnabled(true);
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// fileChooser = new JFileChooser();
+		// fileChooser.setMultiSelectionEnabled(true);
 
-				// a filter to only filter mxl extension files
-				var filter = new FileNameExtensionFilter("Music XML \".mxl\"", "mxl");
-				fileChooser.setFileFilter(filter);
+		// // a filter to only filter mxl extension files
+		// var filter = new FileNameExtensionFilter("Music XML \".mxl\"", "mxl");
+		// fileChooser.setFileFilter(filter);
 
-				// set the default search dir to be the desktop
-				var dirString = System.getProperty("user.home") + "/Desktop";
-				var dir = new File(dirString);
-				fileChooser.setCurrentDirectory(dir);
+		// // set the default search dir to be the desktop
+		// var dirString = System.getProperty("user.home") + "/Desktop";
+		// var dir = new File(dirString);
+		// fileChooser.setCurrentDirectory(dir);
 
-				// show the JFC
-				var choice = fileChooser.showOpenDialog(self);
-				// will hold all the selected files
-				File[] files = null;
+		// // show the JFC
+		// var choice = fileChooser.showOpenDialog(self);
+		// // will hold all the selected files
+		// File[] files = null;
 
-				/*
-				 * ENTER THE DESTINATION OF WHERE TO PUT THE MXL FILES TO BE CONVERTED
-				 * 
-				 * ENTER THE PATH OF THE RHYTHIMC PATTERN FILE TO BE EXECUTED
-				 */
-				var destinationDir = "";
-				var extractionScriptPath = "";
+		// /*
+		// * ENTER THE DESTINATION OF WHERE TO PUT THE MXL FILES TO BE CONVERTED
+		// *
+		// * ENTER THE PATH OF THE RHYTHIMC PATTERN FILE TO BE EXECUTED
+		// */
+		// var destinationDir = "";
+		// var extractionScriptPath = "";
 
-				/*
-				 * 1. For each file within the list of selected files, move them into the folder
-				 * that holds files to be converted
-				 * 
-				 * 2. Run the extraction script to convert and extract all the information
-				 * 
-				 * ** IN PYTHON, FOR EACH FILE, CHECK IF THE COLLECITON NAME ALREADY EXIST. IF
-				 * YES, DONT CONVERT
-				 * 
-				 * 3. Add a check to see if there is a new '.abc' file created within the abc
-				 * folder of converted files, IF NOT, SHOW ERROR DIALOG
-				 */
+		// /*
+		// * 1. For each file within the list of selected files, move them into the
+		// folder
+		// * that holds files to be converted
+		// *
+		// * 2. Run the extraction script to convert and extract all the information
+		// *
+		// * ** IN PYTHON, FOR EACH FILE, CHECK IF THE COLLECITON NAME ALREADY EXIST. IF
+		// * YES, DONT CONVERT
+		// *
+		// * 3. Add a check to see if there is a new '.abc' file created within the abc
+		// * folder of converted files, IF NOT, SHOW ERROR DIALOG
+		// */
 
-				if (choice == JFileChooser.APPROVE_OPTION) {
-					// files = all the slected "xml" files
-					files = fileChooser.getSelectedFiles();
+		// if (choice == JFileChooser.APPROVE_OPTION) {
+		// // files = all the slected "xml" files
+		// files = fileChooser.getSelectedFiles();
 
-					if (files.length == 0) {
-						new MessageDialog("Error", "There were no files selected to be parsed", null);
-						return;
-					}
+		// if (files.length == 0) {
+		// new MessageDialog("Error", "There were no files selected to be parsed",
+		// null);
+		// return;
+		// }
 
-					// This loop moves the files to the destinationDir to be conveterd to abc and be
-					// extracted
-					for (File f : files) {
-						f.renameTo(new File(destinationDir + f.getName()));
-					}
+		// // This loop moves the files to the destinationDir to be conveterd to abc and
+		// be
+		// // extracted
+		// for (File f : files) {
+		// f.renameTo(new File(destinationDir + f.getName()));
+		// }
 
-					// This section executes the python script to convert the mxl file to abc and
-					// extract the required information and upload it to MongoDB
-					ProcessBuilder process = new ProcessBuilder("python", extractionScriptPath).inheritIO();
-					Process p = null;
-					try {
-						p = process.start();
-					} catch (IOException e1) {
-						new MessageDialog("Error", "Unable to perform extraction / uploading of information", null);
-					}
-					// a delay until the conversion, extraction and upload is completed
-					try {
-						p.waitFor();
-						new MessageDialog("Success", "Succesfully extracted and converted the selected files", null);
-					} catch (InterruptedException e1) {
-						new MessageDialog("Error", "Process of extracting and uploading information was interrupted",
-								null);
-					}
-				} else if (choice == JFileChooser.CANCEL_OPTION) {
-					new MessageDialog("Error", "No files were selected", null);
-				}
-			}
-		});
+		// // This section executes the python script to convert the mxl file to abc and
+		// // extract the required information and upload it to MongoDB
+		// ProcessBuilder process = new ProcessBuilder("python",
+		// extractionScriptPath).inheritIO();
+		// Process p = null;
+		// try {
+		// p = process.start();
+		// } catch (IOException e1) {
+		// new MessageDialog("Error", "Unable to perform extraction / uploading of
+		// information", null);
+		// }
+		// // a delay until the conversion, extraction and upload is completed
+		// try {
+		// p.waitFor();
+		// new MessageDialog("Success", "Succesfully extracted and converted the
+		// selected files", null);
+		// } catch (InterruptedException e1) {
+		// new MessageDialog("Error", "Process of extracting and uploading information
+		// was interrupted",
+		// null);
+		// }
+		// } else if (choice == JFileChooser.CANCEL_OPTION) {
+		// new MessageDialog("Error", "No files were selected", null);
+		// }
+		// }
+		// });
 
 		buttonPanel.add(generate);
+		buttonPanel.add(cleanup);
 		// buttonPanel.add(upload);
 	}
 }
