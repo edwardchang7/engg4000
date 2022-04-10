@@ -986,13 +986,11 @@ Return:
     # keep a running counter of beats, every 4 beats append the next note to a new list
     for note in input_verse:
         # if checking first note of a bar then append it to the v2 note list
-        if beat_counter == 0:
-            v2_notes.append(note.note)
+        if beat_counter == 0: v2_notes.append(note.note)
 
         beat_counter += int(note.length) if "[" not in note.length else int(note.length[1])
         # WILL THIS ACCOUNT FOR 16th notes signified by 0
-        if beat_counter == 8:
-            beat_counter = 0
+        if beat_counter == 8: beat_counter = 0
     
     v2_note_patterns=[]
 
