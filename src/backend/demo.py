@@ -1,3 +1,8 @@
+
+# UI interface file
+
+
+
 import inspect,os,sys, random
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -42,4 +47,5 @@ with open(song.title + ".abc", 'x') as f:
     f.write(song_out)
 
 import os
+# open the file
 os.startfile(song.title+ ".abc")

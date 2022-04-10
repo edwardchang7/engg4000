@@ -4,25 +4,25 @@ import re
  This file contains tools for writing, reading and tweaking abc notation.
 """
 
-"""
-This function will retrieve the header value(s) of the given header key 
-HEADERS EVERY SONG HAS
-X = Tune number
-T = Title of the tune
-T = A secondary title
-K = Tune key
 
-OPTIONAL HEADERS
-C = Composer of the music
-M = the meter of the music (4/4, 6/8 etc)
-L = note length as a proportion of a bar (ex 1/8, 1/4)
-R = Rhythm (jig, reel, waltz, polka etc)
-Q = Speed of playback in bpm
-V = Voicing 
-P = Parts - specifying which parts should be played
-
-"""
 def get_header(abc_file_path:str, header:str) -> str:
+  """
+  This function will retrieve the header value(s) of the given header key\n
+  HEADERS EVERY SONG HAS\n
+  X = Tune number\n
+  T = Title of the tune\n
+  T = A secondary title\n
+  K = Tune key\n
+
+  OPTIONAL HEADERS\n
+  C = Composer of the music\n
+  M = the meter of the music (4/4, 6/8 etc)\n
+  L = note length as a proportion of a bar (ex 1/8, 1/4)\n
+  R = Rhythm (jig, reel, waltz, polka etc)\n
+  Q = Speed of playback in bpm\n
+  V = Voicing \n
+  P = Parts - specifying which parts should be played\n
+  """
   
   with open(abc_file_path) as f:
     lines = f.readlines()
@@ -40,13 +40,13 @@ def get_header(abc_file_path:str, header:str) -> str:
   # otherwise return the list
   return header_list
 
-'''
-This function will return 
-True --> Polyphonic
-False --> Monophonic
-'''
-def is_polyphonic(abc_file_path:str):
 
+def is_polyphonic(abc_file_path:str) -> bool:
+  '''
+  This function will return 
+  True --> Polyphonic
+  False --> Monophonic
+  '''
   num_voices=get_header(abc_file_path,"V")
   for voice in num_voices:
     if len(voice)>4:{
@@ -55,11 +55,12 @@ def is_polyphonic(abc_file_path:str):
   # if there is more than 1 voicing, return True
   return (len(num_voices)>1)
 
-'''
-This function will get the bulk music portion of the passed in abc file
-Chopping headers, footers etc
-'''
-def get_music(abc_file_path:str):
+
+def get_music(abc_file_path:str) -> list:
+  '''
+  This function will get the bulk music portion of the passed in abc file
+  Chopping headers, footers etc
+  '''
   with open(abc_file_path) as f:
     lines = f.readlines()
 
@@ -83,11 +84,12 @@ def get_music(abc_file_path:str):
   return music
 
 
-'''
-This function will return a list of strings
-Each element in the list will be an independent lines/voicing/melody of the passed in abc file
-'''
-def get_voicings(abc_file_path:str):
+
+def get_voicings(abc_file_path:str) -> list:
+  '''
+  This function will return a list of strings
+  Each element in the list will be an independent lines/voicing/melody of the passed in abc file
+  '''
   
   # if there is only one voicing return that voicing
   if not is_polyphonic(abc_file_path):
@@ -101,7 +103,16 @@ def get_voicings(abc_file_path:str):
     return lines
 
 
-def get_melodic_and_rythmic(abc_file_path):
+def get_melodic_and_rythmic(abc_file_path:str) -> list:
+  '''
+  Gets the melodic and rhythmic voicings from the given file
+
+  Parameters:
+    abc_file_path: the abc file path
+
+  Returns:
+    voicing 1 and voicing 2
+  '''
   lines = []
   found1, found2 = False, False
   v1 = []

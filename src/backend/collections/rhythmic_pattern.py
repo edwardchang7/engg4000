@@ -2,6 +2,9 @@ import ast
 
 
 class RhythmicPattern:
+
+    __slots__ = ("pattern", "frequency", "is_v1")
+
     def __init__(self, pattern, frequency, is_v1:bool):
         # Converts a string in the format of a list to an actual list object
         self.pattern = pattern
@@ -25,6 +28,15 @@ class RhythmicPattern:
 
 
 def _get_length_in_beats(pattern:str) -> int:
+    '''
+    counts the number of beats within the bar (chords counted as 1 all together, beam notes are couted sepeareatly)
+
+    Parameters:
+        pattern: the rhythmic pattern to count the beats
+
+    Returns:
+        the number of beats within this rhythmic pattern
+    '''
     length = 0
 
     pattern_list = ast.literal_eval(pattern)

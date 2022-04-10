@@ -8,4 +8,7 @@ class NotePattern:
         self.length = length
 
     def __str__(self):
+        '''
+        toString function
+        '''
         return f"{self.note} : {self.length}"

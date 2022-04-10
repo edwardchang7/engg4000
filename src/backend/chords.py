@@ -4,7 +4,7 @@ import random
 
 RANDOM_OCTAVE_RANGE = 2
 
-def gen_chord_rand(root: str, type: str, num_notes: int):
+def gen_chord_rand(root: str, type: str, num_notes: int) -> list:
     """
     Returns a list of notes to build the specified root chord with given number of random extra notes
 
@@ -69,7 +69,7 @@ def gen_chord_rand(root: str, type: str, num_notes: int):
     return gen_chord(root, type, extra_note_list)
 
 
-def gen_chord(root, type, extra_note_list):
+def gen_chord(root:str, type:str, extra_note_list:list) -> list:
     """
     Returns a list of notes to build the specified root chord
 

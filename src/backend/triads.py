@@ -1,23 +1,7 @@
-'''
-Author : Elliot, Thomas
-Last Edit : Thomas (17.11.2021 11:19PM)
-'''
-
-from src.backend.music_tools import *
-
-# # Major and minor triad
-# M_triad = root->major_third(M3)->minor_third(m3)
-# m_triad = root->minor_third(m3)->major_third(M3)
-
-# # Diminished triad
-# D_triad = root->minor_third(m3)->minor_third(m3)
-
-# # Suspended triad (sus2 and sus4)
-# sus2_triad = root->whole_step->major_third(M3) + half_step
-# sus4_triad = root->major_third(M3) + half_step->whole_step
+from src.backend.music_tools import M3, half_step, whole_step
 
 
-def gen_triad(root, type):
+def gen_triad(root:str, type:str) -> list:
     '''
     Returns a list of notes to build the specified root triad
         Parameters:
