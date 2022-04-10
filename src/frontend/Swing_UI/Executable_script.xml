@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\heyyo\OneDrive\Documents\GitHub\engg4000\ENGG4000_App.jar</jar>
+  <jar>C:\Users\heyyo\OneDrive\Documents\GitHub\engg4000\src\frontend\Swing_UI\ENGG4000_App.jar</jar>
   <outfile>C:\Users\heyyo\OneDrive\Documents\GitHub\engg4000\Automated_Musicians.exe</outfile>
   <errTitle>&quot;Java Version Error&quot;</errTitle>
   <cmdLine></cmdLine>
@@ -26,7 +26,7 @@
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
-    <minVersion>13.0</minVersion>
+    <minVersion>13</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
     <runtimeBits>64/32</runtimeBits>
