@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -18,6 +19,8 @@ public class MainFrame extends JFrame {
 	private JFileChooser fileChooser;
 	private JLabel statusLabel;
 	private JFrame self;
+
+	private volatile boolean isRunning;
 
 	/**
 	 * Launch the application.
@@ -48,11 +51,15 @@ public class MainFrame extends JFrame {
 		setUndecorated(true);
 		getRootPane().setBorder(WindowBorder.getInstance());
 		self = this;
+		isRunning = false;
+
+		System.out.println(System.getProperty("user.dir") + "/src/frontend/Swing_UI");
 
 		/*
 		 * Header
 		 */
-		header = new Header(this, "ENGG4000_Automated Musicians", null, true);
+		header = new Header(this, "ENGG4000_Automated Musicians",
+				new ImageIcon(System.getProperty("user.dir") + "/src/frontend/Swing_UI/Logo.png"), true);
 		contentPane.add(header);
 
 		/*
@@ -75,15 +82,20 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
+				if (isRunning) {
+					new MessageDialog("Error", "A song is current being generated, please be patient", null);
+					return;
+				}
+
 				/*
 				 * 1. Run the file that will generate a song.
 				 */
 				statusLabel.setText("Generating Song...");
 				new Thread(() -> {
+					isRunning = true;
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 					var songBuilderPath = System.getProperty("user.dir") + "/src/backend/demo.py";
@@ -114,6 +126,7 @@ public class MainFrame extends JFrame {
 					}
 
 					statusLabel.setText("Please pick an option.");
+					isRunning = false;
 
 				}).start();
 
