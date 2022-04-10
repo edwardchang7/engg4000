@@ -1,9 +1,8 @@
 import ast
-from itertools import accumulate, chain, count
 
 
 class RhythmicPattern:
-    def __init__(self, pattern, frequency, is_v1):
+    def __init__(self, pattern, frequency, is_v1:bool):
         # Converts a string in the format of a list to an actual list object
         self.pattern = pattern
         self.frequency = frequency
@@ -18,27 +17,37 @@ class RhythmicPattern:
 
         self.is_v1 = is_v1
 
-    '''
-    toString function
-    '''
-    def __str__(self):
+    def __str__(self) -> str:
+        '''
+        toString function
+        '''
         return f"Pattern: {self.pattern} \nFrequency: {self.frequency} \nLength: {self.length} \nBeats: {self.beats}\nIs V1: {self.is_v1}\n"
 
 
-def _get_length_in_beats(pattern):
+def _get_length_in_beats(pattern:str) -> int:
     length = 0
 
-    x = ast.literal_eval(pattern)
+    pattern_list = ast.literal_eval(pattern)
 
-    for y in x:
-        length += sum(len(z) for z in y if "[" not in z and "(" not in z)
+    end = False
+
+    for beats in pattern_list:
+        # get the count of every beat if its its not within a bracket 
+        length += sum(len(beat) for beat in beats if "[" not in beats and "(" not in beats)
 
         # if there is a chord, count the number of chords that exist
-        if any("[" in b for b in y):
-            for b in y:
-                length += b.count("[")    
-        
+        if any("[" in b for b in beats):
+            for b in beats:
 
+                length += b.count("[")
+                
+                if b == "[":
+                    end = False
+
+                elif b == "]":
+                    end = True
+
+                if end and b.isdigit():
+                    length += 1
     return length
-
 

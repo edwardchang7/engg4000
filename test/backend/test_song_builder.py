@@ -1,23 +1,10 @@
-from turtle import up
 import unittest
 
-# ===========================================================
-# only uncomment this if you are not using pycharm
-import os
-import sys
-import inspect
-from src.backend.music_tools import whole_step
-currentdir = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-parent2 = os.path.dirname(parentdir)
-sys.path.insert(0, parent2)
-# ===========================================================
-# REMOVE THIS BEFORE MERGING INTO MASTER
-from src.backend.collections.tonal_pattern import TonalPattern
-from src.backend.collections.rhythmic_pattern import RhythmicPattern
-from src.backend.collections.note_pattern import NotePattern
 from src.backend import scales, song_builder
+from src.backend.collections.note_pattern import NotePattern
+from src.backend.collections.tonal_pattern import TonalPattern
+from src.backend.music_tools import whole_step
+
 
 class Test_Song_Builder(unittest.TestCase):
 
@@ -97,7 +84,7 @@ class Test_Song_Builder(unittest.TestCase):
 
         tonal_pattern_obj = TonalPattern(pattern, num_notes, priority)
 
-        results = song_builder.convert_tonal_pattern('C', tonal_pattern_obj)
+        results = song_builder.convert_tonal_pattern('CM', tonal_pattern_obj)
 
         self.assertIsNotNone(tonal_pattern_obj)
         self.assertEqual(results, answer)
@@ -120,7 +107,7 @@ class Test_Song_Builder(unittest.TestCase):
     def test_get_window(self):
         key = 'CM'
         note = 'E'
-        actual_window = ['D', 'C', 'F', 'G']
+        actual_window = ['F', 'D', 'G', 'C']
 
         scale = scales.get_scale(key[0], 'M')
         generated_window = song_builder._get_window(note, scale)
@@ -227,9 +214,3 @@ class Test_Song_Builder(unittest.TestCase):
 
         self.assertIsNotNone(bridge)
         self.assertEqual(len(bridge), len(verse))
-
-# DEBUG
-# REMOVE THIS BEFORE MERGING INTO MASTER
-# THIS IS JUST TO RUN ALL THE TEST WITHIN THIS FILE ONLY
-if __name__ == '__main__':
-    unittest.main()

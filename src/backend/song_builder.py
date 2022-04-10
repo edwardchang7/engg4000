@@ -6,7 +6,6 @@ from datetime import datetime as dt
 from functools import reduce
 from itertools import chain
 from typing import Tuple
-
 from src.backend.cluster import Cluster
 from src.backend.collections.note_pattern import NotePattern
 from src.backend.collections.rhythmic_pattern import RhythmicPattern
@@ -15,6 +14,8 @@ from src.backend.LoopError import LoopError
 from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
                                      whole_step)
 from src.backend.scales import get_scale
+
+
 
 
 
@@ -238,7 +239,7 @@ def convert_tonal_pattern(key:str, tonal_pattern:TonalPattern) -> list:
     Converts each pattern given to notes
 
     Parameters:
-        key: the starting note to step up or step down from
+        key[note, modifer]: the starting note to step up or step down from
         tonal_pattern: the tonal pattern object that has the attribute of steps required
 
     Return:
@@ -521,9 +522,7 @@ def _get_random_number(limit:int, start:int =0) -> int:
         a randomly generated value within the range of [0,limit]
     '''
     # set the seed
-    if DEBUG == False:
-        dt.now().timestamp() 
-    # DEBUGG MAKE SURE THIS IS THE LINE ABOVE AND NOT JUST 1
+    dt.now().timestamp() 
 
     # a quick nap of about 3ms so that it doesnt always use the same seed if this function is called multiple times consecutively
     time.sleep(0.003)
@@ -1005,50 +1004,3 @@ Return:
         v2_note_patterns.append(_make_note_pattern(note_to_append, 8))
 
     return v2_note_patterns
-
-# # # # DEBUG
-
-counter = 0
-
-
-
-notes_to_pick = ['A', 'A#', 'B', 'C', 'C#',  'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
-modifiers = ['M', 'm']
-
-
-while(DEBUG):
-    counter += 1 
-    try:
-
-        note_to_use = notes_to_pick[_get_random_number(len(notes_to_pick) - 1)]
-        modifier_to_use = modifiers[_get_random_number(len(modifiers) - 1)]
-        key_to_use = note_to_use + modifier_to_use
-
-        print(f"===== Starting Run number {counter} using KEY: {key_to_use}...")
-        combined_rhythmic_pattern = build_rhythmic_pattern(key_to_use)
-
-
-
-        if counter == 24:
-            pass
-
-        verse = build_verse(key_to_use, combined_rhythmic_pattern)
-
-        if PRINT_OUTPUT:
-            for note in verse:
-                    print(note)
-
-        # print(f"===== Run number {counter} has been successful!")
-        # print()
-
-    except LoopError:
-        print(f" ----- error occured on try number {counter}")
-        traceback.print_exc()
-        print()
-        break
-
-    except:
-        print(f"It ran this many times already {counter}")
-        traceback.print_exc()
-        break
-# # # DEBUG - END
