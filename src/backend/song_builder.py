@@ -1,27 +1,12 @@
-# REMOVE THIS BEFORE MERGING INTO MASTER
-# ===========================================================
-# only uncomment this if you are not using pycharm
-import ast
-from distutils.debug import DEBUG
-from functools import reduce
-import inspect
-import os
 import random as rand
 import re
-import sys
 import time
 import traceback
 from datetime import datetime as dt
+from functools import reduce
 from itertools import chain
 from typing import Tuple
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-parent2 = os.path.dirname(parentdir)
-sys.path.insert(0, parent2)
-# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
-# ===========================================================
-# REMOVE THIS BEFORE MERGING INTO MASTER
 from src.backend.cluster import Cluster
 from src.backend.collections.note_pattern import NotePattern
 from src.backend.collections.rhythmic_pattern import RhythmicPattern
@@ -33,35 +18,31 @@ from src.backend.scales import get_scale
 
 
 
-
-'''
-Takes in a genre and returns a song template for the given genre
-
-Parameters:
-    genre: the genre to return the song template
-
-Return:
-    the song template based on the given genre
-'''
-
 def get_song_template():
+    '''
+    Takes in a genre and returns a song template for the given genre
+
+    Parameters:
+        genre: the genre to return the song template
+
+    Return:
+        the song template based on the given genre
+    '''
     return ['A', 'A', 'B', 'A']
 
 
-rand.seed(2)
-DEBUG = True
-PRINT_OUTPUT = False
 
-'''
-Gets a key and returns a combination of rhythmic patterns
 
-Parameters:
-    key : the key to return the patterns in
-
-Returns:
-    a combination of patterns that matches the selected style
-'''
 def build_rhythmic_pattern(key:str) -> RhythmicPattern:
+    '''
+    Gets a key and returns a combination of rhythmic patterns
+
+    Parameters:
+        key : the key to return the patterns in
+
+    Returns:
+        a combination of patterns that matches the selected style
+    '''
 
     # gets a random song name from the list of songs that exist within the database
     song_name = _get_random_song_name()
@@ -106,16 +87,17 @@ def build_rhythmic_pattern(key:str) -> RhythmicPattern:
     return combined_rhythmic_pattern_object
 
 
-'''
-Selects a random song name from the list of songs within the database
 
-Parameters:
-    get_from_tonal_patterns: if this is true, get the song names from "thomas" db instead
-
-Return:
-    A list of song names 
-'''
 def _get_random_song_name(get_from_tonal_patterns:bool=False) -> str:
+    '''
+    Selects a random song name from the list of songs within the database
+
+    Parameters:
+        get_from_tonal_patterns: if this is true, get the song names from "thomas" db instead
+
+    Return:
+        A list of song names 
+    '''
     # gets all the songs from the database
     song_names = _get_db_song_names(get_from_tonal_patterns)
 
@@ -129,13 +111,14 @@ def _get_random_song_name(get_from_tonal_patterns:bool=False) -> str:
     return song_names[selected_index]
 
 
-'''
-Randomly selects a pattern style
 
-Return:
-    a random selected pattern style that has a length of 8 
-'''
 def _get_random_pattern_style() -> Tuple:
+    '''
+    Randomly selects a pattern style
+
+    Return:
+        a random selected pattern style that has a length of 8 
+    '''
     # Each of this are the possible combinations of bars
     pattern_style = [(4, 4), (3, 5), (5, 3)]
 
@@ -145,17 +128,18 @@ def _get_random_pattern_style() -> Tuple:
     return pattern_style[selected_index]
 
 
-'''
-Gets a list of Rhythmic Pattern objects from the db within the given collection that matches the pattern length
 
-Parameters:
-    song_name : the song name to search for the patterns (the name of the collection)
-    pattern_length : the length for the patterns to match with
-
-Return:
-    a Rhythmic Pattern objects that matches the given pattern length within the given collection name
-'''
 def _get_rhythmic_pattern(song_name:str, pattern_length:int) -> RhythmicPattern:
+    '''
+    Gets a list of Rhythmic Pattern objects from the db within the given collection that matches the pattern length
+
+    Parameters:
+        song_name : the song name to search for the patterns (the name of the collection)
+        pattern_length : the length for the patterns to match with
+
+    Return:
+        a Rhythmic Pattern objects that matches the given pattern length within the given collection name
+    '''
     # DB Settings
     db_name = "elliot"
     is_admin = False
@@ -204,16 +188,17 @@ def _get_rhythmic_pattern(song_name:str, pattern_length:int) -> RhythmicPattern:
         return None
 
 
-'''
-Gets a list of song names that exist within the database
 
-Parameters: 
-    get_from_tonal_patterns: if this is set to true, then get all song names from "thomas" db instead
-
-Return:
-    a list of all the song names within the database 
-'''
 def _get_db_song_names(get_from_tonal_patterns:bool = False) -> list:
+    '''
+    Gets a list of song names that exist within the database
+
+    Parameters: 
+        get_from_tonal_patterns: if this is set to true, then get all song names from "thomas" db instead
+
+    Return:
+        a list of all the song names within the database 
+    '''
     is_admin = False
     # use elliot as the db name if we're only getting rhythmic patterns, else get from Thomas
     db_name = "elliot" if not get_from_tonal_patterns else "thomas"
@@ -228,35 +213,37 @@ def _get_db_song_names(get_from_tonal_patterns:bool = False) -> list:
     return song_names
 
 
-'''
-Make initial DB connection 
 
-Parameters:
-    database_name : the database name to connect to
-    is_admin : a boolean value to specify the admin status
-    colleciton_name : the collection name to return (None will return all collection names)
-
-Return:
-    a cluster instance
-'''
 def _make_db_connection(database_name:str, is_admin:bool, collection_name:bool = None) -> Cluster:
+    '''
+    Make initial DB connection 
+
+    Parameters:
+        database_name : the database name to connect to
+        is_admin : a boolean value to specify the admin status
+        colleciton_name : the collection name to return (None will return all collection names)
+
+    Return:
+        a cluster instance
+    '''
     # the cluster instance to be returned
     database = Cluster(database_name, collection_name,is_admin) if collection_name else Cluster(database_name, "", is_admin)
 
     return database
 
 
-'''
-Converts each pattern given to notes
 
-Parameters:
-    key: the starting note to step up or step down from
-    tonal_pattern: the tonal pattern object that has the attribute of steps required
-
-Return:
-    a list of notes that matches the pattern
-'''
 def convert_tonal_pattern(key:str, tonal_pattern:TonalPattern) -> list:
+    '''
+    Converts each pattern given to notes
+
+    Parameters:
+        key: the starting note to step up or step down from
+        tonal_pattern: the tonal pattern object that has the attribute of steps required
+
+    Return:
+        a list of notes that matches the pattern
+    '''
     # gets the pattern from the given tonal pattern
     pattern = tonal_pattern.pattern
 
@@ -282,17 +269,18 @@ def convert_tonal_pattern(key:str, tonal_pattern:TonalPattern) -> list:
 
     return to_return
 
-'''
-Gets the next note based on the step and the given note
 
-Parameters:
-    step : the step to take from teh given note
-    note : the note to modify
-
-Return:
-    the next note based on the given step
-'''
 def _get_note(step:str, note:str) -> str:
+    '''
+    Gets the next note based on the step and the given note
+
+    Parameters:
+        step : the step to take from teh given note
+        note : the note to modify
+
+    Return:
+        the next note based on the given step
+    '''
     if 'h' in step:
             new_note = half_step(
                 note, False) if '-' in step else half_step(note, True)
@@ -317,16 +305,17 @@ def _get_note(step:str, note:str) -> str:
     return new_note
 
 
-'''
-Removes all note modifiers (the pitch) from each note in the scale
 
-Parameters:
-    scale: the scale to strip all modifiers from
-
-Return:
-    the same scale but with just the base notes (no modifiers)
-'''
 def _strip_modifiers_from_scale(scale:list) -> list:
+    '''
+    Removes all note modifiers (the pitch) from each note in the scale
+
+    Parameters:
+        scale: the scale to strip all modifiers from
+
+    Return:
+        the same scale but with just the base notes (no modifiers)
+    '''
 
     # strip all modifers from each note
     scale_to_return = list(map(_strip_note_modifiers, scale))
@@ -334,22 +323,23 @@ def _strip_modifiers_from_scale(scale:list) -> list:
     return scale_to_return
 
 
-'''
-Given a starting note and an ending note, fill in the number of notes
-based on the num_beats, with each note at most +2 from current note or -2
-from the current note.
 
-Parameters:
-    key: The key to generate the scale in
-    start_note: the starting note of the pattern
-    end_note: the ending note of the pattern
-    num_beats: the number of elements to fill
-
-Return:
-    A list of randomly generated notes that sounds nice together
-    within the given key of the scale
-'''
 def bridge_pattern(key:str, tonal_pattern_1:list, tonal_pattern_2:list, num_beats:int) -> list:
+    '''
+    Given a starting note and an ending note, fill in the number of notes
+    based on the num_beats, with each note at most +2 from current note or -2
+    from the current note.
+
+    Parameters:
+        key: The key to generate the scale in
+        start_note: the starting note of the pattern
+        end_note: the ending note of the pattern
+        num_beats: the number of elements to fill
+
+    Return:
+        A list of randomly generated notes that sounds nice together
+        within the given key of the scale
+    '''
     # get the initial scale for this given key
     scale = _get_random_scale_type(key)
     # now strip all the modifiers from the notes in the scale
@@ -386,16 +376,17 @@ def bridge_pattern(key:str, tonal_pattern_1:list, tonal_pattern_2:list, num_beat
     # the first part of the tonal pattern still has to be added in
     return bridged_patterns
 
-'''
-Removes all modifiers from the notes
 
-Parameters:
-    note: the note to remove the modifiers from
-
-Return:
-    the note but without modifiers
-'''
 def _strip_note_modifiers(note:str) -> str:
+    '''
+    Removes all modifiers from the notes
+
+    Parameters:
+        note: the note to remove the modifiers from
+
+    Return:
+        the note but without modifiers
+    '''
     # if the note is None, reutrn none
     if not note:
         return None
@@ -403,24 +394,25 @@ def _strip_note_modifiers(note:str) -> str:
     # only add to character to be returned if its a valid character or if its "#"
     to_return = [c for c in note if c.isalpha() or c == "#"]
 
-    # now stick everythign back together since the line above turns each char into an element in a list
+    # now stick everything back together since the line above turns each char into an element in a list
     to_return = str(reduce(lambda a,b: a + b, to_return))
 
     return to_return
 
 
-'''
-Given the note and the scale, generates a window of notes
-of length 4, (+2 and -2 index from the given note within the scale)
 
-Parameters:
-    note: The note to go up by 2 and down by 2 in the scale
-    scale: the scale that the given note exist within
-
-Return:
-    a list of 4 notes (+2 from note and -2 from note)
-'''
 def _get_window(note:str, scale:list) -> list:
+    '''
+    Given the note and the scale, generates a window of notes
+    of length 4, (+2 and -2 index from the given note within the scale)
+
+    Parameters:
+        note: The note to go up by 2 and down by 2 in the scale
+        scale: the scale that the given note exist within
+
+    Return:
+        a list of 4 notes (+2 from note and -2 from note)
+    '''
     # empty placeholder to be returned
     window = []
 
@@ -458,49 +450,38 @@ def _get_window(note:str, scale:list) -> list:
         # if this loop has been looping for over 50 times assume theres an error and just break from this loop
         if counter >= 50:
             raise LoopError("Error in getting window loop")
+
         counter += 1
 
-    # gets the index of the note within the scale
-    index_of_note = scale.index(temp)
+    # the reversed scale
+    reversed_scale = list(reversed(scale))
 
-    length_of_scale = len(scale)
+    scale_index_of_note = scale.index(temp) + 1
+    reversed_index_of_note = reversed_scale.index(temp) + 1
 
-    # set the index of the notes to take
-    lower_bound_2 = index_of_note - 2
-    lower_bound_1 = index_of_note - 1
-    upper_bound_2 = index_of_note + 2
-    upper_bound_1 = index_of_note + 1
-
-    # make it so that it loops back to the top/bottom of the list
-    if lower_bound_2 < 0:
-        lower_bound_2 = length_of_scale - abs(lower_bound_2)
-    if upper_bound_2 >= length_of_scale:
-        upper_bound_2 %= length_of_scale
-    if lower_bound_1 < 0:
-        lower_bound_1 = length_of_scale - abs(lower_bound_1)
-    if upper_bound_1 >= length_of_scale:
-        upper_bound_1 %= length_of_scale
-
-    # append all the 4 neighbouring notes to the window
-    window.append(scale[lower_bound_1])
-    window.append(scale[lower_bound_2])
-    window.append(scale[upper_bound_1])
-    window.append(scale[upper_bound_2])
+    for _ in range(2):
+        scale_index = scale_index_of_note % len(scale)
+        reversed_index = reversed_index_of_note % len(reversed_scale)
+        window.append(scale[scale_index])
+        window.append(reversed_scale[reversed_index])
+        scale_index_of_note += 1
+        reversed_index_of_note+= 1
 
     return window
 
 
-'''
-Gets a scale given the key with a random type
 
-Parameters
-    key: The key to generate the scale in
-    test: only set to True for testing
-
-Return
-    The generated scale in the given key
-'''
 def _get_random_scale_type(key:str, test:bool =False) -> str:
+    '''
+    Gets a scale given the key with a random type
+
+    Parameters
+        key: The key to generate the scale in
+        test: only set to True for testing
+
+    Return
+        The generated scale in the given key
+    '''
     # split the root and the scale type
     root = key[0] if len(key) == 2 else key[0] + key[1]
     scale_type = key[1] if len(key) == 2 else key[2]
@@ -527,17 +508,18 @@ def _get_random_scale_type(key:str, test:bool =False) -> str:
     return generated_scale
 
 
-'''
-Returns a random number between the range of [0,limit]
 
-Parameters:
-    limit: the maximum value that can be randomly generated 
-    start: the starting value
+def _get_random_number(limit:int, start:int =0) -> int:
+    '''
+    Returns a random number between the range of [0,limit]
 
-Return:
-    a randomly generated value within the range of [0,limit]
-'''
-def _get_random_number(limit, start=0):
+    Parameters:
+        limit: the maximum value that can be randomly generated 
+        start: the starting value
+
+    Return:
+        a randomly generated value within the range of [0,limit]
+    '''
     # set the seed
     if DEBUG == False:
         dt.now().timestamp() 
@@ -552,17 +534,18 @@ def _get_random_number(limit, start=0):
     return value
 
 
-'''
-builds the verse based on the given key and rhytmic_pattern
 
-Parameters:
-    key: the key to generate the verse in
-    rhythmic_pattern: the rhythmic_pattern to match the notes with
+def build_verse(key:str, rhythmic_pattern: RhythmicPattern) -> list:
+    '''
+    builds the verse based on the given key and rhytmic_pattern
 
-Return
-    a list of NotePattern objects that holds the note and the beats
+    Parameters:
+        key: the key to generate the verse in
+        rhythmic_pattern: the rhythmic_pattern to match the notes with
+
+    Return
+        a list of NotePattern objects that holds the note and the beats
 '''
-def build_verse(key, rhythmic_pattern: RhythmicPattern):
     # the list to return
     verse_to_return = []
     # temporary placeholder for holding all the combined patterns with the bridge patterns
@@ -659,17 +642,18 @@ def build_verse(key, rhythmic_pattern: RhythmicPattern):
 
     return verse_to_return
 
-'''
-Creates the bridge for the song given the verse and certain presets
 
-Parameters:
-    reference_verse: the verse to use as reference for bridge building
-    key: key of the song
-
-Return:
-    The modulated verse, and the modulated key
-'''
 def build_song_bridge(reference_verse: list, key: str, modulate: bool):
+    '''
+    Creates the bridge for the song given the verse and certain presets
+
+    Parameters:
+        reference_verse: the verse to use as reference for bridge building
+        key: key of the song
+
+    Return:
+        The modulated verse, and the modulated key
+    '''
 
     bridge = []
 
@@ -682,17 +666,18 @@ def build_song_bridge(reference_verse: list, key: str, modulate: bool):
 
     return bridge
 
-'''
-Randomly modifies certain sections of verse/bridge to add cadences
 
-Parameters:
-    reference: the verse/bridge to modify
-    key: key of the song
-
-Return:
-    The verse/bridge with changes to certain notes
-'''
 def add_random_cadence(reference: list, key: str):
+    '''
+    Randomly modifies certain sections of verse/bridge to add cadences
+
+    Parameters:
+        reference: the verse/bridge to modify
+        key: key of the song
+
+    Return:
+        The verse/bridge with changes to certain notes
+    '''
 
     modified = []
     deceptive = False
@@ -779,19 +764,20 @@ def add_random_cadence(reference: list, key: str):
 
     return modified
 
-'''
-Modulates a given verse depending on the input interval
 
-Parameters:
-    reference_verse: the verse to modulate
-    interval: list of steps indicating the total interval
-    up_frequency: indicates whether interval is up or down
-    key: key of the song
-
-Return:
-    The modulated verse, and the modulated key
-'''
 def modulate_verse(reference_verse: list, interval: list, up_frequency: bool, key: str):
+    '''
+    Modulates a given verse depending on the input interval
+
+    Parameters:
+        reference_verse: the verse to modulate
+        interval: list of steps indicating the total interval
+        up_frequency: indicates whether interval is up or down
+        key: key of the song
+
+    Return:
+        The modulated verse, and the modulated key
+    '''
 
     interval_length = 0
     key_done = False
@@ -828,16 +814,17 @@ def modulate_verse(reference_verse: list, interval: list, up_frequency: bool, ke
 
     return modulated, key + key_type
 
-'''
-Gets a random tonal pattern
 
-Parameters:
-    num_beats_left: the number of beats to get 
-
-Return:
-    a tonal pattern object
-'''
 def get_tonal_pattern(num_beats_left:int) -> TonalPattern:
+    '''
+    Gets a random tonal pattern
+
+    Parameters:
+        num_beats_left: the number of beats to get 
+
+    Return:
+        a tonal pattern object
+    '''
     # db settings
     db_name = "thomas"
     is_admin = False
@@ -879,7 +866,8 @@ def get_tonal_pattern(num_beats_left:int) -> TonalPattern:
     return tonal_patterns_of_given_song[selected_index]
 
 
-'''
+def _make_note_pattern(note:str, beat:str) -> NotePattern:
+    '''
 Creates a NotePattern Object with the given note and beat
 
 Parameters:
@@ -889,84 +877,77 @@ Parameters:
 Returns:
     a Note pattern object
 '''
-def _pair_note_and_beat(note:str, beat:str) -> NotePattern:
     return NotePattern(note, beat)
 
 
-'''
-adds a square bracket to surround the given beats
 
-Parameters:
-    chord : the chord to be surrounded with square brackets
-
-return:
-    `[chord]`
-'''
-def _add_brackets(chord:list) -> str:
-    return "[" + str(chord) + "]"
-
-
-'''
-pairs the rhythimc pattern with the tonal patterns
-
-Parameters:
-    rhythmic_pattern: The rhythimc pattern object to get the rhythimc patterns from
-    verse_note_list: a list of notes that have been converted to match the length of the rhythmic pattern
-
-Return:
-    a list of Note_Patterns that has the length of each note / chord along with the note itself
-'''
 def match_rhythmic_with_tonals(rhythmic_pattern: RhythmicPattern, verse_note_list:list) -> list:
+    '''
+    pairs the rhythimc pattern with the tonal patterns
+
+    Parameters:
+        rhythmic_pattern: The rhythimc pattern object to get the rhythimc patterns from
+        verse_note_list: a list of notes that have been converted to match the length of the rhythmic pattern
+
+    Return:
+        a list of Note_Patterns that has the length of each note / chord along with the note itself
+    '''
     # the patterns to match
-    pattern = rhythmic_pattern.pattern.copy()
+    pattern = rhythmic_pattern.pattern
     # an empty placeholder
     to_return = []
 
-    pattern = list(chain.from_iterable(pattern))
+    # this index keeps track of the notes in the verse_note_list
+    index = 0
 
-    for note in pattern:
-        # if its a rest, use the middle number as the beat
-        if "(" in note and ")" in note:
-            to_return.append(_pair_note_and_beat("z", note[1]))
+    # will be true of the given note is a chord
+    is_chord = False
 
-        # else if its a chord / beam notes, check if theres the square brackets.
-        elif len(note) > 1:
-            # ======================================================
-            # FIX THIS PART, STILL NOT WORKING FOR '[11][11]' CHORDS
-            if "[" in note and "]" in note:
-                # if its a chord or a set of chords, break everthing into notes and do this
-                chords = ast.literal_eval(note)
-                # add the square brackets back for the chords
-                chords = list(map(_add_brackets, chords))
-                # now match each chord with a note
-                paired_chords_note_patterns = list(map(_pair_note_and_beat, chords, verse_note_list))
-                # shave off the top of the list
-                del verse_note_list[:len(paired_chords_note_patterns)]
-            # FIX THIS PART, STILL NOT WORKING FOR '[11][11]' CHORDS
-            # ======================================================
+    # loop through the given rthythmic pattern, create a note pattern object, and append ot to the list to be returned
+    for bar in pattern:
+        for notes in bar:
+            # if the notes is a rest note, create a note pattern with "z" as the note and the beats
+            if len(notes) == 3 and '(' in notes and ')' in notes:
+                to_return.append(_make_note_pattern("z", notes[1]))
+            # else if its not a rest note, then do this
             else:
-                individual_beats = list(map(int, note))
-                paired_note_patterns = list(map(_pair_note_and_beat, verse_note_list , individual_beats))
-                del verse_note_list[:len(individual_beats)]
-                to_return.extend(paired_note_patterns)
-        else:
-            to_return.append(_pair_note_and_beat(verse_note_list[0], note))
-            # shave off the top of the list
-            del verse_note_list[:1]
-
+                # break up the notes into groups of beats (might be 1, might be more)
+                beam_beats = list(filter(None, re.split("(\W)", notes)))
+                # for each beat in the "group" of beats
+                for beats in beam_beats:
+                    # if the given character at that time is "[" we know its the start of a chord
+                    if beats == "[":
+                        is_chord = True
+                    
+                    # if the flag is_chord is up, it means at this point, it has the "content" of the chord
+                    # EX: content of the chord => chord = '[111]' content of chord = 111
+                    elif is_chord:
+                        # if its a chord, create a Note_pattern and add it to the list, and put the "[" and "]" back
+                        # to signify that its a chord
+                        to_return.append(_make_note_pattern(verse_note_list[index], "[" + str(beats) + "]"))
+                        # increase the index to get the next note in the verse_note_list
+                        index += 1
+                        # since we already used the content of the chord, reset the flag
+                        is_chord = False
+                    # if its not a chord, and jsut a set of beats like `1111` or `1` then
+                    elif beats.isdigit():
+                        # go through each of these beats, and append a note to it through the verse_note_list
+                        for individual_beat in beats:
+                            to_return.append(_make_note_pattern(verse_note_list[index], individual_beat))
+                            index += 1
     return to_return
 
 
-'''
-Gets a random bridge length to return
-
-Parameters:
-    total_length: the total length of all the bridge buffers
-
-Return:
-    a list of each size of the bridge length
-'''
 def _get_random_bridge_length(total_length:int, number_of_bridges:int) -> list:
+    '''
+    Gets a random bridge length to return
+
+    Parameters:
+        total_length: the total length of all the bridge buffers
+
+    Return:
+        a list of each size of the bridge length
+    '''
     # the lengths of each bridge to return
     length_to_return = []
     # the minimum length is 3
@@ -990,7 +971,9 @@ def _get_random_bridge_length(total_length:int, number_of_bridges:int) -> list:
 
     return length_to_return
 
-'''
+
+def build_v2(tonic:str, input_verse:list) -> list:
+    '''
 Builds a complimenting V2 pattern that can be combined with V1
 
 Parameters:
@@ -999,7 +982,6 @@ Parameters:
 Return:
     v2_verse: a list of PatternNotes
 '''
-def build_v2(tonic:str, input_verse:list) -> list:
     v2_notes = []
     beat_counter = 0
 
@@ -1020,13 +1002,11 @@ def build_v2(tonic:str, input_verse:list) -> list:
 
     for note in v2_notes:
         note_to_append = note if note != "z" else tonic
-        v2_note_patterns.append(NotePattern(note_to_append, 8))
+        v2_note_patterns.append(_make_note_pattern(note_to_append, 8))
 
     return v2_note_patterns
 
 # # # # DEBUG
-
-
 
 counter = 0
 
