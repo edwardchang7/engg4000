@@ -1,4 +1,5 @@
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 
 public class MainFrame extends JFrame {
 
@@ -18,8 +20,13 @@ public class MainFrame extends JFrame {
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
+
+		Thread.sleep(3000);
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -46,6 +53,7 @@ public class MainFrame extends JFrame {
 		getRootPane().setBorder(WindowBorder.getInstance());
 		generatingSong = false;
 		cleaningUp = false;
+		setIconImage(Toolkit.getDefaultToolkit().getImage(System.getProperty("user.dir") + "/src/frontend/Swing_UI/Logo.png"));
 
 		/*
 		 * Header
@@ -157,7 +165,7 @@ public class MainFrame extends JFrame {
 					} catch (InterruptedException e2) {
 						e2.printStackTrace();
 					}
-					var songBuilderPath = System.getProperty("user.dir") + "/clean_up_script.py";
+					var songBuilderPath = System.getProperty("user.dir") + "/src/frontend/Swing_UI/clean_up_script.py";
 
 					ProcessBuilder process = new ProcessBuilder("python", songBuilderPath).inheritIO();
 					Process p = null;
