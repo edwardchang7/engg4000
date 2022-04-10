@@ -1,21 +1,6 @@
 from src.backend.music_tools import *
 
-# notes = ['C', 'C#', 'D', 'D#', 'E', 'F',  'F#', 'G', 'G#', 'A', 'A#', 'B']
-
-# # Major Ionion Scale
-# I_major = 'WWHWWWH'
-
-# # Natural minor Aeolian Scale
-# A_minor = 'WHWWHWW'
-
-# # Major Pentatonic Scale
-# P_major = 'WWPW'
-
-# # Minor Pentatonic Scale
-# P_minor = 'PWWP'
-
-
-def get_scale(root, type):
+def get_scale(root:str, type:str) -> list:
     '''
     Returns a scale beginning from the root node.
 

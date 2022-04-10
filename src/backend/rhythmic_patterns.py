@@ -1,35 +1,13 @@
-"""
-This file will be filled with the functions required to extract and save 
-rhythmic patterns from an abc file
-
-1. If polyphonic - seperate
-2. Get meter and time signature
-3. Translate notes in bars into numbers representing note lengths
-4. Analyze numbers looking for patterns
-5. Cross reference those sections with original music to get actual musical pattern
-"""
-
+import os
 import re
 import warnings
-# REMOVE THIS BEFORE MERGING INTO MASTER
-# ===========================================================
-# only uncomment this if you are not using pycharm
-import os, sys, inspect
-
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-parent2 = os.path.dirname(parentdir)
-sys.path.insert(0, parent2)
-# END OF IMPORTS FOR NON-PYCHARM USERS (mostly just for Elliot)
-# ===========================================================
-# REMOVE THIS BEFORE MERGING INTO MASTER
 
 from src.backend.cluster import Cluster
 from src.backend.collections.rhythmic_pattern import RhythmicPattern
 from src.backend.collections.songcollection import SongCollection
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
-from abc_tools import get_header, get_melodic_and_rythmic, get_voicings
+from abc_tools import get_header, get_melodic_and_rythmic
 
 # surpress the warnings from format_bar function
 warnings.simplefilter(action="ignore", category=FutureWarning)
@@ -48,28 +26,38 @@ song_list = []
 meter = -1
 
 
-def extract_rhythmic_patterns(file_path: str):
+
+def extract_rhythmic_patterns(file_path: str) -> None:
+    '''
+    To Extract all rhythmic patterns from each file within the given directory:\n
+        1. Seperates each bar\n
+        2. Remove unnecessary notation\n
+        3. Replace all notes with the beat counts\n
+        4. Combine all bars\n
+        5. extract patterns\n
+
+    Paramters:
+        file_path: The directory to use the files to extract the rhythmic patterns
+    '''
     global meter
 
-    voicings = get_voicings(file_path)
     meter = get_header(file_path, 'M')
 
     # Gets the seperated list of v1 and v2
     v1, v2 = get_melodic_and_rythmic(file_path)
-
-    '''
-    1. Seperates each bar
-    2. Remove unnecessary notation
-    3. Replace all notes with the beat counts
-    4. Combine all bars
-    5. extract patterns
-    '''
     encode_voicings(v1, v2)
 
-# Function to isolate the notes in a single bar
 
+def format_bar(bar: str) -> list:
+    '''
+    remove all unnecessary notation from the bar
 
-def format_bar(bar: str):
+    Parameters:
+        bar: the bar to remove the notations from
+
+    Return:
+        the bar without unnecessary notation
+    '''
     has_notes = re.search('[A-Ga-g]', bar) or 'z' in bar
     if not has_notes:
         bar = None
@@ -87,7 +75,14 @@ def format_bar(bar: str):
     return bar
 
 
-def encode_voicings(v1, v2):
+def encode_voicings(v1:list, v2:list) -> None:
+    '''
+    encode the voicings
+
+    Parameters:
+        v1: v1 voicings
+        v2: v2 voicings
+    '''
     # 1. isolate notes
     # split into sections
     # split sections into bars
@@ -118,18 +113,25 @@ def encode_voicings(v1, v2):
                     v2_combination.append(bar)
 
 
-'''
-8 = whole note
-6 = half note + .
-4 = half note
-3 = quater note + .
-2 = quater note
-1 = 8th note
-0 = 16th note
-'''
 
+def encode_bar(bar:list) -> list:
+    '''
+    Given a bar encode the bar with the beats.
 
-def encode_bar(bar):
+    8 = whole note\n
+    6 = half note + .\n
+    4 = half note\n
+    3 = quater note + .\n
+    2 = quater note\n
+    1 = 8th note\n
+    0 = 16th note
+
+    Parameters:
+        bar : the bar to convert to beats 
+
+    Return:
+        the beats of the bar
+'''
 
     # replace '/' with 0 to show its a 16th note
     bar = bar.replace("/", "0")
@@ -168,8 +170,7 @@ def encode_bar(bar):
     # remove all non notes
     for note in new_bar:
         # if a number exist within the note, assume its valid, else, new_bar remove it
-        if not any(char.isdigit() for char in note):
-            new_bar.remove(note)
+        if not any(char.isdigit() for char in note): new_bar.remove(note)
 
     if(new_bar):
         if(_check_valid_beats(new_bar)):
@@ -178,12 +179,18 @@ def encode_bar(bar):
     return None
 
 
-'''
-Replaces each note with the given beat (keeps square bracket to signify that its a chord)
-'''
 
+def _keep_beats_only(note:str, beat:str) -> str:
+    '''
+    Replaces each note with the given beat (keeps square bracket to signify that its a chord)
 
-def _keep_beats_only(note, beat):
+    Parameters:
+        note: the note that has the beat beside it
+        beat: the beat to replace the note with
+
+    Return:
+        the beat of the note
+    '''
 
     exception_list = {'x'}
     new_note = ''
@@ -202,12 +209,17 @@ def _keep_beats_only(note, beat):
     return new_note
 
 
-'''
-checks if the given bar matches the meter
-'''
 
+def _check_valid_beats(bar:list)-> bool:
+    '''
+    checks if the given bar matches the meter
 
-def _check_valid_beats(bar):
+    Parameters:
+        bar: the bar the check
+
+    Return:
+        a boolean value of whether the beats within the bar matches the meter
+    '''
 
     beat_count = 0
 
@@ -256,7 +268,13 @@ def _check_valid_beats(bar):
     return beat_count == int(meter[0])
 
 
-def extract_pattern():
+def extract_pattern() -> None:
+    '''
+    Extracts rhythmic patterns from the given abc files.
+
+    Extracted lengths are with a min = 3 and a max = 5 bars for each pattern.\n
+    Then parse through the entire list and count the number of occurances.
+    '''
     v1_temp = []
     v2_temp = []
 
@@ -340,7 +358,12 @@ def extract_pattern():
             v2_pattern[str(set_of_bars)] = 1
 
 # CALL THIS FUNCTION TO EXTRACT EVERY FILW WITHIN THE DIR BELOW
-def extract_all_files():
+def extract_all_files() -> None:
+    '''
+    Extracts rhythmic patterns from all the files within this directory:\n
+    -> src/backend/mxl_to_abc/converted_compositions\n
+    and save them in a list
+    '''
 
     global v1_pattern, v2_pattern, v1_keys, v2_keys, v1_combination, v2_combination
 
@@ -412,24 +435,22 @@ def extract_all_files():
             v2_combination = []
 
 
-def upload_rhythmic_patterns_to_DB():
+def upload_rhythmic_patterns_to_DB() -> None:
+    '''
+    Uploads the extracted rhythmic patterns to the database
+    '''
+
+    db_name = "elliot"
+    is_admin = False
+
     for song in song_list:
-        database = Cluster("elliot", song.song_name, False)
+        database = Cluster(db_name, song.song_name, is_admin)
         v1,v2 = song.get_patterns()
 
         model = RhythmicPatternModel(song.song_name, v1)
-        passed = database.insert_rhythmic_pattern_model(database, model)
-
-        # -----------------------------------------------------------------------
-             # DEBUGGING PURPOSES, REMOVE BEFORE MERGING WITH MASTER
-             # -----------------------------------------------------------------------
-        print(f"V1 of song {song.song_name} has been {str(passed).upper()} added")
+        database.insert_rhythmic_pattern_model(database, model)
 
         if v2:
             model = RhythmicPatternModel(song.song_name, v2)
-            passed = database.insert_rhythmic_pattern_model(database, model)
+            database.insert_rhythmic_pattern_model(database, model)
             
-             # -----------------------------------------------------------------------
-             # DEBUGGING PURPOSES, REMOVE BEFORE MERGING WITH MASTER
-             # -----------------------------------------------------------------------
-            print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")

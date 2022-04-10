@@ -4,11 +4,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -16,8 +15,8 @@ public class MainFrame extends JFrame {
 
 	private JPanel contentPane, header, buttonPanel;
 	private JButton upload, generate;
-	private JComboBox<Genre> genreCBBox;
 	private JFileChooser fileChooser;
+	private JLabel statusLabel;
 	private JFrame self;
 
 	/**
@@ -57,18 +56,17 @@ public class MainFrame extends JFrame {
 		contentPane.add(header);
 
 		/*
-		 * Combobox
+		 * Status Label
 		 */
-		genreCBBox = new JComboBox<Genre>();
-		genreCBBox.setModel(new DefaultComboBoxModel<Genre>(Genre.values()));
-		genreCBBox.setBounds(10, 46, 320, 22);
-		contentPane.add(genreCBBox);
-
+		statusLabel = new StatusLabel("Please pick an option.");
+		statusLabel.setBounds(10, 46, 320, 58);
+		contentPane.add(statusLabel);
+		
 		/*
 		 * Button Panels and buttons
 		 */
 		buttonPanel = new JPanel();
-		buttonPanel.setBounds(10, 115, 320, 49);
+		buttonPanel.setBounds(10, 115, 320, 50);
 		contentPane.add(buttonPanel);
 
 		generate = new CustomButton("Generate");
@@ -76,27 +74,51 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
+				statusLabel.setText("Generating Song...");
 				/*
 				 * 1. Run the file that will generate a song.
 				 */
+				statusLabel.setText("Generating Song...");
+				new Thread(() -> {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					var songBuilderPath = System.getProperty("user.dir") + "/src/backend/demo.py";
 
-				var songBuilderPath = "";
+					ProcessBuilder process = new ProcessBuilder("python", songBuilderPath).inheritIO();
+					Process p = null;
 
-				ProcessBuilder process = new ProcessBuilder("python", songBuilderPath).inheritIO();
-				Process p = null;
-
-				try {
-					p = process.start();
-				} catch (IOException e1) {
-					new MessageDialog("Error", "Unable to execute Song_Builder Python script", null);
-				}
-				// a delay until the song generation is completed
-				try {
-					p.waitFor();
-					// open EZABC with the generated abc file? -- STILL THINKING
-				} catch (InterruptedException e1) {
-					new MessageDialog("Error", "Process of building a song was interupted", null);
-				}
+					try {
+						p = process.start();
+					} catch (IOException e1) {
+						new MessageDialog("Error", "Unable to execute Song_Builder Python script", null);
+					}
+					// a delay until the song generation is completed
+					try {
+						p.waitFor();
+						// open EZABC with the generated abc file? -- STILL THINKING
+					} catch (InterruptedException e1) {
+						new MessageDialog("Error", "Process of building a song was interupted", null);
+					}
+					
+					statusLabel.setText("Done! Opening ABC file...");
+					
+					try {
+						Thread.sleep(1500);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					statusLabel.setText("Please pick an option.");
+					
+				}).start();
+				
+				
 			}
 
 		});
@@ -166,17 +188,15 @@ public class MainFrame extends JFrame {
 					try {
 						p = process.start();
 					} catch (IOException e1) {
-						new MessageDialog("Error",
-								"Unable to perform extraction / uploading of information", null);
+						new MessageDialog("Error", "Unable to perform extraction / uploading of information", null);
 					}
 					// a delay until the conversion, extraction and upload is completed
 					try {
 						p.waitFor();
-						new MessageDialog("Success",
-								"Succesfully extracted and converted the selected files", null);
+						new MessageDialog("Success", "Succesfully extracted and converted the selected files", null);
 					} catch (InterruptedException e1) {
-						new MessageDialog("Error",
-								"Process of extracting and uploading information was interrupted", null);
+						new MessageDialog("Error", "Process of extracting and uploading information was interrupted",
+								null);
 					}
 				} else if (choice == JFileChooser.CANCEL_OPTION) {
 					new MessageDialog("Error", "No files were selected", null);

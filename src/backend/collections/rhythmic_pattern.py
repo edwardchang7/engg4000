@@ -2,7 +2,10 @@ import ast
 
 
 class RhythmicPattern:
-    def __init__(self, pattern, frequency, is_v1):
+
+    __slots__ = ("pattern", "frequency", "is_v1")
+
+    def __init__(self, pattern, frequency, is_v1:bool):
         # Converts a string in the format of a list to an actual list object
         self.pattern = pattern
         self.frequency = frequency
@@ -17,39 +20,46 @@ class RhythmicPattern:
 
         self.is_v1 = is_v1
 
-    def __str__(self):
+    def __str__(self) -> str:
+        '''
+        toString function
+        '''
         return f"Pattern: {self.pattern} \nFrequency: {self.frequency} \nLength: {self.length} \nBeats: {self.beats}\nIs V1: {self.is_v1}\n"
 
 
-def _get_length_in_beats(pattern):
+def _get_length_in_beats(pattern:str) -> int:
+    '''
+    counts the number of beats within the bar (chords counted as 1 all together, beam notes are couted sepeareatly)
+
+    Parameters:
+        pattern: the rhythmic pattern to count the beats
+
+    Returns:
+        the number of beats within this rhythmic pattern
+    '''
     length = 0
-    to_count = True
-    is_chord = False
-    last_char = ''
 
-    # counts the length of each bar within the combined pattern
-    for char in pattern:
-        if char == '(':
-            to_count = False
+    pattern_list = ast.literal_eval(pattern)
 
-        if char == "'":
-            last_char = char
+    end = False
 
-        if last_char == "'" and char == '[':
-            is_chord = True
-            length += 1
+    for beats in pattern_list:
+        # get the count of every beat if its its not within a bracket 
+        length += sum(len(beat) for beat in beats if "[" not in beats and "(" not in beats)
 
-        if last_char == "'" and char == ']':
-            is_chord = False
-            last_char = ""
+        # if there is a chord, count the number of chords that exist
+        if any("[" in b for b in beats):
+            for b in beats:
 
-        # if its a digit, then check if to_count is true (to_count will be false if its a rest's beat)
-        if char.isdigit() and to_count and not is_chord:
-            length += 1
+                length += b.count("[")
+                
+                if b == "[":
+                    end = False
 
-        elif char.isdigit() and not to_count:
-            to_count = True
+                elif b == "]":
+                    end = True
 
+                if end and b.isdigit():
+                    length += 1
     return length
-
 
