@@ -1,8 +1,5 @@
 
 # UI interface file
-
-
-
 import inspect,os,sys, random
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -37,7 +34,6 @@ for section in template:
         song_list += bridge
 
 key_abc = key.replace("M", "")
-key_abc = key.replace("m", "")
 
 v2 = build_v2(key, verse)
 song = ABCSong(key_abc, '4/4', [song_list, v2])
