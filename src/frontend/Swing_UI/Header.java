@@ -58,11 +58,20 @@ public class Header extends JPanel {
 		BTN_exit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		BTN_exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (frame != null)
+
+				if (frame != null && !MainFrame.cleaningUp && !MainFrame.generatingSong)
 					frame.dispose();
-				else
+				else {
+					if (isMain && (MainFrame.cleaningUp || MainFrame.generatingSong)) {
+						new MessageDialog("Error",
+								"Please do not close this windows while a process is running. We can't afford to break this masterpiece :) <br><br> I wonder who will try to do this and see this message lmao",
+								null);
+						return;
+					}
 					dialog.dispose();
-				if (isMain)
+				}
+
+				if (isMain && !MainFrame.cleaningUp && !MainFrame.generatingSong)
 					System.exit(0);
 			}
 		});
@@ -151,7 +160,8 @@ public class Header extends JPanel {
 			LBL_taskbar.setBounds(66, 11, dialog.getWidth() - 63, 24);
 		add(LBL_taskbar);
 
-		JLabel LBL_taskbarIcon = new JLabel(icon, JLabel.CENTER);
+		JLabel LBL_taskbarIcon = new JLabel(
+				new ImageIcon(System.getProperty("user.dir") + "/src/frontend/Swing_UI/Logo.png"), JLabel.CENTER);
 		LBL_taskbarIcon.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 		LBL_taskbarIcon.setFocusTraversalKeysEnabled(false);
 		LBL_taskbarIcon.setFocusable(false);
