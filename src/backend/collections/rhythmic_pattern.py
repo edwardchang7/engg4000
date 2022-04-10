@@ -3,8 +3,6 @@ import ast
 
 class RhythmicPattern:
 
-    __slots__ = ("pattern", "frequency", "is_v1")
-
     def __init__(self, pattern, frequency, is_v1:bool):
         # Converts a string in the format of a list to an actual list object
         self.pattern = pattern

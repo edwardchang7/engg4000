@@ -58,10 +58,10 @@ public class MainFrame extends JFrame {
 		/*
 		 * Status Label
 		 */
-		statusLabel = new StatusLabel("Please pick an option.");
+		statusLabel = new StatusLabel("Click to generate a song.");
 		statusLabel.setBounds(10, 46, 320, 58);
 		contentPane.add(statusLabel);
-		
+
 		/*
 		 * Button Panels and buttons
 		 */
@@ -75,7 +75,6 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				statusLabel.setText("Generating Song...");
 				/*
 				 * 1. Run the file that will generate a song.
 				 */
@@ -104,25 +103,27 @@ public class MainFrame extends JFrame {
 					} catch (InterruptedException e1) {
 						new MessageDialog("Error", "Process of building a song was interupted", null);
 					}
-					
+
 					statusLabel.setText("Done! Opening ABC file...");
-					
+
 					try {
 						Thread.sleep(1500);
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
+
 					statusLabel.setText("Please pick an option.");
-					
+
 				}).start();
-				
-				
+
 			}
 
 		});
 
+		/**
+		 * NOTE: NOT USED
+		 */
 		upload = new CustomButton("Upload");
 		upload.addActionListener(new ActionListener() {
 
@@ -205,6 +206,6 @@ public class MainFrame extends JFrame {
 		});
 
 		buttonPanel.add(generate);
-		buttonPanel.add(upload);
+		// buttonPanel.add(upload);
 	}
 }

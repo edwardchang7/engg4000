@@ -175,7 +175,6 @@ def _get_rhythmic_pattern(song_name:str, pattern_length:int) -> RhythmicPattern:
                 list_of_matching_length_songs = db.query_rhythmic_patterns(db, new_song_name, pattern_length)
                 if not list_of_matching_length_songs:
                     list_of_matching_length_songs = db.query_rhythmic_patterns(db, new_song_name, pattern_length)
-                    print(f"It tried again to get this song {song_name} and new song {new_song_name} and counter {counter}")
                 reset_song = True
 
             # if we picked another song and it still has no v1
