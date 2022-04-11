@@ -1,3 +1,4 @@
+import functools
 import random as rand
 import re
 import time
@@ -14,10 +15,6 @@ from src.backend.LoopError import LoopError
 from src.backend.music_tools import (M3, P5, change_octave, half_step, m3,
                                      whole_step)
 from src.backend.scales import get_scale
-
-
-
-
 
 def get_song_template():
     '''
@@ -521,7 +518,9 @@ def _get_random_number(limit:int, start:int =0) -> int:
         a randomly generated value within the range of [0,limit]
     '''
     # set the seed
-    dt.now().timestamp() 
+    seed = dt.now().timestamp() 
+
+    rand.seed(seed)
 
     # a quick nap of about 3ms so that it doesnt always use the same seed if this function is called multiple times consecutively
     time.sleep(0.003)
@@ -951,12 +950,10 @@ def _get_random_bridge_length(total_length:int, number_of_bridges:int) -> list:
     # the minimum length is 3
     min_length = 3
     # if the total length is less than the minimum length, update the minimum length
-    if total_length < 3:
-        min_length = total_length
+    if total_length < 3: min_length = total_length
 
     # fill each bridge to be the min length by default
-    for _ in range(number_of_bridges):
-        length_to_return.append(min_length)
+    for _ in range(number_of_bridges): length_to_return.append(min_length)
 
     # if there are still beats left to be filled
     remaining_length = total_length - (min_length * number_of_bridges)
@@ -990,14 +987,19 @@ Return:
 
         beat_counter += int(note.length) if "[" not in note.length else int(note.length[1])
         # WILL THIS ACCOUNT FOR 16th notes signified by 0
-        if beat_counter == 8: beat_counter = 0
+        beat_counter = 0 if beat_counter == 8 else beat_counter
     
     v2_note_patterns=[]
 
     tonic = tonic[0] if len(tonic) == 2 else tonic[0] + tonic[1]
 
-    for note in v2_notes:
-        note_to_append = note if note != "z" else tonic
-        v2_note_patterns.append(_make_note_pattern(note_to_append, 8))
+    v2_notes = list(map(lambda a: a.replace("z", tonic), v2_notes))
+
+    v2_note_patterns = list(map(functools.partial(_make_note_pattern, beat=8), v2_notes))
+
+    # for note in v2_notes:
+    #     note_to_append = note if note != "z" else tonic
+    #     v2_note_patterns.append(_make_note_pattern(note_to_append, 8))
 
     return v2_note_patterns
+
