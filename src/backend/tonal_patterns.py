@@ -62,10 +62,6 @@ def frequency_of_pattern(analyze_str, key, pattern):
     total = 0
     pattern_index = 0
 
-    # -------- DEBUG ---------
-    # TO BE DELETED BEFORE MERGING WITH MASTER
-    # -------- DEBUG ---------
-    print(prev_notes)
 
     for i in range(1, len(prev_notes)):
         # checks for half notes upwards and downwards

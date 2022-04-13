@@ -1,23 +1,16 @@
-"""
-This file will be filled with the functions required to extract and save 
-rhythmic patterns from an abc file
-
-1. If polyphonic - seperate
-2. Get meter and time signature
-3. Translate notes in bars into numbers representing note lengths
-4. Analyze numbers looking for patterns
-5. Cross reference those sections with original music to get actual musical pattern
-"""
-
 import os
 import re
+import warnings
 
 from src.backend.cluster import Cluster
-from src.backend.collections.Rhythmic_Pattern import RhythmicPattern
+from src.backend.collections.rhythmic_pattern import RhythmicPattern
 from src.backend.collections.songcollection import SongCollection
 from src.backend.models.rhythmic_pattern_model import RhythmicPatternModel
 
-from abc_tools import get_header, get_melodic_and_rythmic, get_voicings
+from abc_tools import get_header, get_melodic_and_rythmic
+
+# surpress the warnings from format_bar function
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 v1_keys = []
 v2_keys = []
@@ -32,51 +25,71 @@ song_list = []
 
 meter = -1
 
-def extract_rhythmic_patterns(file_path:str):
+
+
+def extract_rhythmic_patterns(file_path: str) -> None:
+    '''
+    To Extract all rhythmic patterns from each file within the given directory:\n
+        1. Seperates each bar\n
+        2. Remove unnecessary notation\n
+        3. Replace all notes with the beat counts\n
+        4. Combine all bars\n
+        5. extract patterns\n
+
+    Paramters:
+        file_path: The directory to use the files to extract the rhythmic patterns
+    '''
     global meter
 
-    voicings=get_voicings(file_path)
-    meter = get_header(file_path,'M')
+    meter = get_header(file_path, 'M')
 
     # Gets the seperated list of v1 and v2
-    v1,v2 = get_melodic_and_rythmic(file_path)
-
-    '''
-    1. Seperates each bar
-    2. Remove unnecessary notation
-    3. Replace all notes with the beat counts
-    4. Combine all bars
-    5. extract patterns
-    '''
+    v1, v2 = get_melodic_and_rythmic(file_path)
     encode_voicings(v1, v2)
 
-# Function to isolate the notes in a single bar
-def format_bar(bar:str):
-    has_notes=re.search('[A-Ga-g]',bar) or 'z' in bar
+
+def format_bar(bar: str) -> list:
+    '''
+    remove all unnecessary notation from the bar
+
+    Parameters:
+        bar: the bar to remove the notations from
+
+    Return:
+        the bar without unnecessary notation
+    '''
+    has_notes = re.search('[A-Ga-g]', bar) or 'z' in bar
     if not has_notes:
-        bar=None
+        bar = None
     else:
-        bar=re.sub('%[0-9][0-9]?[0-9]?',"",bar)
-        bar=re.sub('"[^"]*"',"",bar)
-        bar=re.sub('![^"]*!',"",bar)
-        bar=re.sub('[[A-Z]:[^"]*]',"",bar)
-        bar=bar.replace("\n","")
-        bar=bar.replace("$","")
-        bar=bar.replace("{/f'}", "")
-        bar=bar.replace(":", "")
-        bar=bar.strip()
+        bar = re.sub('%[0-9][0-9]?[0-9]?', "", bar)
+        bar = re.sub('"[^"]*"', "", bar)
+        bar = re.sub('![^"]*!', "", bar)
+        bar = re.sub('[[A-Z]:[^"]*]', "", bar)
+        bar = bar.replace("\n", "")
+        bar = bar.replace("$", "")
+        bar = bar.replace("{/f'}", "")
+        bar = bar.replace(":", "")
+        bar = bar.strip()
 
     return bar
 
 
-def encode_voicings(v1, v2):
-    #1. isolate notes   
+def encode_voicings(v1:list, v2:list) -> None:
+    '''
+    encode the voicings
+
+    Parameters:
+        v1: v1 voicings
+        v2: v2 voicings
+    '''
+    # 1. isolate notes
     # split into sections
     # split sections into bars
     for v in v1:
         bars = v.split('|')
         for bar in bars:
-        # Strips all unnecessary notation
+            # Strips all unnecessary notation
             bar = format_bar(bar)
 
             if(bar):
@@ -89,7 +102,7 @@ def encode_voicings(v1, v2):
     for v in v2:
         bars = v.split('|')
         for bar in bars:
-        # Strips all unnecessary notation
+            # Strips all unnecessary notation
             bar = format_bar(bar)
 
             if(bar):
@@ -100,19 +113,28 @@ def encode_voicings(v1, v2):
                     v2_combination.append(bar)
 
 
+
+def encode_bar(bar:list) -> list:
+    '''
+    Given a bar encode the bar with the beats.
+
+    8 = whole note\n
+    6 = half note + .\n
+    4 = half note\n
+    3 = quater note + .\n
+    2 = quater note\n
+    1 = 8th note\n
+    0 = 16th note
+
+    Parameters:
+        bar : the bar to convert to beats 
+
+    Return:
+        the beats of the bar
 '''
-8 = whole note
-6 = half note + .
-4 = half note
-3 = quater note + .
-2 = quater note
-1 = 8th note
-0 = 16th note
-'''
-def encode_bar(bar):
 
     # replace '/' with 0 to show its a 16th note
-    bar = bar.replace("/","0")
+    bar = bar.replace("/", "0")
     bar = bar.split()
 
     no_mod_bar = []
@@ -121,7 +143,8 @@ def encode_bar(bar):
 
     # for each note in the bar remove all modifiers (pitch)
     for note in bar:
-        note = ''.join(c if c.isalpha() or c.isdigit() or c == '[' or c == ']' else '' for c in note)
+        note = ''.join(c if c.isalpha() or c.isdigit() or c ==
+                       '[' or c == ']' else '' for c in note)
         no_mod_bar.append(note)
 
     # go through the new bars. for each note of the new bar, check if there is a beat
@@ -131,37 +154,43 @@ def encode_bar(bar):
         contains_beat = any(char.isdigit() for char in note)
 
         # create a new bar and put them in
-        if not contains_beat:
-            all_beats_bar.append(note + "1")
-        else:
-            all_beats_bar.append(note)
+        temp_note = note + "1" if not contains_beat else note
+        all_beats_bar.append(temp_note)
+            
 
     # replace the notes with the beats
     for note in all_beats_bar:
         beat = note[-1]
 
         # if the beat is placed at the start instead
-        if not beat.isdigit():
-            beat = note[0]
+        if not beat.isdigit(): beat = note[0]
 
         new_bar.append(_keep_beats_only(note, beat))
 
     # remove all non notes
     for note in new_bar:
         # if a number exist within the note, assume its valid, else, new_bar remove it
-        if not any(char.isdigit() for char in note):
-            new_bar.remove(note)
-        
+        if not any(char.isdigit() for char in note): new_bar.remove(note)
+
     if(new_bar):
         if(_check_valid_beats(new_bar)):
             return new_bar
 
     return None
 
-'''
-Replaces each note with the given beat (keeps square bracket to signify that its a chord)
-'''
-def _keep_beats_only(note, beat):
+
+
+def _keep_beats_only(note:str, beat:str) -> str:
+    '''
+    Replaces each note with the given beat (keeps square bracket to signify that its a chord)
+
+    Parameters:
+        note: the note that has the beat beside it
+        beat: the beat to replace the note with
+
+    Return:
+        the beat of the note
+    '''
 
     exception_list = {'x'}
     new_note = ''
@@ -174,16 +203,23 @@ def _keep_beats_only(note, beat):
         elif c.isalpha() and c not in exception_list:
             # remove c
             new_note += beat
-        elif c  == '[' or c == ']':
+        elif c == '[' or c == ']':
             new_note += c
 
     return new_note
 
 
-'''
-checks if the given bar matches the meter
-'''
-def _check_valid_beats(bar):
+
+def _check_valid_beats(bar:list)-> bool:
+    '''
+    checks if the given bar matches the meter
+
+    Parameters:
+        bar: the bar the check
+
+    Return:
+        a boolean value of whether the beats within the bar matches the meter
+    '''
 
     beat_count = 0
 
@@ -213,32 +249,37 @@ def _check_valid_beats(bar):
 
         else:
             for beat in note_beat:
-                    if beat.isdigit():
-                        if beat == '0':
-                            beat_count += 1/4
-                        elif beat == '1':
-                            beat_count += 1/2
-                        elif beat == '2':
-                            beat_count += 1
-                        elif beat == '3':
-                            beat_count += 1.5
-                        elif beat == '4':
-                            beat_count += 2
-                        elif beat == '6':
-                            beat_count += 3
-                        elif beat == '8':
-                            beat_count += 4
+                if beat.isdigit():
+                    if beat == '0':
+                        beat_count += 1/4
+                    elif beat == '1':
+                        beat_count += 1/2
+                    elif beat == '2':
+                        beat_count += 1
+                    elif beat == '3':
+                        beat_count += 1.5
+                    elif beat == '4':
+                        beat_count += 2
+                    elif beat == '6':
+                        beat_count += 3
+                    elif beat == '8':
+                        beat_count += 4
 
     return beat_count == int(meter[0])
 
 
+def extract_pattern() -> None:
+    '''
+    Extracts rhythmic patterns from the given abc files.
 
-def extract_pattern():
+    Extracted lengths are with a min = 3 and a max = 5 bars for each pattern.\n
+    Then parse through the entire list and count the number of occurances.
+    '''
     v1_temp = []
     v2_temp = []
 
     # This loop extracts a bar with the min length of 3 and max length of 5 from v1
-    for counter in range(3,6):
+    for counter in range(3, 6):
         i = 0
         count = 0
         index = 0
@@ -261,20 +302,20 @@ def extract_pattern():
                 # if the index is the length of the combined bars, then decrease it by 1 else you would get IndexOutOfBounds
                 if i >= len(v1_combination):
                     i -= 1
-                
+
                 if(i < 0):
                     break
 
                 v1_temp.append(v1_combination[i])
-                i +=  1
+                i += 1
 
             # If the index  == length, it means you reached the end of v1, so break from the while loop, and increase
             # the max line for the combination
             if index == len(v1_combination):
                 break
-    
+
     # This loop extracts a bar with the min length of 3 and max length of 5 from v1
-    for counter in range(3,6):
+    for counter in range(3, 6):
         i = 0
         count = 0
         index = 0
@@ -297,13 +338,13 @@ def extract_pattern():
                     if i >= len(v2_combination):
                         i -= 1
                     v2_temp.append(v2_combination[i])
-                    i +=  1
+                    i += 1
 
             # If the index  == length, it means you reached the end of v1, so break from the while loop, and increase
             # the max line for the combination
             if index == len(v2_combination):
                 break
-    
+
     for set_of_bars in v1_keys:
         if str(set_of_bars) in v1_pattern.keys():
             v1_pattern[str(set_of_bars)] += 1
@@ -316,86 +357,100 @@ def extract_pattern():
         else:
             v2_pattern[str(set_of_bars)] = 1
 
-# the main dir 
-str_dir = 'mxl_to_abc/converted_compositions'
+# CALL THIS FUNCTION TO EXTRACT EVERY FILW WITHIN THE DIR BELOW
+def extract_all_files() -> None:
+    '''
+    Extracts rhythmic patterns from all the files within this directory:\n
+    -> src/backend/mxl_to_abc/converted_compositions\n
+    and save them in a list
+    '''
 
-count = 0
+    global v1_pattern, v2_pattern, v1_keys, v2_keys, v1_combination, v2_combination
 
-# gets each file from the given directory
-directory = os.fsencode(str_dir)
+    # the main dir 
+    str_dir = 'src/backend/mxl_to_abc/converted_compositions'
 
-# for each file within the given directory, extract patterns from this
-for file in os.listdir(directory):
+    count = 0
 
-    # gets the filename of the given file
-    filename = os.fsdecode(file)
+    # gets each file from the given directory
+    directory = os.fsencode(str_dir)
 
-    # checks if hte given file ends with the right extension
-    if filename.endswith('.abc'):
+    # for each file within the given directory, extract patterns from this
+    for file in os.listdir(directory):
 
-        # concat the directory with the file name
-        file_path = str_dir + "/" + filename
+        # gets the filename of the given file
+        filename = os.fsdecode(file)
 
-        # extracts the header from the given abc file
-        composition_name = get_header(file_path, 'T')
-        
-        # converts the header into a string if it returns a list
-        actual_header = ""
+        # checks if hte given file ends with the right extension
+        if filename.endswith('.abc'):
 
-        # replacing the name 
-        composition_name=get_header(file_path, 'T')
+            # concat the directory with the file name
+            file_path = str_dir + "/" + filename
 
-        # converting list to a string header
-        if type(composition_name) == list:
-            for header in composition_name:
-                header = header.replace(" ", "_")
-                actual_header += str(header)
-        else:
-            actual_header = composition_name.replace(" ", "_")
+            # extracts the header from the given abc file
+            composition_name = get_header(file_path, 'T')
+            
+            # converts the header into a string if it returns a list
+            actual_header = ""
 
-        # creates the song object
-        song = SongCollection(actual_header)
+            # replacing the name 
+            composition_name=get_header(file_path, 'T')
 
-        # appends the song object to the song_list
-        song_list.append(song)
+            # converting list to a string header
+            if type(composition_name) == list:
+                for header in composition_name:
+                    header = header.replace(" ", "_")
+                    actual_header += str(header)
+            else:
+                actual_header = composition_name.replace(" ", "_")
 
+            # creates the song object
+            song = SongCollection(actual_header)
 
-        # The actual extraction process
-        extract_rhythmic_patterns(file_path)
-        extract_pattern()
-
-        # for each pattern and frequency, create a RhythmicPattern object and add it to the given song
-        for k,v in v1_pattern.items():
-            pattern = RhythmicPattern(k, v, True)
-            song.add_pattern(pattern)
-
-        for k,v in v2_pattern.items():
-            pattern = RhythmicPattern(k, v, False)
-            song.add_pattern(pattern)
-
-        # Reset the global variables for the next song
-        v1_pattern = {}
-        v2_pattern = {}
-
-        v1_keys = []
-        v2_keys = []
-
-        v1_combination = []
-        v2_combination = []
-
-for song in song_list:
-    database = Cluster("elliot", song.song_name, False)
-    v1,v2 = song.get_patterns()
-
-    model = RhythmicPatternModel(song.song_name, v1)
-    passed = database.insert_rhythmic_pattern_model(database, model)
-
-    print(f"V1 of song {song.song_name} has been {str(passed).upper()} added")
-
-    if v2:
-        model = RhythmicPatternModel(song.song_name, v2)
-        passed = database.insert_rhythmic_pattern_model(database, model)
-
-        print(f"V2 of song {song.song_name} has been {str(passed).upper()} added")
+            # appends the song object to the song_list
+            song_list.append(song)
 
 
+            # The actual extraction process
+            extract_rhythmic_patterns(file_path)
+            extract_pattern()
+
+            # for each pattern and frequency, create a RhythmicPattern object and add it to the given song
+            for k,v in v1_pattern.items():
+                pattern = RhythmicPattern(k, v, True)
+                song.add_pattern(pattern)
+
+            for k,v in v2_pattern.items():
+                pattern = RhythmicPattern(k, v, False)
+                song.add_pattern(pattern)
+
+            # Reset the global variables for the next song
+            v1_pattern = {}
+            v2_pattern = {}
+
+            v1_keys = []
+            v2_keys = []
+
+            v1_combination = []
+            v2_combination = []
+
+
+def upload_rhythmic_patterns_to_DB() -> None:
+    '''
+    Uploads the extracted rhythmic patterns to the database
+    '''
+
+    db_name = "elliot"
+    is_admin = False
+
+    for song in song_list:
+        database = Cluster(db_name, song.song_name, is_admin)
+        v1,v2 = song.get_patterns()
+
+        model = RhythmicPatternModel(song.song_name, v1)
+        database.insert_rhythmic_pattern_model(database, model)
+
+        if v2:
+            model = RhythmicPatternModel(song.song_name, v2)
+            database.insert_rhythmic_pattern_model(database, model)
+            

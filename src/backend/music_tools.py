@@ -2,16 +2,16 @@ from re import S
 
 notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 
-'''
-
-  Within utility functions:
-    input_note    : note to change frequency of
-    up_frequency  : bool value which denotes whether frequency of note is increasing or decreasing
-
-'''
 
 
-def half_step(input_note, up_frequency):
+def half_step(input_note:str, up_frequency:bool) -> str:
+    '''
+
+    Within utility functions:
+        input_note    : note to change frequency of
+        up_frequency  : bool value which denotes whether frequency of note is increasing or decreasing
+
+    '''
     letter = input_note[0]
     comp_note = input_note[0].upper()
     octave = input_note[1:]
@@ -71,41 +71,39 @@ def half_step(input_note, up_frequency):
         return notes[index] + octave
 
 
-def whole_step(input_note, up_frequency):
+def whole_step(input_note:str, up_frequency:bool) -> str:
     return half_step(half_step(input_note, up_frequency), up_frequency)
 
 
-def M3(input_note, up_frequency):
+def M3(input_note:str, up_frequency:bool) -> str:
     '''
-
     Modifies the frequency of the input note by a Major Third, using whole steps
-
-  '''
+    '''
     return whole_step(whole_step(input_note, up_frequency), up_frequency)
 
 
-def m3(input_note, up_frequency):
+def m3(input_note:str, up_frequency:bool) -> str:
     '''
 
-      Modifies the frequency of the input note by a Minor Third, using whole/half steps
+    Modifies the frequency of the input note by a Minor Third, using whole/half steps
 
     '''
     return whole_step(half_step(input_note, up_frequency), up_frequency)
 
 
-def P5(input_note, up_frequency):
+def P5(input_note:str, up_frequency:bool)->str:
     '''
 
-      Modifies the frequency of the input note by a Perfect 5th, using major/minor thirds
+    Modifies the frequency of the input note by a Perfect 5th, using major/minor thirds
 
     '''
     return M3(m3(input_note, up_frequency), up_frequency)
 
 
-def change_octave(input_note, up_frequency):
+def change_octave(input_note:str, up_frequency:bool)->str:
     '''
 
-      Modifies the frequency of the input note by an entire octave, using 6 whole steps
+    Modifies the frequency of the input note by an entire octave, using 6 whole steps
 
     '''
     return whole_step(whole_step(
@@ -113,17 +111,17 @@ def change_octave(input_note, up_frequency):
                    up_frequency), up_frequency), up_frequency)
 
 
-def check_interval(starting_note: dict, end_note: dict):
+def check_interval(starting_note: dict, end_note: dict)->list:
     '''
         Checks and returns what kind of interval (i.e. H, W, P5, wtc.) is between end_note and starting_note
 
-        Param:
+        Parameters:
           key: key relating the input scale
           scale: reference scale
           starting_note: note to start the interval on
           end_note: note to end the interval on
 
-        Return:
+        Returns:
           The type of interval as a str
   '''
 
@@ -188,7 +186,7 @@ def check_interval(starting_note: dict, end_note: dict):
     return interval
 
 
-def pad_octave_notation(octave: int, note: str):
+def pad_octave_notation(octave: int, note: str)->str:
     '''
         Add the necessary "'" and "," to the given note, given the octave
 

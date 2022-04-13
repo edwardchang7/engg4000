@@ -10,8 +10,6 @@ test_music_string = """V:1
  B6 | C2 F- FAc | B6 | A2 A- A3- |$ A2 F- FAF | G6 | A6 || d6 | a6 | d6- | d3 z ef |$ g6 | f6 | %36
  e6- | e4 z A | B6 | c6 | d6 |$ e2 f2 g2 | f6 | e6 | d6- | d4 z A | B6 | c6 |$ d4 z2 | e2 f2 g2 | %50
 "^rit."[Q:3/8=55] f6[Q:3/8=50] |[Q:3/8=45] e6 |[Q:3/8=40] d6- | d6[Q:3/8=30] |] %54"""
-
-
 class TestTools(unittest.TestCase):
     def test_get_header(self):
         self.assertTrue(get_header(poly_test_composition_path, "T") == "I Can't Help Falling in Love")

@@ -61,7 +61,6 @@ class TestChords(unittest.TestCase):
 
     def test_random_length_major_with_1(self):
         test_chord = gen_chord_rand('C', 'M', 4)
-        print(test_chord)
         self.assertEqual(len(test_chord), 4)
 
     def test_random_known_notes_major_with_1(self):
@@ -70,7 +69,6 @@ class TestChords(unittest.TestCase):
 
     def test_random_length_minor_with_2(self):
         test_chord = gen_chord_rand('A', 'm', 5)
-        print(test_chord)
         self.assertEqual(len(test_chord), 5)
 
     def test_random_known_notes_minor_with_2(self):
